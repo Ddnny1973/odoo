@@ -11,6 +11,7 @@
         'security/ir.model.access.csv',
         'views/whatsapp_qr_view.xml',
     ],
+    'icon': '/odoo_whatsapp_qr/static/description/icon.png',
     'installable': True,
     'application': True,
 }
