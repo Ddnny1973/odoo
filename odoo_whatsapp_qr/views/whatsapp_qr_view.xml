@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_whatsapp_qr_form" model="ir.ui.view">
+        <field name="name">whatsapp.qr.form</field>
+        <field name="model">whatsapp.qr</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp QR">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="phone_number"/>
+                        <field name="qr_code" widget="html"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_whatsapp_qr_tree" model="ir.ui.view">
+        <field name="name">whatsapp.qr.tree</field>
+        <field name="model">whatsapp.qr</field>
+        <field name="arch" type="xml">
+            <tree string="WhatsApp QR">
+                <field name="name"/>
+                <field name="phone_number"/>
+                <field name="qr_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="menu_whatsapp_qr_root" name="WhatsApp QR"/>
+    <menuitem id="menu_whatsapp_qr" name="Vinculación WhatsApp" parent="menu_whatsapp_qr_root"/>
+    <act_window id="action_whatsapp_qr" name="Vinculación WhatsApp" res_model="whatsapp.qr" view_mode="tree,form" menu_id="menu_whatsapp_qr"/>
+</odoo>
