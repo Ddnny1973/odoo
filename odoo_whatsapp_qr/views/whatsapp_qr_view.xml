@@ -4,30 +4,39 @@
         <field name="model">whatsapp.qr</field>
         <field name="arch" type="xml">
             <form string="WhatsApp QR">
+                <header>
+                    <button name="action_update_qr" type="object" string="Actualizar QR" class="oe_highlight"/>
+                    <button name="action_show_logs" type="object" string="Ver últimos logs"/>
+                </header>
                 <sheet>
                     <group>
-                        <field name="name"/>
+                        <field name="name" attrs="{'readonly': [('groups', 'not in', ['base.group_system'])]}"/>
                         <field name="phone_number"/>
-                        <field name="qr_code" widget="html"/>
+                        <field name="user_id"/>
+                        <field name="qr_code" style="min-height: 220px; font-size: 16px; white-space: pre; font-family: monospace;"/>
+                        <field name="logs_preview" readonly="1" style="height: 200px; white-space: pre; font-size: 12px;"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
-
     <record id="view_whatsapp_qr_tree" model="ir.ui.view">
         <field name="name">whatsapp.qr.tree</field>
         <field name="model">whatsapp.qr</field>
         <field name="arch" type="xml">
             <tree string="WhatsApp QR">
-                <field name="name"/>
+                <field name="user_id" string="Usuario Odoo"/>
+                <field name="user_id" string="Login"/>
                 <field name="phone_number"/>
-                <field name="qr_code"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
-
-    <menuitem id="menu_whatsapp_qr_root" name="WhatsApp QR"/>
-    <menuitem id="menu_whatsapp_qr" name="Vinculación WhatsApp" parent="menu_whatsapp_qr_root"/>
-    <act_window id="action_whatsapp_qr" name="Vinculación WhatsApp" res_model="whatsapp.qr" view_mode="tree,form" menu_id="menu_whatsapp_qr"/>
+    <record id="action_whatsapp_qr" model="ir.actions.act_window">
+        <field name="name">Vinculación WhatsApp</field>
+        <field name="res_model">whatsapp.qr</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_whatsapp_qr_root" name="WhatsApp QR" parent="" sequence="10"/>
+    <menuitem id="menu_whatsapp_qr" name="Vinculación WhatsApp" parent="menu_whatsapp_qr_root" action="action_whatsapp_qr" sequence="20"/>
 </odoo>
