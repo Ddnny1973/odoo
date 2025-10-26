@@ -1,0 +1,36 @@
+<odoo>
+    <template id="portal_my_home_inherit_whatsapp_qr" inherit_id="portal.portal_my_home" name="Portal Home WhatsApp QR">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <div id="whatsapp_qr_services">
+                <h4>Mis servicios de WhatsApp</h4>
+                <t t-set="qr_records" t-value="request.env['whatsapp.qr'].sudo().search([('user_id', '=', request.env.user.id)])"/>
+                <t t-if="qr_records">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Teléfono</th>
+                                <th>Servicio</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="qr_records" t-as="qr">
+                                <tr>
+                                    <td><t t-esc="qr.phone_number"/></td>
+                                    <td><t t-esc="qr.name"/></td>
+                                    <td>
+                                        <a t-att-href="'/my/whatsapp_qr/%d' % qr.id" class="btn btn-primary btn-sm">Ver Detalle</a>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-if="not qr_records">
+                    <p>No tienes servicios de WhatsApp QR asociados.</p>
+                </t>
+                <a href="/my/whatsapp_qr" class="btn btn-secondary mt-2">Ver todos mis servicios</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

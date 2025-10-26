@@ -1,0 +1,56 @@
+<odoo>
+    <template id="portal_whatsapp_qr_list" name="Mis servicios WhatsApp QR">
+        <t t-call="portal.portal_layout">
+            <div class="o_portal_my_doc_table">
+                <h2>Mis servicios de WhatsApp</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Teléfono</th>
+                            <th>Servicio</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="qr_records" t-as="qr">
+                            <tr>
+                                <td><t t-esc="qr.phone_number"/></td>
+                                <td><t t-esc="qr.name"/></td>
+                                <td>
+                                    <a t-att-href="'/my/whatsapp_qr/%d' % qr.id" class="btn btn-primary btn-sm">Ver Detalle</a>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_whatsapp_qr_detail" name="Detalle WhatsApp QR">
+        <t t-call="portal.portal_layout">
+            <div class="o_portal_my_doc_table">
+                <h2>Detalle del Servicio WhatsApp</h2>
+                <p><b>Teléfono:</b> <t t-esc="qr.phone_number"/></p>
+                <p><b>Servicio:</b> <t t-esc="qr.name"/></p>
+                <p><b>QR Code:</b></p>
+                <pre id="qr_code_block" style="font-size:16px; background:#f8f8f8; padding:10px;"><t t-esc="qr.qr_code or ''"/></pre>
+                <p><b>Últimos logs:</b></p>
+                <pre id="logs_block" style="font-size:12px; background:#f8f8f8; padding:10px; max-height:300px; overflow:auto;"><t t-esc="qr.logs_preview or ''"/></pre>
+                <button class="btn btn-secondary" id="update_logs_btn" type="button">Actualizar logs</button>
+            </div>
+            <script type="text/javascript">
+                $(function(){
+                    $('#update_logs_btn').on('click', function(){
+                        var url = '/my/whatsapp_qr/' + <t t-esc="qr.id"/> + '/update_logs';
+                        $.jsonRpc(url, 'call', {}).then(function(data){
+                            if(data.logs){
+                                $('#logs_block').text(data.logs);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </t>
+    </template>
+</odoo>
