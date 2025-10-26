@@ -10,7 +10,7 @@
                 </header>
                 <sheet>
                     <group>
-                        <field name="name" attrs="{'readonly': [('groups', 'not in', ['base.group_system'])]}"/>
+                        <field name="name" groups="base.group_system"/>
                         <field name="phone_number"/>
                         <field name="user_id"/>
                         <field name="qr_code" style="min-height: 220px; font-size: 16px; white-space: pre; font-family: monospace;"/>
