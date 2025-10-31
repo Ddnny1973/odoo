@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_mb_asesores_vencimientos_manager,Mb asesores Vencimientos Manager,model_mb_asesores_vencimientos,base.group_system,1,1,1,1
+access_mb_asesores_vencimientos_users,Mb asesores Vencimientos Users,model_mb_asesores_vencimientos,mb-asesores.mbasesores_group,1,1,1,1
+
+access_mb_asesores_correo_enviado_manager,Correo enviado Manager,model_mb_asesores_correo_enviado,base.group_system,1,1,1,1
+access_mb_asesores_correo_enviado_users,Correo enviado Users,model_mb_asesores_correo_enviado,mb-asesores.mbasesores_group,1,1,1,1
+
+access_gmail_setup_wizard_manager,Gmail Setup Wizard Manager,model_gmail_setup_wizard,base.group_system,1,1,1,1
+access_gmail_setup_wizard_users,Gmail Setup Wizard Users,model_gmail_setup_wizard,mb-asesores.mbasesores_group,1,1,1,1
+
+access_gmail_oauth2_config_manager,Gmail OAuth2 Config Manager,model_gmail_oauth2_config,base.group_system,1,1,1,1
+access_gmail_oauth2_config_users,Gmail OAuth2 Config Users,model_gmail_oauth2_config,mb-asesores.mbasesores_group,1,1,1,1

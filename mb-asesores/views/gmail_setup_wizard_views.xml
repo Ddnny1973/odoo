@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vista del wizard -->
+        <record id="view_gmail_setup_wizard_form" model="ir.ui.view">
+            <field name="name">gmail.setup.wizard.form</field>
+            <field name="model">gmail.setup.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Configurar Gmail para Odoo">
+                    <!-- Paso 1: Configuración -->
+                    <div attrs="{'invisible': [('state', '!=', 'step1')]}">
+                        <div class="alert alert-info" role="alert">
+                            <h4>🔐 Configuración de Gmail</h4>
+                            <p>Este asistente te ayudará a configurar el envío de correos con Gmail de forma segura.</p>
+                        </div>
+                        
+                        <group>
+                            <field name="setup_type" widget="radio"/>
+                        </group>
+                        
+                        <group string="Información de la Cuenta">
+                            <field name="gmail_user" 
+                                   attrs="{'invisible': [('setup_type', '=', 'alternative')], 'required': [('setup_type', 'in', ['oauth2_specific', 'oauth2_drive', 'app_password'])]}"
+                                   placeholder="tu-email@gmail.com"/>
+                            <field name="smtp_user" 
+                                   attrs="{'invisible': [('setup_type', '!=', 'alternative')], 'required': [('setup_type', '=', 'alternative')]}"
+                                   placeholder="tu-email@outlook.com"/>
+                        </group>
+                        
+                        <!-- OAuth2 Específico Info -->
+                        <div class="alert alert-success" role="alert"
+                             attrs="{'invisible': [('setup_type', '!=', 'oauth2_specific')]}">
+                            <h5>✅ OAuth2 Específico (Recomendado)</h5>
+                            <ul>
+                                <li>✅ Configuración independiente para Gmail</li>
+                                <li>✅ No depende de Google Drive</li>
+                                <li>✅ Puedes usar cualquier cuenta Gmail</li>
+                                <li>✅ Máxima seguridad y control</li>
+                            </ul>
+                            <p><strong>Prerequisito:</strong> Debes crear la configuración OAuth2 primero en:
+                               <br/>Configuración → 📧 OAuth2 Gmail</p>
+                        </div>
+                        
+                        <!-- OAuth2 desde Google Drive Info -->
+                        <div class="alert alert-warning" role="alert"
+                             attrs="{'invisible': [('setup_type', '!=', 'oauth2_drive')]}">
+                            <h5>⚠️ OAuth2 desde Google Drive</h5>
+                            <ul>
+                                <li>✅ Reutiliza credenciales existentes</li>
+                                <li>⚠️ Debe ser la misma cuenta de Google Drive</li>
+                                <li>⚠️ Dependiente de configuración de Google Drive</li>
+                            </ul>
+                            <p><strong>Nota:</strong> Solo funciona si el email es el mismo que Google Drive.</p>
+                        </div>
+                        
+                        <!-- App Password Info -->
+                        <div attrs="{'invisible': [('setup_type', '!=', 'app_password')]}">
+                            <div class="alert alert-warning" role="alert">
+                                <h5>⚠️ Contraseña de Aplicación</h5>
+                                <p><strong>Requisitos previos:</strong></p>
+                                <ol>
+                                    <li>Activa la verificación en 2 pasos en Gmail</li>
+                                    <li>Ve a <a href="https://myaccount.google.com/apppasswords" target="_blank">myaccount.google.com/apppasswords</a></li>
+                                    <li>Genera una contraseña para "Odoo"</li>
+                                    <li>Copia la contraseña de 16 caracteres aquí:</li>
+                                </ol>
+                            </div>
+                            <group>
+                                <field name="app_password" 
+                                       placeholder="abcd efgh ijkl mnop"
+                                       attrs="{'required': [('setup_type', '=', 'app_password')]}"/>
+                            </group>
+                        </div>
+                        
+                        <!-- Alternative Server Info -->
+                        <div attrs="{'invisible': [('setup_type', '!=', 'alternative')]}">
+                            <div class="alert alert-info" role="alert">
+                                <h5>🔄 Servidor Alternativo</h5>
+                                <p>Configura un servidor SMTP diferente (Outlook, SendGrid, etc.)</p>
+                            </div>
+                            <group>
+                                <field name="smtp_host" 
+                                       attrs="{'required': [('setup_type', '=', 'alternative')]}"/>
+                                <field name="smtp_port" 
+                                       attrs="{'required': [('setup_type', '=', 'alternative')]}"/>
+                                <field name="smtp_pass" password="True" 
+                                       attrs="{'required': [('setup_type', '=', 'alternative')]}"/>
+                            </group>
+                        </div>
+                    </div>
+                    
+                    <!-- Paso 2: Verificación -->
+                    <div attrs="{'invisible': [('state', '!=', 'step2')]}">
+                        <div class="alert alert-info" role="alert">
+                            <h4>🔍 Verificando Configuración</h4>
+                            <p>Creando y probando la configuración del servidor de correo...</p>
+                        </div>
+                        
+                        <group>
+                            <field name="gmail_user" readonly="1" 
+                                   attrs="{'invisible': [('setup_type', '=', 'alternative')]}"/>
+                            <field name="smtp_user" readonly="1" 
+                                   attrs="{'invisible': [('setup_type', '!=', 'alternative')]}"/>
+                            <field name="setup_type" readonly="1"/>
+                            <field name="smtp_host" readonly="1"/>
+                            <field name="smtp_port" readonly="1"/>
+                        </group>
+                    </div>
+                    
+                    <!-- Paso 3: Completado -->
+                    <div attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <div class="alert alert-success" role="alert">
+                            <h4>🎉 Configuración Completada</h4>
+                        </div>
+                        
+                        <group>
+                            <field name="test_result" readonly="1"/>
+                        </group>
+                        
+                        <div class="alert alert-info" role="alert">
+                            <p><strong>Próximos pasos:</strong></p>
+                            <ul>
+                                <li>Prueba enviar un correo desde Odoo</li>
+                                <li>Revisa los logs con los scripts de monitoreo</li>
+                                <li>Si hay problemas, consulta la documentación</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <field name="state" invisible="1"/>
+                    
+                    <footer>
+                        <button string="Siguiente" name="action_next_step" type="object" 
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '=', 'done')]}"
+                                context="{'save_first': True}"/>
+                        <button string="Ver Servidores" name="action_open_mail_servers" type="object" 
+                                class="btn-secondary"
+                                attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                        <button string="Documentación" name="action_view_documentation" type="object" 
+                                class="btn-link"/>
+                        <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción del wizard -->
+        <record id="action_gmail_setup_wizard" model="ir.actions.act_window">
+            <field name="name">Configurar Gmail</field>
+            <field name="res_model">gmail.setup.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_setup_type': 'oauth2'}</field>
+        </record>
+
+        <!-- Menú del wizard -->
+        <menuitem id="menu_gmail_setup_wizard"
+                  name="🔐 Configurar Gmail"
+                  parent="base.menu_email"
+                  action="action_gmail_setup_wizard"
+                  sequence="10"/>
+
+    </data>
+</odoo>

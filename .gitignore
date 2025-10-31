@@ -1,0 +1,12 @@
+# Ignorar archivos temporales, binarios y sensibles
+*.pickle
+*.pyc
+__pycache__/
+temp/
+data/token.pickle
+consola/token.pickle
+*.ipynb_checkpoints/
+.env
+*.log
+*.json
+notebook/.ipynb_checkpoints/

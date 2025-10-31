@@ -1,0 +1,11 @@
+<!-- views/google_drive_config_menu.xml -->
+<odoo>
+    <menuitem id="menu_google_drive_config" name="Google Drive Configuration" parent="base.menu_administration" action="action_google_drive_config"/>
+</odoo>
+
+<!-- views/google_drive_config_menu.xml -->
+<odoo>
+    <menuitem id="menu_vencimientos_config" name="Configuración" parent="main_mb_asesores_menu" sequence="20"/>
+
+    <menuitem id="menu_google_drive_config" name="Google Drive Configuration" parent="menu_vencimientos_config" action="action_google_drive_config" sequence="30"/>
+</odoo>

@@ -1,0 +1,94 @@
+<!-- views/vencimientos_views.xml -->
+<odoo>
+    <record id="view_vencimientos_tree" model="ir.ui.view">
+        <field name="name">vencimientos.tree</field>
+        <field name="model">mb_asesores.vencimientos</field>
+        <field name="arch" type="xml">
+            <tree string="Vencimientos">
+                <field name="ramo"/>
+                <field name="id_poliza"/>
+                <field name="tipo_plan"/>
+                <field name="dni_tomador"/>
+                <field name="tomador"/>
+                <field name="nombrecorto"/>
+                <field name="formadepago"/>
+                <field name="finvigencia"/>
+                <field name="aviso"/>
+                <field name="movil"/>
+                <field name="email_to"/>
+                <field name="mensaje"/>
+                <field name="mes"/>
+                <field name="year"/>
+                <field name="archivo"/>
+                <field name="url"/>
+                <field name="mail_status"/>
+                <field name="whatsapp_status"/>
+                <field name="hora_ws" optional="hide"/>
+                <field name="correo_temporal"/>
+                <field name="mensaje_whatsapp"/>
+                <field name="placa" optional="hide"/>
+                <field name="compania" optional="hide"/>
+                <field name="correo_enviado_id" optional="hide"/>
+                <!-- <field name="mail_message_id" optional="hide"/> -->
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vencimientos_filter" model="ir.ui.view">
+        <field name="name">vencimientos.search</field>
+        <field name="model">mb_asesores.vencimientos</field>
+        <field name="arch" type="xml">
+            <search string="Vencimientos">
+                <field name="id_poliza" string="Id Póliza" filter_domain="['|', ('id_poliza', 'ilike', self), ('tomador', 'ilike', self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_vencimientos_form" model="ir.ui.view">
+        <field name="name">vencimientos.form</field>
+        <field name="model">mb_asesores.vencimientos</field>
+        <field name="arch" type="xml">
+            <form string="Vencimientos">
+                <header>
+                    <button name="print_dummy_message" string="Imprimir mensaje dummy" type="object"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="ramo"/>
+                        <field name="id_poliza"/>
+                        <field name="dni_tomador"/>
+                        <field name="tipo_plan"/>
+                        <field name="tomador"/>
+                        <field name="nombrecorto"/>
+                        <field name="formadepago"/>
+                        <field name="finvigencia"/>
+                        <field name="aviso"/>
+                        <field name="movil"/>
+                        <field name="email_to"/>
+                        <field name="mensaje"/>
+                        <field name="mes"/>
+                        <field name="year"/>
+                        <field name="archivo"/>
+                        <field name="url"/>
+                        <field name="mail_status"/>
+                        <field name="whatsapp_status"/>
+                        <field name="hora_ws"/>
+                        <field name="correo_temporal"/>
+                        <field name="mensaje_whatsapp"/>
+                        <field name="correo_enviado_id"/>
+                        <!-- <field name="mail_message_id"/>      -->
+                        
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vencimientos" model="ir.actions.act_window">
+        <field name="name">Vencimientos</field>
+        <field name="res_model">mb_asesores.vencimientos</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

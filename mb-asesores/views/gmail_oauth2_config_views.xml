@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vista de formulario para configuración Gmail OAuth2 -->
+        <record id="view_gmail_oauth2_config_form" model="ir.ui.view">
+            <field name="name">gmail.oauth2.config.form</field>
+            <field name="model">gmail.oauth2.config</field>
+            <field name="arch" type="xml">
+                <form string="Configuracion OAuth2 para Gmail" class="gmail-oauth2-form">
+                    <style>
+                        .gmail-oauth2-form .oauth2-json-container { 
+                            width: 100% !important; 
+                            display: block !important; 
+                            min-width: 600px !important;
+                        }
+                        .gmail-oauth2-form .oauth2-json-field { 
+                            width: 100% !important; 
+                            min-width: 600px !important; 
+                            display: block !important; 
+                            box-sizing: border-box !important;
+                            font-family: 'Courier New', monospace !important;
+                            font-size: 12px !important;
+                            line-height: 1.4 !important;
+                        }
+                        .gmail-oauth2-form .o_group_col_12 {
+                            width: 100% !important;
+                            max-width: 100% !important;
+                        }
+                        .gmail-oauth2-form .o_row {
+                            width: 100% !important;
+                        }
+                        @media (max-width: 768px) {
+                            .gmail-oauth2-form .oauth2-json-field {
+                                min-width: 100% !important;
+                                width: 100% !important;
+                            }
+                        }
+                    </style>
+                    <header>
+                        <button string="Autenticar con Google" name="action_authenticate" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible': [('is_authenticated', '=', True)]}"/>
+                        <button string="Probar Credenciales" name="test_credentials" type="object"
+                                class="btn-secondary"
+                                attrs="{'invisible': [('is_authenticated', '=', False)]}"/>
+                        <button string="Auto-Configurar Servidor" name="action_auto_configure_mail_server" type="object"
+                                class="btn-success"
+                                attrs="{'invisible': [('is_authenticated', '=', False)]}"/>
+                        <button string="Re-autenticar" name="action_authenticate" type="object"
+                                class="btn-warning"
+                                attrs="{'invisible': [('is_authenticated', '=', False)]}"/>
+                        <field name="is_authenticated" widget="badge" 
+                               decoration-success="is_authenticated == True"
+                               decoration-danger="is_authenticated == False"
+                               readonly="1"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="email" placeholder="usuario@gmail.com"/>
+                            </h1>
+                        </div>
+                        
+                        <group string="Estado de la Configuracion">
+                            <group>
+                                <field name="is_authenticated" readonly="1" widget="badge"
+                                       decoration-success="is_authenticated == True"
+                                       decoration-danger="is_authenticated == False"/>
+                                <field name="last_auth_date" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="active" widget="boolean_toggle"/>
+                                <div>
+                                    <span class="text-success" attrs="{'invisible': [('is_authenticated', '=', False)]}">
+                                        <i class="fa fa-check-circle"/> Configuracion lista para usar
+                                    </span>
+                                    <span class="text-warning" attrs="{'invisible': [('is_authenticated', '=', True)]}">
+                                        <i class="fa fa-exclamation-triangle"/> Requiere autenticacion
+                                    </span>
+                                </div>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Configuracion Basica">
+                                <group attrs="{'invisible': [('is_authenticated', '=', True)]}">
+                                    <div class="alert alert-warning">
+                                        <h5><i class="fa fa-exclamation-triangle"/> Configuracion Requerida</h5>
+                                        <p>Complete todos los campos y ejecute la autenticacion OAuth2 para activar esta configuracion.</p>
+                                        
+                                        <div class="alert alert-info mt-2">
+                                            <h6><i class="fa fa-info-circle"/> Configuracion para Entorno Docker/Proxy Reverso:</h6>
+                                            <p><strong>Tu Odoo esta ejecutandose en Docker detras de un proxy reverso (nginx). Configuracion especial requerida:</strong></p>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h6>Configuracion en Google Cloud Console:</h6>
+                                                    <ol class="small">
+                                                        <li>Tipo de aplicacion: <strong>"Aplicacion web"</strong> (no "escritorio")</li>
+                                                        <li>En <strong>"URIs de redireccion autorizados"</strong>, agregar:
+                                                            <ul class="mt-2">
+                                                                <li><code>https://aserprem.gestorconsultoria.com.co/gmail/oauth2/callback</code></li>
+                                                                <li>Asegurate de usar <strong>HTTPS</strong>, no HTTP</li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>En <strong>"Test users"</strong> (Usuarios de prueba), agregar tu direccion de email de Gmail</li>
+                                                    </ol>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <h6>Configuracion Odoo requerida:</h6>
+                                                    <ul class="small">
+                                                        <li>Ir a <strong>Configuracion → Parametros del sistema</strong></li>
+                                                        <li>Configurar <code>web.base.url</code> = <code>https://aserprem.gestorconsultoria.com.co</code></li>
+                                                        <li><strong>Importante:</strong> Debe ser HTTPS para OAuth2</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>Scopes OAuth2 reducidos:</h6>
+                                                    <ul class="small">
+                                                        <li><code>https://www.googleapis.com/auth/gmail.send</code></li>
+                                                        <li>Solo permiso de envio (no lectura completa del correo)</li>
+                                                        <li>Reduce la posibilidad de error "access_denied"</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </group>
+                                
+                                <group attrs="{'invisible': [('is_authenticated', '=', False)]}">
+                                    <div class="alert alert-success">
+                                        <h5><i class="fa fa-check-circle"/> Configuracion Completa</h5>
+                                        <p>La autenticacion OAuth2 ha sido exitosa. Tu configuracion esta lista para usar.</p>
+                                        <p>Usa el boton <strong>"Auto-Configurar Servidor"</strong> para configurar automaticamente el servidor de correo de Odoo.</p>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <group string="Informacion de la Cuenta">
+                                        <field name="email" required="1"/>
+                                    </group>
+                                    <group string="Credenciales OAuth2">
+                                        <field name="client_id" required="1"/>
+                                        <field name="client_secret" password="True" required="1"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Archivo de Credenciales JSON" class="oauth2-json-container">
+                                    <div class="o_row">
+                                        <div class="o_group_col_12">
+                                            <field name="credentials_json" widget="text" class="oauth2-json-field"
+                                                   placeholder='{"web":{"client_id":"tu-client-id.googleusercontent.com","project_id":"tu-proyecto","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"tu-client-secret","redirect_uris":["https://aserprem.gestorconsultoria.com.co/gmail/oauth2/callback"]}}'
+                                                   help="Pega aqui el contenido completo del archivo credentials.json descargado de Google Cloud Console"/>
+                                        </div>
+                                    </div>
+                                </group>
+                            </page>
+                            
+                            <page string="Configurar Servidor de Correo" attrs="{'invisible': [('is_authenticated', '=', False)]}">
+                                <div class="alert alert-success">
+                                    <h5><i class="fa fa-check-circle"/> Autenticacion OAuth2 Exitosa!</h5>
+                                    <p>Tu cuenta de Gmail esta autenticada correctamente. Ahora puedes configurar el servidor de correo de Odoo.</p>
+                                </div>
+                                
+                                <group string="Configuracion Automatica (Recomendado)">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fa fa-magic"/> Auto-Configuracion</h6>
+                                        <p>El boton <strong>"Auto-Configurar Servidor"</strong> en la parte superior creara automaticamente el servidor de correo con la configuracion optima para OAuth2.</p>
+                                        <p><strong>Que hace exactamente?</strong></p>
+                                        <ul>
+                                            <li>Crea/actualiza el servidor de correo con tu cuenta Gmail</li>
+                                            <li>Configura SMTP: smtp.gmail.com:587 con STARTTLS</li>
+                                            <li>Establece autenticacion OAuth2 (no contrasena)</li>
+                                            <li>Lo marca como servidor principal activo</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="text-center" style="margin: 20px 0;">
+                                        <button string="Auto-Configurar Servidor de Correo Ahora" 
+                                                name="action_auto_configure_mail_server" 
+                                                type="object"
+                                                class="btn-success btn-lg"
+                                                style="padding: 12px 24px; font-size: 16px;"/>
+                                    </div>
+                                </group>
+                                
+                                <separator string="Verificacion Manual"/>
+                                <group string="Estado Actual del Servidor de Correo">
+                                    <div class="alert alert-warning">
+                                        <p><strong>Para verificar manualmente:</strong></p>
+                                        <ol>
+                                            <li>Ve a <strong>Configuracion → Email → Servidores de Correo</strong></li>
+                                            <li>Busca un servidor con tu email Gmail como usuario</li>
+                                            <li>Verifica que este marcado como <strong>"Activo"</strong></li>
+                                            <li>El tipo de autenticacion debe ser <strong>"OAuth2"</strong> o <strong>"gmail_oauth2"</strong></li>
+                                        </ol>
+                                    </div>
+                                </group>
+                                
+                                <group string="Probar Envio de Correo">
+                                    <div class="alert alert-info">
+                                        <h6>Como probar que funciona?</h6>
+                                        <p>Una vez configurado el servidor:</p>
+                                        <ul>
+                                            <li>Ve a cualquier registro (contacto, factura, etc.)</li>
+                                            <li>Haz clic en "Enviar mensaje" o "Enviar por email"</li>
+                                            <li>El correo debe enviarse usando tu cuenta Gmail autenticada</li>
+                                        </ul>
+                                        <p><strong>O usa los scripts de prueba:</strong></p>
+                                        <ul>
+                                            <li><code>test_oauth2_email.bat</code> - Envia un correo de prueba</li>
+                                            <li><code>setup_mail_server.bat</code> - Verificacion completa del setup</li>
+                                        </ul>
+                                    </div>
+                                </group>
+                            </page>
+                            
+                            <page string="Informacion Tecnica" attrs="{'invisible': [('is_authenticated', '=', False)]}">
+                                <div class="alert alert-success">
+                                    <h5><i class="fa fa-check-circle"/> Autenticacion OAuth2 Activa</h5>
+                                    <p>Esta configuracion esta autenticada correctamente con Google. Los tokens se renuevan automaticamente.</p>
+                                </div>
+                                
+                                <group string="Tokens OAuth2">
+                                    <group>
+                                        <field name="last_auth_date" readonly="1"/>
+                                        <field name="is_authenticated" readonly="1" widget="boolean_toggle"/>
+                                    </group>
+                                    <group>
+                                        <label for="token_pickle" string="Token almacenado"/>
+                                        <div>
+                                            <field name="token_pickle" readonly="1" widget="binary" filename="oauth2_token.pkl"/>
+                                            <div class="text-muted">
+                                                <small><i class="fa fa-info-circle"/> Este archivo contiene los tokens OAuth2 encriptados</small>
+                                            </div>
+                                        </div>
+                                    </group>
+                                </group>
+                                
+                                <group string="Diagnostico">
+                                    <button string="Probar Conexion" name="test_credentials" type="object"
+                                            class="btn-secondary"/>
+                                    <button string="Renovar Token" name="action_authenticate" type="object"
+                                            class="btn-warning"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Guia de Configuracion">
+                                <div class="alert alert-info">
+                                    <h4>Guia Paso a Paso</h4>
+                                    
+                                    <h5>1. Crear Proyecto en Google Cloud Console</h5>
+                                    <ul>
+                                        <li>Ve a <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a></li>
+                                        <li>Crea un nuevo proyecto o selecciona uno existente</li>
+                                        <li>Asegurate de que la facturacion este habilitada (puede ser gratuita)</li>
+                                    </ul>
+                                    
+                                    <h5>2. Habilitar Gmail API</h5>
+                                    <ul>
+                                        <li>Ve a "APIs y servicios" → "Biblioteca"</li>
+                                        <li>Busca "Gmail API" y habilitala</li>
+                                    </ul>
+                                    
+                                    <h5>3. Crear Credenciales OAuth2 (Para Docker/Proxy Reverso)</h5>
+                                    <ul>
+                                        <li>Ve a "APIs y servicios" → "Credenciales"</li>
+                                        <li>Clic en "Crear credenciales" → "ID de cliente OAuth 2.0"</li>
+                                        <li><strong>Tipo de aplicacion: "Aplicacion web"</strong> (obligatorio para Docker)</li>
+                                        <li>Nombre: "Odoo Gmail Integration"</li>
+                                        <li><strong>URIs de redireccion autorizados:</strong>
+                                            <ul>
+                                                <li><code>https://aserprem.gestorconsultoria.com.co/gmail/oauth2/callback</code></li>
+                                                <li><code>http://localhost:8069/gmail/oauth2/callback</code> (para desarrollo local)</li>
+                                            </ul>
+                                        </li>
+                                        <li>Descarga el archivo JSON</li>
+                                    </ul>
+                                    
+                                    <div class="alert alert-info">
+                                        <strong>Verificar configuracion de Odoo:</strong>
+                                        <p>Asegurate de que en <strong>Configuracion → Parametros del sistema</strong> el parametro <code>web.base.url</code> este configurado como: <code>https://aserprem.gestorconsultoria.com.co</code></p>
+                                    </div>
+                                    
+                                    <h5>4. Configurar en Odoo</h5>
+                                    <ul>
+                                        <li>Pega el contenido del archivo JSON en el campo "Archivo credentials.json"</li>
+                                        <li>Completa el email de Gmail que enviara los correos</li>
+                                        <li>Haz clic en "Autenticar con Google"</li>
+                                        <li>Autoriza la aplicacion en la ventana que se abre</li>
+                                        <li>Listo! Ya puedes usar OAuth2 para enviar correos</li>
+                                    </ul>
+                                </div>
+                            </page>
+                            
+                            <page string="Ayuda y Diagnosticos">
+                                <group>
+                                    <div class="alert alert-info">
+                                        <h5>Scripts de Ayuda Disponibles:</h5>
+                                        <ul>
+                                            <li><strong>setup_mail_server.bat</strong> - Configurar servidor de correo automaticamente</li>
+                                            <li><strong>test_oauth2_email.bat</strong> - Probar envio de correos</li>
+                                            <li><strong>fix_oauth2_redirect.bat/.sh</strong> - Diagnosticar y solucionar problemas de redirect_uri</li>
+                                            <li><strong>solve_oauth2_access_denied.bat</strong> - Solucionar errores access_denied</li>
+                                            <li><strong>diagnose_oauth2_setup.bat</strong> - Diagnostico completo del setup OAuth2</li>
+                                        </ul>
+                                        <p>Ejecuta estos scripts desde el directorio del addon si encuentras problemas.</p>
+                                    </div>
+                                    
+                                    <div class="alert alert-warning">
+                                        <h5>Problemas Comunes:</h5>
+                                        <ul>
+                                            <li><strong>redirect_uri_mismatch:</strong> Verifica que la URL en Google Cloud Console coincida exactamente</li>
+                                            <li><strong>access_denied:</strong> Agrega tu email como "Test User" en Google Cloud Console</li>
+                                            <li><strong>invalid_client:</strong> Verifica Client ID y Client Secret</li>
+                                        </ul>
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vista de lista -->
+        <record id="view_gmail_oauth2_config_tree" model="ir.ui.view">
+            <field name="name">gmail.oauth2.config.tree</field>
+            <field name="model">gmail.oauth2.config</field>
+            <field name="arch" type="xml">
+                <tree string="Configuraciones OAuth2">
+                    <field name="email"/>
+                    <field name="is_authenticated" widget="badge" 
+                           decoration-success="is_authenticated == True"
+                           decoration-danger="is_authenticated == False"/>
+                    <field name="last_auth_date"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Acción de ventana -->
+        <record id="action_gmail_oauth2_config" model="ir.actions.act_window">
+            <field name="name">Configuracion OAuth2 Gmail</field>
+            <field name="res_model">gmail.oauth2.config</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear nueva configuracion OAuth2 para Gmail
+                </p>
+                <p>
+                    Configura la autenticacion OAuth2 para enviar correos a traves de Gmail desde Odoo.
+                </p>
+            </field>
+        </record>
+
+        <!-- Elemento de menú -->
+        <menuitem id="menu_gmail_oauth2_config"
+                  name="OAuth2 Gmail"
+                  parent="base.menu_email"
+                  action="action_gmail_oauth2_config"
+                  sequence="20"/>
+
+    </data>
+</odoo>

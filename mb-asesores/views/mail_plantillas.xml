@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1"> 
+        <record id="vida" model="mail.template">
+            <field name="name">vida</field>
+            <field name="model">mb_asesores.vencimientos</field>
+            <field name="subject">Poliza Vida: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    ID de la póliza: <b><t t-out="object.id_poliza or ''">Cualquiera</t></b><br/>
+                    Mensaje: <b><t t-out="object.id_poliza or ''">Cualquiera</t></b>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="salud" model="mail.template">
+            <field name="name">salud</field>
+            <field name="model">mb_asesores.vencimientos</field>
+            <field name="subject">Poliza Salud: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    ID de la póliza: <b><t t-out="object.id_poliza or ''">Cualquiera</t></b><br/>
+                    Mensaje: <b><t t-out="object.id_poliza or ''">Cualquiera</t></b>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="masvida" model="mail.template">
+            <field name="name">masvida</field>
+            <field name="model">mb_asesores.vencimientos</field>
+            <field name="subject">Poliza Más Vida: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    ID de la póliza: <b><t t-out="object.id_poliza or ''">Cualquiera</t></b><br/>
+                    Mensaje: <b><t t-out="object.id_poliza or ''">Cualquiera</t></b>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="autosglobal" model="mail.template">
+            <field name="name">autosglobal</field>
+            <field name="model">mb-asesores.vencimientos</field>
+            <field name="subject">Poliza Autos Global: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    Mensaje: <b><t t-out="object.mensaje or ''">Cualquiera</t></b>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="autosclasicos" model="mail.template">
+            <field name="name">autosclasicos</field>
+            <field name="model">mb-asesores.vencimientos</field>
+            <field name="subject">Poliza Autos Clasicos: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    Mensaje: <b><t t-out="object.mensaje or ''">Cualquiera</t></b>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="autosbasico" model="mail.template">
+            <field name="name">autosbasico</field>
+            <field name="model">mb-asesores.vencimientos</field>
+            <field name="subject">Poliza: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    Mensaje: <b><t t-out="object.mensaje or ''">Cualquiera</t></b>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="autosmotos" model="mail.template">
+            <field name="name">autosmotos</field>
+            <field name="model">mb-asesores.vencimientos</field>
+            <field name="subject">Poliza Autos Motos: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    Mensaje: <b><t t-out="object.mensaje or ''">Cualquiera</t></b>
+                </p>
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="autospesados" model="mail.template">
+            <field name="name">autospesados</field>
+            <field name="model">mb-asesores.vencimientos</field>
+            <field name="subject">Poliza Autos Pesados: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    Mensaje: <b><t t-out="object.mensaje or ''">Cualquiera</t></b>
+                </p>
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="pac" model="mail.template">
+            <field name="name">pac</field>
+            <field name="model">mb_asesores.vencimientos</field>
+            <field name="subject">Póliza Plan complementario: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <t t-out="object.mensaje or ''">Cualquiera</t>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="generico" model="mail.template">
+            <field name="name">generico</field>
+            <field name="model">mb_asesores.vencimientos</field>
+            <field name="subject">Poliza: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <t t-out="object.mensaje or ''">Cualquiera</t>
+                </p>
+                
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+        <record id="provision" model="mail.template">
+            <field name="name">provision</field>
+            <field name="model">mb-asesores.vencimientos</field>
+            <field name="subject">Poliza {{ object.compania }}: {{ object.id_poliza }}</field>
+            <field name="body_html" type="html">
+                <p>
+                   <b><t t-out="object.mensaje2 or ''">Mensaje2</t></b>
+                </p>        
+            </field>
+            <field name="email_from">asistente@mbasesoresenseguros.com</field>
+            <field name="email_to">{{ object.email_to }}</field>
+            <field name="auto_delete" eval="False"/> 
+        </record>
+
+    </data>
+</odoo>

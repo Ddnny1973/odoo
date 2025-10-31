@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vista heredada para agregar campos OAuth2 -->
+        <record id="view_mail_server_form_gmail_oauth2" model="ir.ui.view">
+            <field name="name">ir.mail_server.form.gmail.oauth2</field>
+            <field name="model">ir.mail_server</field>
+            <field name="inherit_id" ref="base.view_ir_mail_server_form"/>
+            <field name="arch" type="xml">
+                <!-- Agregar información de ayuda -->
+                <field name="smtp_pass" position="after">
+                    <div class="alert alert-info" role="alert"
+                         attrs="{'invisible': [('smtp_authentication', 'not in', ['gmail_oauth2', 'gmail_oauth2_gdrive'])]}">
+                        <h5>🔐 Autenticación OAuth2 para Gmail</h5>
+                        <p>
+                            <strong>OAuth2 Específico:</strong><br/>
+                            • Credenciales independientes configuradas en 📧 OAuth2 Gmail<br/>
+                            • Funciona con cualquier cuenta Gmail<br/>
+                            • Máxima flexibilidad y seguridad
+                        </p>
+                        <p>
+                            <strong>OAuth2 desde Google Drive:</strong><br/>
+                            • Reutiliza credenciales de Google Drive<br/>
+                            • Solo funciona si es la misma cuenta<br/>
+                            • Fallback para compatibilidad
+                        </p>
+                    </div>
+                        </p>
+                    
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'login'), ('smtp_host', 'not ilike', 'gmail')]}">
+                        <h5>⚠️ Detectamos que usas Gmail</h5>
+                        <p>
+                            <strong>Recomendamos usar OAuth2 en lugar de contraseña:</strong><br/>
+                            • Cambia "Autenticación" a "OAuth2 Específico"<br/>
+                            • O configura OAuth2 específico en 📧 OAuth2 Gmail<br/>
+                            • O genera una contraseña de aplicación en Gmail<br/>
+                            • Consulta el archivo SOLUCION_GMAIL_SMTP.md para más detalles
+                        </p>
+                    </div>
+                </field>
+                
+                <!-- Ocultar campo de contraseña cuando se usa OAuth2 -->
+                <field name="smtp_pass" position="attributes">
+                    <attribute name="attrs">{'invisible': [('smtp_authentication', 'in', ['gmail_oauth2', 'gmail_oauth2_gdrive'])]}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <!-- Acción para configurar Gmail fácilmente -->
+        <record id="action_setup_gmail_oauth2" model="ir.actions.act_window">
+            <field name="name">Configurar Gmail con OAuth2</field>
+            <field name="res_model">ir.mail_server</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_name': 'Gmail OAuth2',
+                'default_smtp_host': 'smtp.gmail.com',
+                'default_smtp_port': 587,
+                'default_smtp_encryption': 'starttls',
+                'default_smtp_authentication': 'gmail_oauth2'
+            }</field>
+        </record>
+
+        <!-- Menú para acceso rápido -->
+        <menuitem id="menu_setup_gmail_oauth2"
+                  name="Configurar Gmail OAuth2"
+                  parent="base.menu_email"
+                  action="action_setup_gmail_oauth2"
+                  sequence="15"/>
+
+    </data>
+</odoo>

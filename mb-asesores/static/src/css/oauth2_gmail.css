@@ -1,0 +1,56 @@
+/* CSS específico para OAuth2 Gmail Configuration */
+
+/* Asegurar que el campo credentials_json tenga ancho completo */
+.o_form_view .o_field_text[name="credentials_json"] {
+    width: 100% !important;
+    min-width: 600px !important;
+    max-width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+/* Contenedor del campo JSON */
+.oauth2-json-container {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Asegurar que los grupos tengan ancho completo */
+.gmail-oauth2-form .o_group_col_12 {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Estilo específico para el textarea del JSON */
+textarea[name="credentials_json"] {
+    width: 100% !important;
+    min-width: 600px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    border: 2px dashed #dee2e6 !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    background-color: #f8f9fa !important;
+    resize: vertical !important;
+    box-sizing: border-box !important;
+}
+
+/* Override de cualquier ancho heredado */
+.o_form_view .gmail-oauth2-form textarea {
+    width: 100% !important;
+    min-width: 600px !important;
+}
+
+/* Asegurar que no haya conflictos con el sistema de columnas de Odoo */
+.gmail-oauth2-form .o_row {
+    width: 100% !important;
+}
+
+/* Para dispositivos móviles */
+@media (max-width: 768px) {
+    .o_field_text[name="credentials_json"] {
+        min-width: 100% !important;
+        width: 100% !important;
+    }
+}
