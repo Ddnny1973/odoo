@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mb-asesores.mbasesores_group" model="res.groups">
+        <field name="name">Mb Asesores</field>
+        <field name="comment">Mb Asesores Permission Group.</field>
+    </record>
+</odoo>

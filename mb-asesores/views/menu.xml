@@ -1,0 +1,81 @@
+<!-- views/menu.xml -->
+<odoo>
+    <!-- ========================================== -->
+    <!-- ACCIONES DEL SERVIDOR                     -->
+    <!-- ========================================== -->
+    
+    <record id="action_descargar" model="ir.actions.server">
+        <field name="name">Descargar Vencimientos</field>
+        <field name="model_id" ref="model_mb_asesores_vencimientos"/>
+        <field name="state">code</field>
+        <field name="code">model.descarga_vencimientos()</field>
+    </record>
+
+    <record id="action_descargar_batch" model="ir.actions.server">
+        <field name="name">Descargar Vencimientos (Batch)</field>
+        <field name="model_id" ref="model_mb_asesores_vencimientos"/>
+        <field name="state">code</field>
+        <field name="code">model.button_descarga_vencimientos()</field>
+    </record>
+
+    <record id="action_actualizar_sheet" model="ir.actions.server">
+        <field name="name">Actualizar Google Sheet</field>
+        <field name="model_id" ref="model_mb_asesores_vencimientos"/>
+        <field name="state">code</field>
+        <field name="code">model.actualizar_sheet_vencimientos()</field>
+    </record>
+
+    <record id="action_consola" model="ir.actions.server">
+        <field name="name">Ejecutar Consola</field>
+        <field name="model_id" ref="model_mb_asesores_vencimientos"/>
+        <field name="state">code</field>
+        <field name="code">model.consola()</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ACCIONES DE VENTANA                       -->
+    <!-- ========================================== -->
+    
+    <record id="action_vencimientos" model="ir.actions.act_window">
+        <field name="name">Vencimientos</field>
+        <field name="res_model">mb_asesores.vencimientos</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ESTRUCTURA DE MENÚS                       -->
+    <!-- ========================================== -->
+    
+    <!-- Menú Principal -->
+    <menuitem id="main_mb_asesores_menu" name="MB Asesores" sequence="10"/>
+    
+    <!-- Sección: Operaciones Principales -->
+    <menuitem id="menu_operaciones" name="📋 Operaciones" parent="main_mb_asesores_menu" sequence="10"/>
+        <menuitem id="menu_vencimientos_list" name="Ver Vencimientos" parent="menu_operaciones" action="action_vencimientos" sequence="10"/>
+        <menuitem id="menu_correos_enviados" name="Correos Enviados" parent="menu_operaciones" action="action_correo_enviado" sequence="20"/>
+    
+    <!-- Sección: Sincronización con Google -->
+    <menuitem id="menu_google_sync" name="🔄 Sincronización Google" parent="main_mb_asesores_menu" sequence="20"/>
+        <menuitem id="menu_descargar_drive" name="Descargar desde Drive" parent="menu_google_sync" action="action_descargar" sequence="10"/>
+        <menuitem id="menu_descargar_batch" name="Descargar (Modo Batch)" parent="menu_google_sync" action="action_descargar_batch" sequence="20"/>
+        <menuitem id="menu_actualizar_sheet" name="Actualizar Google Sheet" parent="menu_google_sync" action="action_actualizar_sheet" sequence="30"/>
+    
+    <!-- Sección: Herramientas -->
+    <menuitem id="menu_herramientas" name="🛠️ Herramientas" parent="main_mb_asesores_menu" sequence="30"/>
+        <menuitem id="menu_consola" name="Ejecutar Consola" parent="menu_herramientas" action="action_consola" sequence="10"/>
+
+    <!-- Acción: Enviar WhatsApp Pendientes -->
+    <record id="action_enviar_whatsapp_pendientes" model="ir.actions.server">
+        <field name="name">Enviar WhatsApp Pendientes</field>
+        <field name="model_id" ref="model_mb_asesores_vencimientos"/>
+        <field name="state">code</field>
+        <field name="code">model.enviar_whatsapp_pendientes()</field>
+    </record>
+
+    <menuitem id="menu_enviar_whatsapp_pendientes" name="Enviar WhatsApp Pendientes" parent="menu_google_sync" action="action_enviar_whatsapp_pendientes" sequence="40"/>
+    
+    <!-- Sección: Configuración -->
+    <menuitem id="menu_configuracion" name="⚙️ Configuración" parent="main_mb_asesores_menu" sequence="40"/>
+        <menuitem id="menu_google_drive_config" name="Google Drive Config" parent="menu_configuracion" action="action_google_drive_config" sequence="10"/>
+
+</odoo>

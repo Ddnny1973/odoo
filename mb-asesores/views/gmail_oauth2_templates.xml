@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="gmail_oauth2_success" name="OAuth2 Gmail Success">
+        <t t-call="web.layout">
+            <div class="container">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h2 class="text-success">
+                                    <i class="fa fa-check-circle fa-3x mb-3"></i><br/>
+                                    ¡Autenticación Exitosa!
+                                </h2>
+                                <p class="lead">
+                                    Gmail OAuth2 configurado correctamente para:
+                                </p>
+                                <p class="h4 text-primary">
+                                    <strong><t t-esc="email"/></strong>
+                                </p>
+                                <p class="text-muted">
+                                    Ya puedes cerrar esta ventana y regresar a Odoo.
+                                    Tu configuración OAuth2 está lista para enviar correos.
+                                </p>
+                                <button type="button" class="btn btn-primary" onclick="window.close()">
+                                    Cerrar Ventana
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="gmail_oauth2_error" name="OAuth2 Gmail Error">
+        <t t-call="web.layout">
+            <div class="container">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h2 class="text-danger">
+                                    <i class="fa fa-exclamation-triangle fa-3x mb-3"></i><br/>
+                                    Error en Autenticación
+                                </h2>
+                                <p class="lead">
+                                    Hubo un problema configurando OAuth2:
+                                </p>
+                                <div class="alert alert-danger">
+                                    <strong>Error:</strong> <t t-esc="error"/><br/>
+                                    <strong>Descripción:</strong> <t t-esc="error_description"/>
+                                </div>
+                                <p class="text-muted">
+                                    Por favor, intenta nuevamente desde Odoo o contacta al administrador.
+                                </p>
+                                <button type="button" class="btn btn-secondary" onclick="window.close()">
+                                    Cerrar Ventana
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

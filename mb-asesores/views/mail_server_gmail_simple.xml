@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vista básica mejorada para servidores de correo Gmail -->
+        <record id="view_mail_server_form_gmail_simple" model="ir.ui.view">
+            <field name="name">ir.mail_server.form.gmail.simple</field>
+            <field name="model">ir.mail_server</field>
+            <field name="arch" type="xml">
+                <form string="Servidor de Correo Gmail">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="test_smtp_connection" type="object" 
+                                    class="oe_stat_button" icon="fa-envelope"
+                                    string="Probar Conexión" />
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="name" placeholder="ej: Gmail OAuth2"/>
+                                <field name="smtp_host" placeholder="smtp.gmail.com"/>
+                                <field name="smtp_port"/>
+                                <field name="smtp_user" placeholder="tu-email@gmail.com"/>
+                            </group>
+                            <group>
+                                <field name="smtp_encryption"/>
+                                <field name="smtp_authentication"/>
+                                <field name="smtp_pass" password="True" 
+                                       attrs="{'invisible': [('smtp_authentication', 'in', ['gmail_oauth2', 'gmail_oauth2_gdrive'])]}"/>
+                            </group>
+                        </group>
+                        
+                        <div class="alert alert-info" role="alert">
+                            <h5>🔐 Configuración de Gmail</h5>
+                            <p><strong>OAuth2 Específico:</strong> Usa credenciales OAuth2 configuradas específicamente para Gmail</p>
+                            <p><strong>OAuth2 desde Google Drive:</strong> Reutiliza credenciales de Google Drive (solo si es la misma cuenta)</p>
+                            <p><strong>Login:</strong> Requiere contraseña de aplicación de Gmail</p>
+                            
+                            <div class="mt-2">
+                                <strong>💡 Recomendación:</strong> Usar <em>OAuth2 Específico</em> para máxima flexibilidad
+                            </div>
+                        </div>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción para Gmail -->
+        <record id="action_mail_server_gmail" model="ir.actions.act_window">
+            <field name="name">Configurar Gmail</field>
+            <field name="res_model">ir.mail_server</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mail_server_form_gmail_simple"/>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_name': 'Gmail OAuth2',
+                'default_smtp_host': 'smtp.gmail.com',
+                'default_smtp_port': 587,
+                'default_smtp_encryption': 'starttls',
+                'default_smtp_authentication': 'gmail_oauth2'
+            }</field>
+        </record>
+
+        <!-- Menú simplificado -->
+        <menuitem id="menu_mail_server_gmail"
+                  name="⚙️ Configuración Avanzada Gmail"
+                  parent="base.menu_email"
+                  action="action_mail_server_gmail"
+                  sequence="20"/>
+
+    </data>
+</odoo>

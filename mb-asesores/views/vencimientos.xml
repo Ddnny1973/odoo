@@ -1,0 +1,75 @@
+<!-- views/vencimientos_views.xml -->
+<odoo>
+    <!-- Vista de lista (tree) -->
+    <record id="view_vencimientos_tree" model="ir.ui.view">
+        <field name="name">vencimientos.tree</field>
+        <field name="model">mb_asesores.vencimientos</field>
+        <field name="arch" type="xml">
+            <tree string="Vencimientos">
+                <field name="ramo"/>
+                <field name="poliza"/>
+                <field name="id_poliza"/>
+                <field name="tomador"/>
+                <field name="nombrecorto"/>
+                <field name="iniciovigencia"/>
+                <field name="movil"/>
+                <field name="correo"/>
+                <field name="mensaje"/>
+                <field name="correo_enviado_id" optional="hide"/>
+                <field name="mail_message_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de formulario -->
+    <record id="view_vencimientos_form" model="ir.ui.view">
+        <field name="name">vencimientos.form</field>
+        <field name="model">mb_asesores.vencimientos</field>
+        <field name="arch" type="xml">
+            <form string="Vencimientos">
+                <sheet>
+                    <group>
+                        <group name="group_info_poliza" string="Información de Póliza">
+                            <field name="ramo"/>
+                            <field name="poliza"/>
+                            <field name="id_poliza"/>
+                            <field name="iniciovigencia"/>
+                        </group>
+                        <group name="group_info_cliente" string="Información del Cliente">
+                            <field name="tomador"/>
+                            <field name="nombrecorto"/>
+                            <field name="movil"/>
+                            <field name="correo"/>
+                        </group>
+                    </group>
+                    <group name="group_comunicacion" string="Comunicación">
+                        <field name="mensaje" widget="text"/>
+                        <field name="correo_enviado_id"/>
+                        <field name="mail_message_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda/filtros -->
+    <record id="view_vencimientos_search" model="ir.ui.view">
+        <field name="name">vencimientos.search</field>
+        <field name="model">mb_asesores.vencimientos</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Vencimientos">
+                <field name="id_poliza" string="Póliza" filter_domain="['|', ('id_poliza', 'ilike', self), ('poliza', 'ilike', self)]"/>
+                <field name="tomador" string="Tomador"/>
+                <field name="correo" string="Correo"/>
+                <separator/>
+                <filter name="filter_con_correo" string="Con Correo" domain="[('correo', '!=', False)]"/>
+                <filter name="filter_sin_correo" string="Sin Correo" domain="[('correo', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_by_ramo" string="Ramo" context="{'group_by': 'ramo'}"/>
+                    <filter name="group_by_tomador" string="Tomador" context="{'group_by': 'tomador'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

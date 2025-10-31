@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_correo_enviado_tree" model="ir.ui.view">
+            <field name="name">correo.enviado.tree</field>
+            <field name="model">mb_asesores.correo_enviado</field>
+            <field name="arch" type="xml">
+                <tree string="Correos Enviados">
+                    <field name="ramo"/>
+                    <field name="id_poliza"/>
+                    <field name="mail_id" widget="many2one_clickable"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                    <field name="tipo"/>
+                    <field name="mes"/>
+                    <field name="year"/>
+                    <field name="subject"/>
+                    <field name="email_to"/>
+                    <field name="mail_id_n8n"/>
+                    <field name="tipo_mensaje"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_correos_enviados_filter" model="ir.ui.view">
+            <field name="name">correosenviados.search</field>
+            <field name="model">mb_asesores.correo_enviado</field>
+            <field name="arch" type="xml">
+                <search string="Correos">
+                    <field name="id_poliza" string="Id Póliza" filter_domain="[('id_poliza', 'ilike', self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Definición de la acción -->
+        <record id="action_correo_enviado" model="ir.actions.act_window">
+            <field name="name">Correos Enviados</field>
+            <field name="res_model">mb_asesores.correo_enviado</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_correo_enviado_tree"/>
+        </record>
+    </data>
+</odoo>
