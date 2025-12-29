@@ -5,6 +5,11 @@
                 <h4>Mis servicios de WhatsApp</h4>
                 <t t-set="qr_records" t-value="request.env['whatsapp.qr'].sudo().search([('user_id', '=', request.env.user.id)])"/>
                 <t t-if="qr_records">
+                    <t t-if="request.session.get('portal_message')">
+                        <div class="alert alert-info" role="alert">
+                            <t t-esc="request.session.pop('portal_message')"/>
+                        </div>
+                    </t>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -20,6 +25,7 @@
                                     <td><t t-esc="qr.name"/></td>
                                     <td>
                                         <a t-att-href="'/my/whatsapp_qr/%d' % qr.id" class="btn btn-primary btn-sm">Ver Detalle</a>
+                                        <a t-att-href="'/my/whatsapp_qr/%d/ejecutar_consola' % qr.id" class="btn btn-success btn-sm ml-2">Ejecutar Consola</a>
                                     </td>
                                 </tr>
                             </t>

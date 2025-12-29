@@ -2,6 +2,11 @@
     <template id="portal_whatsapp_qr_list" name="Mis servicios WhatsApp QR">
         <t t-call="portal.portal_layout">
             <div class="o_portal_my_doc_table">
+                <t t-if="request.session.get('portal_message')">
+                    <div class="alert alert-info" role="alert">
+                        <t t-esc="request.session.pop('portal_message')"/>
+                    </div>
+                </t>
                 <h2>Mis servicios de WhatsApp</h2>
                 <table class="table table-bordered">
                     <thead>

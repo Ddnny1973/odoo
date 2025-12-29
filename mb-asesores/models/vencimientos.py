@@ -405,14 +405,14 @@ class Vencimientos(models.Model):
                                     else:
                                         estado_actualizar = estado
                                     _logger.info(f"PROVISION: Actualizando CONTROL a '{estado_actualizar}' para póliza {poliza} (tipo: {estado_poliza})")
-                                    self.update_sheet_cell_notebook(hoja, row_idx, column_control, estado_actualizar)
+                                    self.update_sheet_cell_notebook(hoja, row_idx, column_control, estado_actualizar, year)
                                     _logger.info(f"L392 - ✅ Google Sheets actualizado: fila {row_idx}, columna {column_control}, valor '{estado_actualizar}'")
                                 else:
                                     # Para otras hojas, mantener lógica original: solo marcar 'enviado'
-                                    self.update_sheet_cell_notebook(hoja, row_idx, column_control, estado)
+                                    self.update_sheet_cell_notebook(hoja, row_idx, column_control, estado, year)
                                     _logger.info(f"L396 - ✅ Google Sheets actualizado: fila {row_idx}, columna {column_control}, valor '{estado}'")
                                 # Actualizar ESTADO WHATSAPP para todas las hojas
-                                self.update_sheet_cell_notebook(hoja, row_idx, column_estado_whatsapp, estado)
+                                self.update_sheet_cell_notebook(hoja, row_idx, column_estado_whatsapp, estado, year)
                                 _logger.info(f"L399 - ✅ Google Sheets actualizado: fila {row_idx}, columna {column_estado_whatsapp}, valor '{estado}'")
                             except Exception as e:
                                 _logger.error(f"❌ Error actualizando Google Sheets: {e}")
@@ -921,35 +921,35 @@ class Vencimientos(models.Model):
 
         return status, month, year, hojas, mensajes_whatsapp, control_mails, id_mb, google_drive_config, creds, gc, servicio_drive, lista_archivos, pathgdrive, pathglocal, ejecucion, enviar
 
-    def get_archivo(self, google_drive_config, servicio_drive, gc, df_sheets, sheet, poliza, mes, lista_archivos):
-        # _logger.info(f"Dentro de get_archivo ************")
-        # aCTUALIZAR gOOGLE CON EL NOMBRE DEL ARCHIVO Y LA url
-        # Eliminar ceros a la izquierda de la poliza para la búsqueda
-        poliza_trm = str(poliza).lstrip('0')
-        resultados = lista_archivos[lista_archivos['nombrearchivo'].str.contains(poliza_trm, na=False)]
-        if len(resultados) > 0:
-            nombrearchivo = resultados['nombrearchivo'].values[0]
-            idarchivo = resultados['idarchivo'].values[0]
+    # def get_archivo(self, google_drive_config, servicio_drive, gc, df_sheets, sheet, poliza, mes, lista_archivos, year):
+    #     # _logger.info(f"Dentro de get_archivo ************")
+    #     # aCTUALIZAR gOOGLE CON EL NOMBRE DEL ARCHIVO Y LA url
+    #     # Eliminar ceros a la izquierda de la poliza para la búsqueda
+    #     poliza_trm = str(poliza).lstrip('0')
+    #     resultados = lista_archivos[lista_archivos['nombrearchivo'].str.contains(poliza_trm, na=False)]
+    #     if len(resultados) > 0:
+    #         nombrearchivo = resultados['nombrearchivo'].values[0]
+    #         idarchivo = resultados['idarchivo'].values[0]
             
-            url = google_drive_config.crear_url_de_acceso(servicio_drive, idarchivo)
+    #         url = google_drive_config.crear_url_de_acceso(servicio_drive, idarchivo)
 
-            column_url = google_drive_config.buscando_columna('URL', df_sheets)
-            column_nombrearchivo = google_drive_config.buscando_columna('NOMBREARCHIVO', df_sheets)
-            row = google_drive_config.buscar_fila(mes, poliza_trm, df_sheets)
-            _logger.info(f"get_archivo: poliza: {poliza_trm} - column_url: {column_url} - column_nombrearchivo {column_nombrearchivo} - row {row} ************")
+    #         column_url = google_drive_config.buscando_columna('URL', df_sheets)
+    #         column_nombrearchivo = google_drive_config.buscando_columna('NOMBREARCHIVO', df_sheets)
+    #         row = google_drive_config.buscar_fila(mes, poliza_trm, df_sheets)
+    #         _logger.info(f"get_archivo: poliza: {poliza_trm} - column_url: {column_url} - column_nombrearchivo {column_nombrearchivo} - row {row} ************")
 
-            # result = google_drive_config.update_sheet_cell(sheet, row, column_url, url)
-            # filename = 'VENCIMIENTOS 2024'
-            # sheet = gc.open(filename).worksheet('PRUEBA')
-            _logger.info(f"Antes de actualizr sheet {sheet} - servicio_drive {servicio_drive} - gc {gc} ************")
-            # result = sheet.update_cell(268, 29, url)
-            try:
-                result = sheet.update_cell(sheet, 267, 28, 'url')
-            except Exception as e:
-                print(f"Error al actualizar la celda: {e}")
-            _logger.info(f"get_archivo: result url: {result} ************")
+    #         # result = google_drive_config.update_sheet_cell(sheet, row, column_url, url)
+    #         # filename = 'VENCIMIENTOS 2024'
+    #         # sheet = gc.open(filename).worksheet('PRUEBA')
+    #         _logger.info(f"Antes de actualizr sheet {sheet} - servicio_drive {servicio_drive} - gc {gc} ************")
+    #         # result = sheet.update_cell(268, 29, url)
+    #         try:
+    #             result = sheet.update_cell(sheet, 267, 28, 'url', url, year)
+    #         except Exception as e:
+    #             print(f"Error al actualizar la celda: {e}")
+    #         _logger.info(f"get_archivo: result url: {result} ************")
 
-        return True
+    #     return True
     
     def validar_correos(self, correo):
         correos = correo.replace(' y ', ';').replace(' Y ', ';').replace(',', ';').split(';')
@@ -1600,7 +1600,7 @@ class Vencimientos(models.Model):
                                         estado_actualizar = status_mail
 
                                     _logger.info(f"L1597 - Actualizando Google Sheets: hoja {hoja}, fila {row_idx}, columna {column_mail_status}, valor '{estado_actualizar}'")
-                                    self.update_sheet_cell_notebook(hoja, row_idx, column_mail_status, estado_actualizar)
+                                    self.update_sheet_cell_notebook(hoja, row_idx, column_mail_status, estado_actualizar, year)
                                     _logger.info(f"✅ Google Sheets actualizado: fila {row_idx}, columna {column_mail_status}, valor '{estado_actualizar}'")
                                 except Exception as e:
                                     _logger.error(f"❌ Error actualizando Google Sheets: {e}")
@@ -1728,13 +1728,13 @@ class Vencimientos(models.Model):
 
     # Función para enviar correo electrónico
     # Función para actualizar la hoja de gdrive con el estado del correo
-    def update_cell(self, row, column, value):
+    def update_cell(self, row, column, value, year):
         # Autenticarse a Google Drive
         google_drive_config = self.env['google.drive.config']
         creds, gc, servicio_drive = google_drive_config.autenticar_google_drive()
         gc = gspread.authorize(creds)
         # Cargar hoja de Google Drive
-        sheet = gc.open("VENCIMIENTOS 2025").worksheet('040-AUTOMOVILES')
+        sheet = gc.open(f"VENCIMIENTOS {year}").worksheet('040-AUTOMOVILES')
         result = sheet.update_cell(row, column, value)
         return result
         
@@ -2029,7 +2029,7 @@ class Vencimientos(models.Model):
             _logger.error(f"L1269 - 💥 Error conectando con n8n: {e}")
             return False, "error_conexion_n8n", None
         
-    def update_sheet_cell_notebook(self, sheet_name, row, column, value):
+    def update_sheet_cell_notebook(self, sheet_name, row, column, value, year):
         """
         Actualiza una celda en Google Sheets usando el mecanismo del notebook.
         """
@@ -2059,8 +2059,8 @@ class Vencimientos(models.Model):
                 pickle.dump(creds, token)
 
         gc = gspread.authorize(creds)
-        sheet = gc.open("VENCIMIENTOS 2025").worksheet(sheet_name)
-        result = sheet.update_cell(row, column, value)
+        sheet = gc.open(f"VENCIMIENTOS {year}").worksheet(sheet_name)
+        result = sheet.update_cell(row, column, value, year)
         return result
 
 
