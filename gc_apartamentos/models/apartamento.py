@@ -32,15 +32,22 @@ class GcApartamento(models.Model):
     sotano_parqueadero = fields.Selection(
         string='Sótano Parqueadero',
         selection=[
-            ('1', 'Sótano 1'),
-            ('2', 'Sótano 2'),
-            ('3', 'Sótano 3'),
+            ('S1', 'Sótano 1'),
+            ('S2', 'Sótano 2'),
+            ('S3', 'Sótano 3'),
+            ('S4', 'Sótano 4'),
         ],
         help='Nivel de sótano para el parqueadero'
     )
     
-    sotano_cuarto_util = fields.Integer(
+    sotano_cuarto_util = fields.Selection(
         string='Sótano Cuarto Útil',
+        selection=[
+            ('S1', 'Sótano 1'),
+            ('S2', 'Sótano 2'),
+            ('S3', 'Sótano 3'),
+            ('S4', 'Sótano 4'),
+        ],
         help='Nivel de sótano para el cuarto útil'
     )
     
