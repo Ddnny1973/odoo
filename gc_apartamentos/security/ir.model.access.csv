@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-# Agrega reglas de acceso aquí para los modelos del módulo
+access_gc_apartamento_public,gc.apartamento.public,model_gc_apartamento,,1,0,0,0
+access_gc_apartamento_user,gc.apartamento.user,model_gc_apartamento,base.group_user,1,1,1,0
+access_gc_apartamento_admin,gc.apartamento.admin,model_gc_apartamento,base.group_system,1,1,1,1
