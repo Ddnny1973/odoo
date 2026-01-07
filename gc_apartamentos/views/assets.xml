@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- assets moved to manifest 'assets' to avoid load-order issues with web.assets_backend -->
+</odoo>

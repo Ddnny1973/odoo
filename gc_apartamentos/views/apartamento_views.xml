@@ -10,6 +10,10 @@
                 <field name="numero_apartamento"/>
                 <field name="torre"/>
                 <field name="area"/>
+                <field name="parqueadero"/>
+                <field name="sotano_parqueadero"/>
+                <field name="cuarto_util"/>
+                <field name="sotano_cuarto_util"/>
                 <field name="coeficiente"/>
                 <field name="habitado_por"/>
             </list>
@@ -23,54 +27,30 @@
         <field name="arch" type="xml">
             <form string="Apartamento">
                 <sheet>
-                    <h1>
-                        <field name="numero_apartamento" placeholder="Número"/>
-                        <span>- Torre</span>
-                        <field name="torre" placeholder="Torre" style="width: 100px"/>
-                    </h1>
-
-                    <group>
-                        <group string="Información General">
-                            <field name="numero_apartamento" readonly="1"/>
-                            <field name="torre" readonly="1"/>
-                            <field name="area"/>
-                            <field name="coeficiente"/>
-                        </group>
-
-                        <group string="Parqueadero">
-                            <field name="parqueadero"/>
-                            <field name="sotano_parqueadero"/>
-                        </group>
-
-                        <group string="Cuarto Útil">
-                            <field name="cuarto_util"/>
-                            <field name="sotano_cuarto_util"/>
-                        </group>
-
-                        <group string="Ocupación">
-                            <field name="habitado_por"/>
-                        </group>
+                    <!-- Grupo 1: Información General -->
+                    <group string="INFORMACIÓN GENERAL DEL INMUEBLE">
+                        <field name="numero_apartamento"/>
+                        <field name="torre"/>
+                        <field name="area"/>
+                        <field name="coeficiente"/>
                     </group>
 
-                    <group string="Propietarios">
-                        <field name="propietario_ids" widget="many2many_tags"
-                               placeholder="Selecciona propietarios..."/>
+                    <!-- Grupo 2: Información Complementaria -->
+                    <group string="INFORMACIÓN COMPLEMENTARIA DEL INMUEBLE">
+                        <field name="parqueadero"/>
+                        <field name="sotano_parqueadero"/>
+                        <field name="cuarto_util"/>
+                        <field name="sotano_cuarto_util"/>
                     </group>
 
-                    <group string="Arrendatarios"
-                           invisible="habitado_por != 'arrendatario'">
-                        <field name="arrendatario_ids" widget="many2many_tags"
-                               placeholder="Selecciona arrendatarios..."/>
-                    </group>
-
-                    <group string="Observaciones">
-                        <field name="observaciones" nolabel="1"/>
+                    <!-- Grupo 3: Ocupación / Propietarios / Arrendatarios -->
+                    <group string="OCUPACIÓN Y PROPIETARIOS">
+                        <field name="habitado_por"/>
+                        <field name="propietario_ids" widget="many2many_tags"/>
+                        <field name="arrendatario_ids" widget="many2many_tags"/>
+                        <field name="observaciones"/>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
             </form>
         </field>
     </record>
@@ -103,16 +83,11 @@
         </field>
     </record>
 
-    <!-- Acción para abrir el modelo gc.apartamento -->
+    <!-- Acción para abrir el modelo gc.apartamento (sin ayuda HTML para evitar paneles superpuestos) -->
     <record id="gc_apartamento_action" model="ir.actions.act_window">
         <field name="name">Apartamentos</field>
         <field name="res_model">gc.apartamento</field>
         <field name="view_mode">list,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No hay apartamentos registrados. ¡Crea uno ahora!
-            </p>
-        </field>
     </record>
 
     <!-- Menú raíz para GC Apartamentos -->

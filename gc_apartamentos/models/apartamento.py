@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class GcApartamento(models.Model):
@@ -29,25 +30,22 @@ class GcApartamento(models.Model):
         help='Número del cuarto útil asignado'
     )
     
+    SOTANO_OPTIONS = [
+        ('S1', 'Sótano 1'),
+        ('S2', 'Sótano 2'),
+        ('S3', 'Sótano 3'),
+        ('S4', 'Sótano 4'),
+    ]
+
     sotano_parqueadero = fields.Selection(
+        selection=SOTANO_OPTIONS,
         string='Sótano Parqueadero',
-        selection=[
-            ('S1', 'Sótano 1'),
-            ('S2', 'Sótano 2'),
-            ('S3', 'Sótano 3'),
-            ('S4', 'Sótano 4'),
-        ],
         help='Nivel de sótano para el parqueadero'
     )
     
     sotano_cuarto_util = fields.Selection(
+        selection=SOTANO_OPTIONS,
         string='Sótano Cuarto Útil',
-        selection=[
-            ('S1', 'Sótano 1'),
-            ('S2', 'Sótano 2'),
-            ('S3', 'Sótano 3'),
-            ('S4', 'Sótano 4'),
-        ],
         help='Nivel de sótano para el cuarto útil'
     )
     
@@ -105,7 +103,28 @@ class GcApartamento(models.Model):
         default=True,
         help='Marca si el apartamento está activo'
     )
-    
+
+    @api.onchange('habitado_por')
+    def _onchange_habitado_por(self):
+        """Si no es arrendatario, limpiar arrendatarios y advertir al usuario."""
+        for rec in self:
+            if rec.habitado_por != 'arrendatario' and rec.arrendatario_ids:
+                rec.arrendatario_ids = [(5, 0, 0)]
+                return {
+                    'warning': {
+                        'title': 'Atención',
+                        'message': 'El campo Arrendatarios sólo está disponible cuando "Habituado por" es "Arrendatario". Se ha limpiado el campo.'
+                    }
+                }
+
+    @api.constrains('habitado_por', 'arrendatario_ids')
+    def _check_arrendatarios_consistency(self):
+        for rec in self:
+            if rec.habitado_por != 'arrendatario' and rec.arrendatario_ids:
+                raise ValidationError(
+                    "No puede asignar arrendatarios si 'Habitado por' no es 'Arrendatario'."
+                )
+
     def _compute_display_name(self):
         """Mostrar el número de apartamento como nombre"""
         for record in self:
