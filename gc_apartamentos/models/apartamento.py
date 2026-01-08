@@ -161,11 +161,11 @@ class GcApartamento(models.Model):
         for rec in self:
             rec.area_total = (rec.area or 0.0) + (rec.area_parqueadero or 0.0) + (rec.area_util or 0.0)
     
-    #@api.depends('area', 'area_parqueadero', 'area_util')
+    @api.depends('area_total', 'area','area_parqueadero', 'area_util')
     def _compute_coeficiente(self):
-        suma_total = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
+        suma_total_area = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
         for rec in self:
-            rec.coeficiente = (rec.area_total or 0.0) / suma_total if suma_total else 0.0
+            rec.coeficiente = (rec.area_total or 0.0) / suma_total_area if suma_total_area else 0.0
 
     def _compute_display_name(self):
         """Mostrar el número de apartamento como nombre"""
