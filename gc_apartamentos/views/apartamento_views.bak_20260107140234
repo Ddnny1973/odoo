@@ -16,8 +16,6 @@
                 <field name="sotano_cuarto_util"/>
                 <field name="coeficiente"/>
                 <field name="habitado_por"/>
-                <field name="fecha_entrega"/>
-                <field name="saldo_admon" widget="monetary"/>
             </list>
         </field>
     </record>
@@ -29,38 +27,24 @@
         <field name="arch" type="xml">
             <form string="Apartamento">
                 <sheet>
-                    <!-- Grupo 1: Información General del Apto -->
-                    <group string="INFORMACIÓN GENERAL DEL APTO" col="2">
-                        <group>
-                            <field name="numero_apartamento"/>
-                            <field name="torre"/>
-                        </group>
-                        <group>
-                            <field name="fecha_entrega"/>
-                            <field name="saldo_admon" widget="monetary"/>
-                        </group>
+                    <!-- Grupo 1: Información General -->
+                    <group string="INFORMACIÓN GENERAL DEL INMUEBLE">
+                        <field name="numero_apartamento"/>
+                        <field name="torre"/>
+                        <field name="area"/>
+                        <field name="coeficiente"/>
+                        <field name="fecha_entrega"/>
                     </group>
 
-                    <!-- Grupo 2: Información Complementaria Apto -->
-                    <group string="INFORMACIÓN COMPLEMENTARIA APTO" col="3">
-                        <group>
-                            <field name="area"/>
-                            <field name="area_total"/>
-                            <field name="coeficiente"/>
-                        </group>
-                        <group>
-                            <field name="parqueadero"/>
-                            <field name="sotano_parqueadero"/>
-                            <field name="area_parqueadero"/>
-                        </group>
-                        <group>
-                            <field name="cuarto_util"/>
-                            <field name="sotano_cuarto_util"/>
-                            <field name="area_util"/>
-                        </group>
+                    <!-- Grupo 2: Información Complementaria -->
+                    <group string="INFORMACIÓN COMPLEMENTARIA DEL INMUEBLE">
+                        <field name="parqueadero"/>
+                        <field name="sotano_parqueadero"/>
+                        <field name="cuarto_util"/>
+                        <field name="sotano_cuarto_util"/>
                     </group>
 
-                    <!-- Grupo 3: Ocupación y Propietarios -->
+                    <!-- Grupo 3: Ocupación / Propietarios / Arrendatarios -->
                     <group string="OCUPACIÓN Y PROPIETARIOS">
                         <field name="habitado_por"/>
                         <field name="propietario_ids" widget="many2many_tags"/>

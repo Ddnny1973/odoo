@@ -1,0 +1,45 @@
+/* gc_apartamentos: Mejorar legibilidad de columnas cuando se agrupa en vistas tree/list */
+
+/* Forzamos table-layout auto para que las columnas se redimensionen según el contenido */
+.o_list_view table.o_list_table, .o_list_view table.o_list_view_table {
+    table-layout: auto !important;
+}
+
+/* Aumenta el ancho m�nimo de la columna de agrupaci�n y permite que el texto se rompa para ser legible. */
+.o_list_view .o_group_row .o_group_cell,
+.o_list_view .o_group_row > td:first-child,
+.o_list_view .o_group_row > th:first-child,
+.o_tree_view .o_group_row > td:first-child {
+    min-width: 180px !important;
+    width: auto !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    display: table-cell !important;
+    overflow: visible !important;
+    padding-right: 12px !important;
+}
+
+/* Aseguramos que el contenedor del encabezado de grupo no trunque texto */
+.o_group_header, .o_group_row td .o_group_header {
+    white-space: normal !important;
+    max-width: none !important;
+}
+
+/* Si el contenido va demasiado largo, permitir que la celda crezca pero manteniendo la visual */
+.o_list_view .o_group_row td .o_group_header {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+/* Mejora en pantallas pequeñas */
+@media (max-width: 768px) {
+    .o_list_view .o_group_row .o_group_cell,
+    .o_list_view .o_group_row > td:first-child {
+        min-width: 120px !important;
+    }
+}
+
+/* Si la agrupación se muestra como cabecera en el listado, aseguramos que el texto no sea truncado */
+.o_group_header .o_input, .o_group_header {
+    white-space: normal !important;
+}

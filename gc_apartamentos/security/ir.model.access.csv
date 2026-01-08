@@ -2,3 +2,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_gc_apartamento_public,gc.apartamento.public,model_gc_apartamento,,1,0,0,0
 access_gc_apartamento_user,gc.apartamento.user,model_gc_apartamento,base.group_user,1,1,1,0
 access_gc_apartamento_admin,gc.apartamento.admin,model_gc_apartamento,base.group_system,1,1,1,1
+access_gc_concepto,user_gc_concepto,model_gc_concepto,base.group_user,1,1,1,1
+access_gc_valores_conceptos,user_gc_valores_conceptos,model_gc_valores_conceptos,base.group_user,1,1,1,1
+access_gc_cobros_admon,user_gc_cobros_admon,model_gc_cobros_admon,base.group_user,1,1,1,1

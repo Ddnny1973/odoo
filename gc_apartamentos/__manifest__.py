@@ -1,6 +1,7 @@
 {
     'name': 'GC Apartamentos',
     'version': '1.0.0',
+    'license': 'LGPL-3',
     'author': 'Gestor Consultoría',
     'category': 'Real Estate',
     'summary': 'Gestión de apartamentos y unidades habitacionales',
@@ -9,15 +10,18 @@
     'data': [
         'security/ir.model.access.csv',
         'views/apartamento_views.xml',
+        'views/conceptos_views.xml',
     ],
+    'images': ['static/description/icon.png'],
     'assets': {
         'web.assets_backend': [
             'gc_apartamentos/static/src/js/arrendatarios_control.js',
+            'gc_apartamentos/static/src/css/grouping.css',
+            'gc_apartamentos/static/src/js/grouping_width.js',
         ],
     },
-    'demo': [
-        # Agrega aquí los archivos XML de datos demo si los hay
-    ],
+    'web_icon': '/gc_apartamentos/static/description/icon.png',
+    'demo': [],
     'installable': True,
     'application': True,
     'auto_install': False,
