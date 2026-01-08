@@ -78,16 +78,10 @@ class GcApartamento(models.Model):
         compute='_compute_coeficiente',
         help='Coeficiente de participación del apartamento'
     )
-    @api.depends('area_total')
     def _compute_coeficiente(self):
-        # Obtener la suma total de area_total de todos los apartamentos
-        total_area = self.env['gc.apartamento'].search([]).mapped('area_total')
-        suma_total = sum(total_area)
+        suma_total = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
         for rec in self:
-            if suma_total > 0:
-                rec.coeficiente = (rec.area_total or 0.0) / suma_total
-            else:
-                rec.coeficiente = 0.0
+            rec.coeficiente = (rec.area_total or 0.0) / suma_total if suma_total else 0.0
 
     fecha_entrega = fields.Date(
         string='Fecha de Entrega',
