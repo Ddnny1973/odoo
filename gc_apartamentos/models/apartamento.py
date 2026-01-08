@@ -79,11 +79,11 @@ class GcApartamento(models.Model):
         help='Coeficiente de participación del apartamento'
     )
     
-    @api.depends('area', 'area_parqueadero', 'area_util')
-    def _compute_coeficiente(self):
-        suma_total = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
-        for rec in self:
-            rec.coeficiente = (rec.area_total or 0.0) / suma_total if suma_total else 0.0
+#    @api.depends('area', 'area_parqueadero', 'area_util')
+#    def _compute_coeficiente(self):
+#        suma_total = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
+#        for rec in self:
+#            rec.coeficiente = (rec.area_total or 0.0) / suma_total if suma_total else 0.0
 
     fecha_entrega = fields.Date(
         string='Fecha de Entrega',
@@ -160,6 +160,12 @@ class GcApartamento(models.Model):
     def _compute_area_total(self):
         for rec in self:
             rec.area_total = (rec.area or 0.0) + (rec.area_parqueadero or 0.0) + (rec.area_util or 0.0)
+    
+    #@api.depends('area', 'area_parqueadero', 'area_util')
+    def _compute_coeficiente(self):
+        suma_total = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
+        for rec in self:
+            rec.coeficiente = (rec.area_total or 0.0) / suma_total if suma_total else 0.0
 
     def _compute_display_name(self):
         """Mostrar el número de apartamento como nombre"""
