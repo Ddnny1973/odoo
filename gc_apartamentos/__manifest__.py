@@ -6,11 +6,12 @@
     'category': 'Real Estate',
     'summary': 'Gestión de apartamentos y unidades habitacionales',
     'description': 'Módulo para la gestión de apartamentos, edificios y unidades en Odoo Community 18.',
-    'depends': ['base', 'mail', 'web'],
+    'depends': ['base', 'mail', 'web', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'views/apartamento_views.xml',
         'views/conceptos_views.xml',
+        'views/account_move_views.xml',
     ],
     'images': ['static/description/icon.png'],
     'assets': {
