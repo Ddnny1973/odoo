@@ -9,12 +9,12 @@
             <list string="Apartamentos">
                 <field name="numero_apartamento"/>
                 <field name="torre"/>
-                <field name="area" digits="(16,5)"/>
+                <field name="area"/>
                 <field name="parqueadero"/>
                 <field name="sotano_parqueadero"/>
                 <field name="cuarto_util"/>
                 <field name="sotano_cuarto_util"/>
-                <field name="coeficiente" digits="(16,5)"/>
+                <field name="coeficiente"/>
                 <field name="habitado_por"/>
                 <field name="fecha_entrega"/>
                 <field name="saldo_admon" widget="monetary"/>
@@ -44,19 +44,19 @@
                     <!-- Grupo 2: Información Complementaria Apto -->
                     <group string="INFORMACIÓN COMPLEMENTARIA APTO" col="3">
                         <group>
-                            <field name="area" digits="(16,5)"/>
-                            <field name="area_total" digits="(16,5)"/>
-                            <field name="coeficiente" digits="(16,5)"/>
+                            <field name="area"/>
+                            <field name="area_total"/>
+                            <field name="coeficiente"/>
                         </group>
                         <group>
                             <field name="parqueadero"/>
                             <field name="sotano_parqueadero"/>
-                            <field name="area_parqueadero" digits="(16,5)"/>
+                            <field name="area_parqueadero"/>
                         </group>
                         <group>
                             <field name="cuarto_util"/>
                             <field name="sotano_cuarto_util"/>
-                            <field name="area_util" digits="(16,5)"/>
+                            <field name="area_util"/>
                         </group>
                     </group>
 

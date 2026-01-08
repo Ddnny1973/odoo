@@ -53,29 +53,34 @@ class GcApartamento(models.Model):
     area = fields.Float(
         string='Área (m²)',
         required=True,
+        digits=(16, 5),
         help='Área total del apartamento en metros cuadrados'
     )
     
     area_parqueadero = fields.Float(
-    string='Área Parqueadero',
-    help='Área del parqueadero en m2'
+        string='Área Parqueadero',
+        digits=(16, 5),
+        help='Área del parqueadero en m2'
     )
 
     area_util = fields.Float(
-    string='Área Util',
-    help='Área del cuarto útil en m2'
+        string='Área Util',
+        digits=(16, 5),
+        help='Área del cuarto útil en m2'
     )
 
     area_total = fields.Float(
-    string='Área Total',
-    compute='_compute_area_total',
-    store=True,
-    help='Suma de área apartamento, parqueadero y útil'
+        string='Área Total',
+        compute='_compute_area_total',
+        store=True,
+        digits=(16, 5),
+        help='Suma de área apartamento, parqueadero y útil'
     )
 
     coeficiente = fields.Float(
         string='Coeficiente',
         compute='_compute_coeficiente',
+        digits=(16, 5),
         help='Coeficiente de participación del apartamento'
     )
     
