@@ -2060,7 +2060,7 @@ class Vencimientos(models.Model):
 
         gc = gspread.authorize(creds)
         sheet = gc.open(f"VENCIMIENTOS {year}").worksheet(sheet_name)
-        result = sheet.update_cell(row, column, value, year)
+        result = sheet.update_cell(row, column, value)
         return result
 
 
