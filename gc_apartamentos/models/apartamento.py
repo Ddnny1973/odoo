@@ -79,7 +79,7 @@ class GcApartamento(models.Model):
         help='Coeficiente de participación del apartamento'
     )
     
-    @api.depends('area_total','area' 'area_parqueadero', 'area_util')
+    @api.depends('area_total','area','area_parqueadero', 'area_util')
     def _compute_coeficiente(self):
         suma_total = sum(self.env['gc.apartamento'].search([]).mapped('area_total'))
         for rec in self:
