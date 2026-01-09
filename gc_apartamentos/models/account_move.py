@@ -1,5 +1,60 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, Command
 from odoo.exceptions import UserError
+from datetime import date
+
+
+class AccountMoveLine(models.Model):
+    """Extensión de líneas de factura para incluir coeficiente de apartamento"""
+    _inherit = 'account.move.line'
+
+    coeficiente = fields.Float(
+        string='Coeficiente',
+        help='Coeficiente de participación del apartamento',
+        default=0.0,
+        digits=(16, 5),
+    )
+
+    @api.onchange('product_id')
+    def _onchange_product_id_gc(self):
+        """
+        Al seleccionar un producto manualmente en la línea de la factura:
+        Busca si el producto tiene una configuración en gc.valores_conceptos
+        para aplicar el coeficiente y el monto automáticamente.
+        """
+        # Solo actuar en facturas de cliente y si hay producto/apartamento
+        if not self.product_id or not self.move_id.apartamento_id or self.move_id.move_type not in ('out_invoice', 'out_refund'):
+            # Si no hay apartamento, asegurar que el coeficiente sea 0
+            if not self.move_id.apartamento_id:
+                self.coeficiente = 0.0
+            return
+
+        # Buscar la configuración vigente para este producto
+        # Priorizamos el registro más reciente que esté activo
+        fecha_ref = self.move_id.invoice_date or date.today()
+        valor_concepto = self.env['gc.valores_conceptos'].search([
+            ('producto_id', '=', self.product_id.id),
+            ('activo', '=', True),
+            ('fecha_inicial', '<=', fecha_ref),
+            '|',
+            ('fecha_final', '=', False),
+            ('fecha_final', '>=', fecha_ref),
+        ], limit=1, order='fecha_inicial desc')
+
+        if valor_concepto:
+            coef = self.move_id.apartamento_id.coeficiente
+            
+            # Aplicar configuración de coeficiente
+            if valor_concepto.usar_coeficiente:
+                self.coeficiente = coef
+                self.price_unit = valor_concepto.monto * coef
+            else:
+                self.coeficiente = 0.0
+                self.price_unit = valor_concepto.monto
+        else:
+            # Si el producto no está en la tabla de conceptos, 
+            # podemos optar por poner coeficiente 0 o el del apartamento
+            # Por seguridad, lo dejamos en 0 si no es un concepto predefinido
+            self.coeficiente = 0.0
 
 
 class AccountMove(models.Model):
@@ -25,42 +80,101 @@ class AccountMove(models.Model):
         readonly=True,
     )
 
-    @api.onchange('apartamento_id')
-    def _onchange_apartamento_id(self):
+    @api.onchange('apartamento_id', 'invoice_date')
+    def _onchange_apartamento_o_fecha(self):
         """
-        Al seleccionar un apartamento:
-        1. Establece el cliente principal (primer propietario)
-        2. Llena propietarios adicionales con los demás propietarios
+        Evento unificado para manejar cambios en apartamento o fecha.
+        Sincroniza propietarios y genera líneas de cobro recurrentes.
         """
+        if self.move_type not in ('out_invoice', 'out_refund'):
+            return
+
+        # 1. Sincronizar propietarios si hay apartamento
         if self.apartamento_id:
             propietarios = self.apartamento_id.propietario_ids
             
             if not propietarios:
                 # Si el apartamento no tiene propietarios, limpiar campos y advertir
-                self.partner_id = False
-                self.propietarios_adicionales_ids = [(5, 0, 0)]
+                self.propietarios_adicionales_ids = [Command.clear()]
                 return {
                     'warning': {
                         'title': 'Apartamento sin Propietarios',
-                        'message': f'El apartamento {self.apartamento_id.display_name} no tiene propietarios asignados. Por favor, asigne al menos un propietario antes de facturar.',
+                        'message': f'El apartamento {self.apartamento_id.display_name} no tiene propietarios asignados. Por favor, asigne al menos un propietario.',
                     }
                 }
             
             # Establecer el primer propietario como cliente principal
-            propietario_principal = propietarios[0]
-            self.partner_id = propietario_principal
+            if self.partner_id != propietarios[0]:
+                self.partner_id = propietarios[0]
             
-            # Si hay más propietarios, agregarlos a propietarios adicionales
-            if len(propietarios) > 1:
-                propietarios_adicionales = propietarios[1:]
-                self.propietarios_adicionales_ids = [(6, 0, propietarios_adicionales.ids)]
-            else:
-                # Si solo hay un propietario, limpiar propietarios adicionales
-                self.propietarios_adicionales_ids = [(5, 0, 0)]
+            # Sincronizar propietarios adicionales
+            propietarios_adicionales = propietarios[1:]
+            if set(self.propietarios_adicionales_ids.ids) != set(propietarios_adicionales.ids):
+                self.propietarios_adicionales_ids = [Command.set(propietarios_adicionales.ids)]
+            
+            # 2. Generar líneas solo si tenemos fecha y NO hay líneas con valor
+            if self.invoice_date:
+                # Si ya hay líneas con precio > 0, NO regeneramos (protección contra duplicados y cambios manuales)
+                if any(line.price_unit > 0 for line in self.invoice_line_ids):
+                    return
+                
+                self._crear_lineas_conceptos()
         else:
             # Si se limpia el apartamento, limpiar también propietarios adicionales
-            # pero mantener el partner_id por si se eligió manualmente
-            self.propietarios_adicionales_ids = [(5, 0, 0)]
+            self.propietarios_adicionales_ids = [Command.clear()]
+
+    def _crear_lineas_conceptos(self):
+        """
+        Genera las líneas de factura basadas en conceptos recurrentes vigentes.
+        """
+        if not self.apartamento_id or not self.invoice_date:
+            return
+        
+        # Buscar valores recurrentes y activos que sean vigentes en la fecha
+        valores_conceptos = self.env['gc.valores_conceptos'].search([
+            ('recurrente', '=', True),
+            ('activo', '=', True),
+            ('fecha_inicial', '<=', self.invoice_date),
+            '|',
+            ('fecha_final', '=', False),
+            ('fecha_final', '>=', self.invoice_date),
+        ], order='fecha_inicial desc')
+        
+        if not valores_conceptos:
+            return
+        
+        # Agrupar por producto y seleccionar el más reciente
+        productos_vigentes = {}
+        for valor in valores_conceptos:
+            producto_id = valor.producto_id.id
+            if producto_id not in productos_vigentes:
+                productos_vigentes[producto_id] = valor
+        
+        # Preparar lista de comandos: primero limpiar TODO, luego añadir
+        # Usamos Command.clear() y Command.create() para mayor estabilidad en Odoo 18
+        comandos_lineas = [Command.clear()]
+        coef = self.apartamento_id.coeficiente
+        
+        for valor in productos_vigentes.values():
+            # Calcular precio: monto * coeficiente o monto fijo según configuración
+            if valor.usar_coeficiente:
+                precio_unit = valor.monto * coef
+            else:
+                precio_unit = valor.monto
+            
+            # Solo añadir si el precio es mayor a 0 (evita líneas basura en la UI)
+            if precio_unit > 0:
+                comandos_lineas.append(Command.create({
+                    'product_id': valor.producto_id.id,
+                    'quantity': 1.0,
+                    'price_unit': precio_unit,
+                    'coeficiente': coef if valor.usar_coeficiente else 0.0,
+                    'name': valor.producto_id.name,
+                }))
+        
+        # Solo aplicar si realmente generamos algo para evitar limpiar líneas manuales si no hay conceptos
+        if len(comandos_lineas) > 1:
+            self.invoice_line_ids = comandos_lineas
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
