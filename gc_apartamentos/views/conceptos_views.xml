@@ -16,6 +16,7 @@
                 <list string="Conceptos">
                     <field name="name"/>
                     <field name="tipo_concepto"/>
+                    <field name="usar_coeficiente"/>
                 </list>
             </field>
         </record>
@@ -29,6 +30,7 @@
                         <group>
                             <field name="name"/>
                             <field name="tipo_concepto"/>
+                            <field name="usar_coeficiente"/>
                         </group>
                         <!-- Valores page temporarily removed to avoid ParseError during upgrade.
                         <notebook>
@@ -64,10 +66,13 @@
             <field name="model">gc.valores_conceptos</field>
             <field name="arch" type="xml">
                 <list string="Valores de Conceptos">
-                    <field name="concepto_id"/>
+                    <field name="producto_id"/>
                     <field name="fecha_inicial"/>
                     <field name="fecha_final"/>
                     <field name="monto" widget="monetary"/>
+                    <field name="usar_coeficiente" widget="boolean_toggle"/>
+                    <field name="recurrente" widget="boolean" readonly="1"/>
+                    <field name="activo" widget="boolean" readonly="1"/>
                 </list>
             </field>
         </record>
@@ -79,10 +84,17 @@
                 <form string="Valor Concepto">
                     <sheet>
                         <group>
-                            <field name="concepto_id"/>
-                            <field name="fecha_inicial"/>
-                            <field name="fecha_final"/>
-                            <field name="monto" widget="monetary"/>
+                            <group>
+                                <field name="producto_id"/>
+                                <field name="activo"/>
+                                <field name="recurrente"/>
+                                <field name="usar_coeficiente"/>
+                            </group>
+                            <group>
+                                <field name="fecha_inicial"/>
+                                <field name="fecha_final"/>
+                                <field name="monto" widget="monetary"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>

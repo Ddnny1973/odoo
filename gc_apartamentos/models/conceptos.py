@@ -10,4 +10,8 @@ class GcConcepto(models.Model):
         [('admon', 'Cuota Admon'), ('extra', 'Cuota Extra'), ('multa', 'Multa')],
         string='Tipo de Concepto', required=True, default='admon'
     )
-    valor_ids = fields.One2many('gc.valores_conceptos', 'concepto_id', string='Valores')
+    usar_coeficiente = fields.Boolean(
+        string='Usar Coeficiente por Defecto',
+        default=True,
+        help='Configuración por defecto para los nuevos valores de este concepto.'
+    )
