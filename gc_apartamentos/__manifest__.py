@@ -12,6 +12,8 @@
         'views/apartamento_views.xml',
         'views/conceptos_views.xml',
         'views/account_move_views.xml',
+        'views/multas_views.xml',
+        'views/multas_menu.xml',
     ],
     'images': ['static/description/icon.png'],
     'assets': {
