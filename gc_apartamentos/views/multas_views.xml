@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gc_multas_tree" model="ir.ui.view">
+        <field name="name">gc.multas.tree</field>
+        <field name="model">gc.multas</field>
+        <field name="arch" type="xml">
+            <tree string="Multas">
+                <field name="multa_id"/>
+                <field name="num_apartamento_id"/>
+                <field name="fecha_multa"/>
+                <field name="concepto_multa"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_gc_multas_form" model="ir.ui.view">
+        <field name="name">gc.multas.form</field>
+        <field name="model">gc.multas</field>
+        <field name="arch" type="xml">
+            <form string="Multa">
+                <sheet>
+                    <group>
+                        <field name="num_apartamento_id"/>
+                        <field name="fecha_multa"/>
+                        <field name="concepto_multa"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gc_multas" model="ir.actions.act_window">
+        <field name="name">Multas</field>
+        <field name="res_model">gc.multas</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>Gestione las multas y sanciones asociadas a los apartamentos.</p>
+        </field>
+    </record>
+</odoo>
