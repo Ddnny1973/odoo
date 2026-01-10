@@ -6,4 +6,3 @@ access_gc_concepto,user_gc_concepto,model_gc_concepto,base.group_user,1,1,1,1
 access_gc_valores_conceptos,user_gc_valores_conceptos,model_gc_valores_conceptos,base.group_user,1,1,1,1
 access_gc_cobros_admon,user_gc_cobros_admon,model_gc_cobros_admon,base.group_user,1,1,1,1
 access_gc_multas,user_gc_multas,model_gc_multas,base.group_user,1,1,1,1
-model_gc_multas,gc.multas,model_gc_multas,,1,1,1,1
