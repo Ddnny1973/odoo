@@ -4,12 +4,11 @@
         <field name="name">gc.multas.tree</field>
         <field name="model">gc.multas</field>
         <field name="arch" type="xml">
-            <tree string="Multas">
-                <field name="multa_id"/>
+            <list string="Multas">
                 <field name="num_apartamento_id"/>
                 <field name="fecha_multa"/>
                 <field name="concepto_multa"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -32,7 +31,7 @@
     <record id="action_gc_multas" model="ir.actions.act_window">
         <field name="name">Multas</field>
         <field name="res_model">gc.multas</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p>Gestione las multas y sanciones asociadas a los apartamentos.</p>
         </field>
