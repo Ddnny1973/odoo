@@ -121,7 +121,7 @@ class AccountMove(models.Model):
 
     def _crear_lineas_conceptos(self):
         """
-        Genera las líneas de factura basadas en conceptos recurrentes vigentes.
+        Genera las líneas de factura basadas en conceptos recurrentes y cobros registrados.
         """
         if not self.apartamento_id or not self.invoice_date:
             return
@@ -136,20 +136,16 @@ class AccountMove(models.Model):
             ('fecha_final', '>=', self.invoice_date),
         ], order='fecha_inicial desc')
         
-        if not valores_conceptos:
-            return
+        # Preparar lista de comandos
+        comandos_lineas = [Command.clear()]
+        coef = self.apartamento_id.coeficiente
         
-        # Agrupar por producto y seleccionar el más reciente
+        # 1. PROCESAR CONCEPTOS RECURRENTES
         productos_vigentes = {}
         for valor in valores_conceptos:
             producto_id = valor.producto_id.id
             if producto_id not in productos_vigentes:
                 productos_vigentes[producto_id] = valor
-        
-        # Preparar lista de comandos: primero limpiar TODO, luego añadir
-        # Usamos Command.clear() y Command.create() para mayor estabilidad en Odoo 18
-        comandos_lineas = [Command.clear()]
-        coef = self.apartamento_id.coeficiente
         
         for valor in productos_vigentes.values():
             # Calcular precio: monto * coeficiente o monto fijo según configuración
@@ -158,7 +154,7 @@ class AccountMove(models.Model):
             else:
                 precio_unit = valor.monto
             
-            # Solo añadir si el precio es mayor a 0 (evita líneas basura en la UI)
+            # Solo añadir si el precio es mayor a 0
             if precio_unit > 0:
                 comandos_lineas.append(Command.create({
                     'product_id': valor.producto_id.id,
@@ -166,6 +162,22 @@ class AccountMove(models.Model):
                     'price_unit': precio_unit,
                     'coeficiente': coef if valor.usar_coeficiente else 0.0,
                     'name': valor.producto_id.name,
+                }))
+        
+        # 2. PROCESAR COBROS REGISTRADOS (gc.cobros_admon)
+        cobros = self.env['gc.cobros_admon'].search([
+            ('numero_apartamento_id', '=', self.apartamento_id.id),
+            ('fecha_cobro', '<=', self.invoice_date),
+        ])
+        
+        for cobro in cobros:
+            if cobro.monto_pago > 0:
+                comandos_lineas.append(Command.create({
+                    'product_id': cobro.producto_id.id,
+                    'quantity': 1.0,
+                    'price_unit': cobro.monto_pago,
+                    'coeficiente': 0.0,  # Los cobros no usan coeficiente
+                    'name': f'{cobro.producto_id.name} ({cobro.fecha_cobro})',
                 }))
         
         # Solo aplicar si realmente generamos algo para evitar limpiar líneas manuales si no hay conceptos
