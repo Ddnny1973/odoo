@@ -112,12 +112,8 @@ class AccountMove(models.Model):
             if set(self.propietarios_adicionales_ids.ids) != set(propietarios_adicionales.ids):
                 self.propietarios_adicionales_ids = [Command.set(propietarios_adicionales.ids)]
             
-            # 2. Generar líneas solo si tenemos fecha y NO hay líneas con valor
-            if self.invoice_date:
-                # Si ya hay líneas con precio > 0, NO regeneramos (protección contra duplicados y cambios manuales)
-                if any(line.price_unit > 0 for line in self.invoice_line_ids):
-                    return
-                
+            # 2. Generar líneas SOLO si es la primera vez (no hay líneas)
+            if self.invoice_date and not self.invoice_line_ids:
                 self._crear_lineas_conceptos()
         else:
             # Si se limpia el apartamento, limpiar también propietarios adicionales
