@@ -10,9 +10,35 @@ class AccountMoveLine(models.Model):
     coeficiente = fields.Float(
         string='Coeficiente',
         help='Coeficiente de participación del apartamento',
-        default=0.0,
         digits=(16, 5),
+        compute='_compute_gc_coeficiente',
+        store=True,
+        readonly=True,
     )
+
+    @api.depends('move_id.apartamento_id', 'move_id.apartamento_id.coeficiente', 'move_id.invoice_date', 'product_id')
+    def _compute_gc_coeficiente(self):
+        ValoresConceptos = self.env['gc.valores_conceptos']
+        hoy = date.today()
+        for line in self:
+            coef = 0.0
+            if not line.move_id or not line.move_id.apartamento_id or not line.product_id:
+                line.coeficiente = 0.0
+                continue
+
+            fecha_ref = line.move_id.invoice_date or hoy
+            valor_concepto = ValoresConceptos.search([
+                ('producto_id', '=', line.product_id.id),
+                ('activo', '=', True),
+                ('fecha_inicial', '<=', fecha_ref),
+                '|',
+                ('fecha_final', '=', False),
+                ('fecha_final', '>=', fecha_ref),
+            ], limit=1, order='fecha_inicial desc')
+
+            if valor_concepto and valor_concepto.usar_coeficiente:
+                coef = line.move_id.apartamento_id.coeficiente or 0.0
+            line.coeficiente = coef
 
     @api.onchange('product_id')
     def _onchange_product_id_gc(self):
@@ -21,11 +47,13 @@ class AccountMoveLine(models.Model):
         Busca si el producto tiene una configuración en gc.valores_conceptos
         para aplicar el coeficiente y el monto automáticamente.
         """
-        # Solo actuar en facturas de cliente y si hay producto/apartamento
-        if not self.product_id or not self.move_id.apartamento_id or self.move_id.move_type not in ('out_invoice', 'out_refund'):
-            # Si no hay apartamento, asegurar que el coeficiente sea 0
-            if not self.move_id.apartamento_id:
-                self.coeficiente = 0.0
+        # Solo actuar en facturas de cliente
+        if not self.product_id or self.move_id.move_type not in ('out_invoice', 'out_refund'):
+            return
+
+        # En autosave/cambios de pestaña Odoo puede evaluar onchanges con el move aún incompleto.
+        # No borrar coeficientes existentes por falta temporal de apartamento en cache.
+        if not self.move_id.apartamento_id:
             return
 
         # Buscar la configuración vigente para este producto
@@ -42,19 +70,17 @@ class AccountMoveLine(models.Model):
 
         if valor_concepto:
             coef = self.move_id.apartamento_id.coeficiente
-            
+
             # Aplicar configuración de coeficiente
             if valor_concepto.usar_coeficiente:
-                self.coeficiente = coef
                 self.price_unit = valor_concepto.monto * coef
             else:
-                self.coeficiente = 0.0
                 self.price_unit = valor_concepto.monto
         else:
             # Si el producto no está en la tabla de conceptos, 
             # podemos optar por poner coeficiente 0 o el del apartamento
             # Por seguridad, lo dejamos en 0 si no es un concepto predefinido
-            self.coeficiente = 0.0
+            return
 
 
 class AccountMove(models.Model):
@@ -112,8 +138,8 @@ class AccountMove(models.Model):
             if set(self.propietarios_adicionales_ids.ids) != set(propietarios_adicionales.ids):
                 self.propietarios_adicionales_ids = [Command.set(propietarios_adicionales.ids)]
             
-            # 2. Generar líneas SOLO si es la primera vez (no hay líneas)
-            if self.invoice_date and not self.invoice_line_ids:
+            # 2. Generar/ajustar líneas en borrador (idempotente, no duplica)
+            if self.invoice_date and self.state == 'draft':
                 self._crear_lineas_conceptos()
         else:
             # Si se limpia el apartamento, limpiar también propietarios adicionales
@@ -121,9 +147,13 @@ class AccountMove(models.Model):
 
     def _crear_lineas_conceptos(self):
         """
-        Genera las líneas de factura basadas en conceptos recurrentes y cobros registrados.
+        Genera/actualiza las líneas de factura basadas en conceptos recurrentes y cobros registrados.
+        Importante: debe ser idempotente para que autosave/cambio de pestaña no duplique líneas.
         """
         if not self.apartamento_id or not self.invoice_date:
+            return
+
+        if self.state != 'draft':
             return
         
         # Buscar valores recurrentes y activos que sean vigentes en la fecha
@@ -136,8 +166,9 @@ class AccountMove(models.Model):
             ('fecha_final', '>=', self.invoice_date),
         ], order='fecha_inicial desc')
         
-        # Preparar lista de comandos
-        comandos_lineas = [Command.clear()]
+        # Preparar datos deseados
+        datos_lineas_recurrentes_por_producto = {}
+        datos_lineas_cobros = []
         coef = self.apartamento_id.coeficiente
         
         # 1. PROCESAR CONCEPTOS RECURRENTES
@@ -156,13 +187,12 @@ class AccountMove(models.Model):
             
             # Solo añadir si el precio es mayor a 0
             if precio_unit > 0:
-                comandos_lineas.append(Command.create({
+                datos_lineas_recurrentes_por_producto[valor.producto_id.id] = {
                     'product_id': valor.producto_id.id,
                     'quantity': 1.0,
                     'price_unit': precio_unit,
-                    'coeficiente': coef if valor.usar_coeficiente else 0.0,
                     'name': valor.producto_id.name,
-                }))
+                }
         
         # 2. PROCESAR COBROS REGISTRADOS (gc.cobros_admon)
         cobros = self.env['gc.cobros_admon'].search([
@@ -172,17 +202,45 @@ class AccountMove(models.Model):
         
         for cobro in cobros:
             if cobro.monto_pago > 0:
-                comandos_lineas.append(Command.create({
+                datos_lineas_cobros.append({
                     'product_id': cobro.producto_id.id,
                     'quantity': 1.0,
                     'price_unit': cobro.monto_pago,
-                    'coeficiente': 0.0,  # Los cobros no usan coeficiente
                     'name': f'{cobro.producto_id.name} ({cobro.fecha_cobro})',
-                }))
-        
-        # Solo aplicar si realmente generamos algo para evitar limpiar líneas manuales si no hay conceptos
-        if len(comandos_lineas) > 1:
-            self.invoice_line_ids = comandos_lineas
+                })
+
+        # --- Aplicar de forma idempotente ---
+        line_model = self.env['account.move.line']
+
+        # 1) Recurrentes: actualizar si ya existe línea del producto, crear si no.
+        for product_id, datos in datos_lineas_recurrentes_por_producto.items():
+            # Preferimos actualizar líneas "simples" del producto (name exacto) si existen.
+            existente = self.invoice_line_ids.filtered(
+                lambda l: l.product_id.id == product_id and (l.name or '') == datos['name']
+            )[:1]
+            if existente:
+                # Si existe duplicado en cero para el mismo producto, lo removemos.
+                ceros = self.invoice_line_ids.filtered(
+                    lambda l: l.product_id.id == product_id and l.id != existente.id and (l.price_unit == 0 or l.price_unit is False)
+                )
+                if ceros:
+                    self.invoice_line_ids -= ceros
+
+                existente.price_unit = datos['price_unit']
+                existente.quantity = datos['quantity']
+            else:
+                # En onchange no se puede hacer `+= [Command.create(...)]` (eso produce TypeError).
+                # Creamos un registro virtual y lo concatenamos al one2many.
+                self.invoice_line_ids += line_model.new(datos)
+
+        # 2) Cobros: pueden existir múltiples; evitamos duplicar por (product_id, name).
+        for datos in datos_lineas_cobros:
+            ya_existe = self.invoice_line_ids.filtered(
+                lambda l: l.product_id.id == datos['product_id'] and (l.name or '') == datos['name']
+            )[:1]
+            if ya_existe:
+                continue
+            self.invoice_line_ids += line_model.new(datos)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
