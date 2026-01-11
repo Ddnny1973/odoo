@@ -1,58 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Actions and Views for Conceptos -->
-        <record id="action_gc_concepto" model="ir.actions.act_window">
-            <field name="name">Conceptos</field>
-            <field name="res_model">gc.concepto</field>
-            <field name="view_mode">list,form</field>
-            <field name="help">Manage conceptos de la aplicación.</field>
-        </record>
-
-        <record id="view_gc_concepto_tree" model="ir.ui.view">
-            <field name="name">gc.concepto.tree</field>
-            <field name="model">gc.concepto</field>
-            <field name="arch" type="xml">
-                <list string="Conceptos">
-                    <field name="name"/>
-                    <field name="tipo_concepto"/>
-                    <field name="usar_coeficiente"/>
-                </list>
-            </field>
-        </record>
-
-        <record id="view_gc_concepto_form" model="ir.ui.view">
-            <field name="name">gc.concepto.form</field>
-            <field name="model">gc.concepto</field>
-            <field name="arch" type="xml">
-                <form string="Concepto">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="tipo_concepto"/>
-                            <field name="usar_coeficiente"/>
-                        </group>
-                        <!-- Valores page temporarily removed to avoid ParseError during upgrade.
-                        <notebook>
-                            <page string="Valores">
-                                <field name="valor_ids">
-                                    <tree editable="bottom">
-                                        <field name="fecha_inicial"/>
-                                        <field name="fecha_final"/>
-                                        <field name="monto" widget="monetary"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                        -->
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Actions and Views for Valores de Conceptos -->
-
-
         <!-- Actions and Views for Valores de Conceptos -->
         <record id="action_gc_valor_concepto" model="ir.actions.act_window">
             <field name="name">Valores Conceptos</field>
@@ -101,12 +49,10 @@
             </field>
         </record>
 
-        <!-- Menus -->
-        <menuitem id="gc_conceptos_menu" name="Conceptos" parent="gc_apartamentos_root_menu" sequence="20"/>
-        <menuitem id="gc_concepto_menu" name="Conceptos" parent="gc_conceptos_menu" action="action_gc_concepto" sequence="10"/>
-        <menuitem id="gc_valor_concepto_menu" name="Valores" parent="gc_conceptos_menu" action="action_gc_valor_concepto" sequence="20"/>
+        <!-- Menú Principal -->
+        <menuitem id="gc_valores_menu" name="Valores Conceptos" parent="gc_apartamento_menu" action="action_gc_valor_concepto" sequence="25"/>
 
-        <!-- Cobros Administración action & submenu under Apartamentos -->
+        <!-- Cobros Administración action & submenu -->
         <record id="action_gc_cobros_admon" model="ir.actions.act_window">
             <field name="name">Cobros Administración</field>
             <field name="res_model">gc.cobros_admon</field>

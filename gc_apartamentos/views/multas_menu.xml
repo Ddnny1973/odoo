@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="gc_multas_menu" name="Multas" parent="gc_conceptos_menu" action="action_gc_multas" sequence="30"/>
+        <menuitem id="gc_multas_menu" name="Multas" parent="gc_apartamento_menu" action="action_gc_multas" sequence="30"/>
     </data>
 </odoo>

@@ -10,10 +10,11 @@
     'data': [
         'security/ir.model.access.csv',
         'views/apartamento_views.xml',
-        'views/conceptos_views.xml',
+        'views/valores_conceptos_views.xml',
         'views/account_move_views.xml',
         'views/multas_views.xml',
         'views/multas_menu.xml',
+        'views/cobros_admon_views.xml',
     ],
     'images': ['static/description/icon.png'],
     'assets': {

@@ -11,7 +11,7 @@
                 <list string="Cobros de Administración">
                     <field name="fecha_cobro"/>
                     <field name="numero_apartamento_id"/>
-                    <field name="concepto_id"/>
+                    <field name="producto_id"/>
                     <field name="monto_pago" widget="monetary"/>
                 </list>
             </field>
@@ -26,7 +26,7 @@
                         <group>
                             <field name="fecha_cobro"/>
                             <field name="numero_apartamento_id"/>
-                            <field name="concepto_id"/>
+                            <field name="producto_id"/>
                             <field name="monto_pago" widget="monetary"/>
                         </group>
                     </sheet>
