@@ -10,6 +10,7 @@
                 <field name="concepto_multa"/>
                 <field name="monto_multa"/>
                 <field name="estado"/>
+                <field name="factura_id" optional="show"/>
                 <field name="factura_line_id" optional="hide"/>
             </list>
         </field>
@@ -38,8 +39,9 @@
                             <field name="facturada" invisible="1"/>
                         </group>
                     </group>
-                    <group string="Información de Facturación" name="facturacion" invisible="estado == 'pendiente'">
-                        <field name="factura_line_id" readonly="1"/>
+                    <group string="Información de Facturación" name="facturacion">
+                        <field name="factura_id" readonly="1" widget="many2one_link"/>
+                        <field name="factura_line_id" readonly="1" invisible="1"/>
                     </group>
                 </sheet>
             </form>

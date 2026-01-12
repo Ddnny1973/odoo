@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 class GcMultas(models.Model):
     _name = 'gc.multas'
@@ -43,6 +44,15 @@ class GcMultas(models.Model):
         string='Línea de Factura',
         readonly=True,
         help='Línea de factura donde se incluyó esta multa'
+    )
+    
+    factura_id = fields.Many2one(
+        'account.move',
+        string='Factura Asociada',
+        related='factura_line_id.move_id',
+        store=True,
+        readonly=True,
+        help='Factura donde está incluida esta multa'
     )
     
     estado = fields.Selection(
@@ -99,3 +109,18 @@ class GcMultas(models.Model):
             # Si no encuentra valor vigente, mantener o establecer en 0.0
             if not self.monto_multa:
                 self.monto_multa = 0.0
+
+    def unlink(self):
+        """Bloquear eliminación de multas que no estén en estado pendiente"""
+        for multa in self:
+            if multa.estado != 'pendiente':
+                factura_info = ""
+                if multa.factura_line_id and multa.factura_line_id.move_id:
+                    factura_info = f" en la factura {multa.factura_line_id.move_id.name}"
+                
+                raise UserError(
+                    f"No se puede eliminar la multa '{multa.concepto_multa.name}' "
+                    f"del {multa.num_apartamento_id.display_name} porque está en estado '{multa.estado}'{factura_info}. "
+                    f"Solo se pueden eliminar multas en estado 'Pendiente'."
+                )
+        return super(GcMultas, self).unlink()

@@ -20,6 +20,7 @@ class AccountMoveLine(models.Model):
         'gc.multas',
         string='Multa Facturada',
         readonly=True,
+        ondelete='restrict',
         help='Multa asociada a esta línea de factura (si aplica)',
     )
     
@@ -417,15 +418,29 @@ class AccountMove(models.Model):
                 
                 for multa in multas_en_lineas:
                     _logger.warning(f"↩️ Revirtiendo multa {multa.id} a pendiente")
+                    # NO limpiar factura_line_id - debe quedarse para registro histórico
+                    # Solo cambiar el flag facturada
                     multa.write({
                         'facturada': False,
-                        'factura_line_id': False,
                     })
 
     def action_post(self):
         """
         Sobreescribir action_post para marcar multas cuando la factura se confirma
         """
+        # Validar que no haya líneas con multas que ya no existen
+        for move in self:
+            for line in move.invoice_line_ids:
+                if line.gc_multa_id:
+                    # Verificar si la multa realmente existe en la base de datos
+                    multa_existe = self.env['gc.multas'].search([('id', '=', line.gc_multa_id.id)], limit=1)
+                    if not multa_existe:
+                        raise UserError(
+                            f"No se puede confirmar la factura porque la línea '{line.name}' "
+                            f"está asociada a una multa que fue eliminada. "
+                            f"Por favor, elimine esta línea antes de confirmar la factura."
+                        )
+        
         resultado = super().action_post()
         # Marcar multas como facturadas cuando se confirma la factura
         self._marcar_multas_facturadas()
