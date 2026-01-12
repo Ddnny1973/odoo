@@ -365,27 +365,62 @@ class AccountMove(models.Model):
     def _marcar_multas_facturadas(self):
         """
         Marca como facturadas las multas que están en líneas de esta factura.
-        Se ejecuta cuando la factura se guarda, incluso en estado posted.
+        Solo marca como facturada si la factura está en estado 'posted'.
+        Si la factura vuelve a draft o se cancela, revierte el estado de la multa.
         """
         import logging
         _logger = logging.getLogger(__name__)
         
         for factura in self:
-            # Procesar multas si la factura tiene al menos las líneas confirmadas
-            # (no solo en draft, también en posted)
-            if factura.state in ('draft', 'posted'):
-                # Buscar líneas que tengan gc_multa_id asignado
-                lineas_con_multa = factura.invoice_line_ids.filtered('gc_multa_id')
-                _logger.info(f"Factura {factura.id}: Encontradas {len(lineas_con_multa)} líneas con multas")
+            _logger.warning(f"🔍 GC_APARTAMENTOS - Procesando factura {factura.id} en estado '{factura.state}'")
+            
+            if factura.state == 'posted':
+                # La factura está confirmada: marcar multas como facturadas
+                _logger.warning(f"✅ Factura confirmada - Marcando multas como facturadas")
                 
-                for linea in lineas_con_multa:
-                    multa = linea.gc_multa_id
-                    if multa and not multa.facturada:
-                        _logger.info(f"Marcando multa {multa.id} como facturada en línea {linea.id}")
-                        multa.write({
-                            'facturada': True,
-                            'factura_line_id': linea.id,
-                        })
+                if factura.apartamento_id:
+                    multas_pendientes = self.env['gc.multas'].search([
+                        ('num_apartamento_id', '=', factura.apartamento_id.id),
+                        ('estado', '=', 'pendiente'),
+                    ])
+                    _logger.warning(f"📋 Multas pendientes encontradas: {len(multas_pendientes)}")
+                    
+                    for multa in multas_pendientes:
+                        # Buscar línea que corresponda a esta multa
+                        lineas_multa = factura.invoice_line_ids.filtered(
+                            lambda l: l.product_id.id == multa.concepto_multa.id 
+                            and 'Multa' in (l.name or '') 
+                            and str(multa.fecha_multa) in (l.name or '')
+                        )
+                        
+                        if lineas_multa:
+                            linea = lineas_multa[0]
+                            if not multa.facturada:
+                                _logger.warning(f"🔗 Asignando gc_multa_id {multa.id} a línea {linea.id}")
+                                linea.write({'gc_multa_id': multa.id})
+                                
+                                _logger.warning(f"✅ Marcando multa {multa.id} como facturada")
+                                multa.write({
+                                    'facturada': True,
+                                    'factura_line_id': linea.id,
+                                })
+            
+            elif factura.state in ('draft', 'cancel'):
+                # La factura está en borrador o cancelada: revertir multas a pendiente
+                _logger.warning(f"⚠️ Factura en {factura.state} - Revertiendo multas a pendiente")
+                
+                # Buscar multas que fueron facturadas por esta factura
+                multas_en_lineas = self.env['gc.multas'].search([
+                    ('factura_line_id', 'in', factura.invoice_line_ids.ids),
+                    ('facturada', '=', True),
+                ])
+                
+                for multa in multas_en_lineas:
+                    _logger.warning(f"↩️ Revirtiendo multa {multa.id} a pendiente")
+                    multa.write({
+                        'facturada': False,
+                        'factura_line_id': False,
+                    })
 
     def action_post(self):
         """
@@ -393,5 +428,23 @@ class AccountMove(models.Model):
         """
         resultado = super().action_post()
         # Marcar multas como facturadas cuando se confirma la factura
+        self._marcar_multas_facturadas()
+        return resultado
+
+    def button_draft(self):
+        """
+        Sobreescribir button_draft para revertir multas cuando la factura vuelve a borrador
+        """
+        resultado = super().button_draft()
+        # Revertir multas a pendiente cuando la factura vuelve a draft
+        self._marcar_multas_facturadas()
+        return resultado
+
+    def button_cancel(self):
+        """
+        Sobreescribir button_cancel para revertir multas cuando la factura se cancela
+        """
+        resultado = super().button_cancel()
+        # Revertir multas a pendiente cuando la factura se cancela
         self._marcar_multas_facturadas()
         return resultado
