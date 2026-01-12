@@ -336,33 +336,7 @@ class AccountMove(models.Model):
         
         return resultado
     
-    def write(self, vals):
-        """
-        Sobreescribir write para mantener sincronización al cambiar apartamento
-        """
-        # Si se está cambiando el apartamento, recalcular propietarios
-        if 'apartamento_id' in vals and vals['apartamento_id']:
-            apartamento = self.env['gc.apartamento'].browse(vals['apartamento_id'])
-            propietarios = apartamento.propietario_ids
-            
-            if propietarios:
-                # Actualizar propietarios adicionales
-                if len(propietarios) > 1:
-                    vals['propietarios_adicionales_ids'] = [(6, 0, propietarios[1:].ids)]
-                else:
-                    vals['propietarios_adicionales_ids'] = [(5, 0, 0)]
-        
-        # Si se limpia el apartamento, limpiar propietarios adicionales
-        if 'apartamento_id' in vals and not vals['apartamento_id']:
-            vals['propietarios_adicionales_ids'] = [(5, 0, 0)]
-        
-        resultado = super().write(vals)
-        
-        # Marcar multas como facturadas después de escribir la factura
-        self._marcar_multas_facturadas()
-        
-        return resultado
-    
+   
     def _marcar_multas_facturadas(self):
         """
         Marca como facturadas las multas que están en líneas de esta factura.
