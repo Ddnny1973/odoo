@@ -8,6 +8,9 @@
                 <field name="num_apartamento_id"/>
                 <field name="fecha_multa"/>
                 <field name="concepto_multa"/>
+                <field name="monto_multa"/>
+                <field name="estado"/>
+                <field name="factura_line_id" optional="hide"/>
             </list>
         </field>
     </record>
@@ -18,13 +21,44 @@
         <field name="arch" type="xml">
             <form string="Multa">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_gc_multas)d" type="action" class="oe_stat_button" icon="fa-file-o">
+                            <span class="o_stat_text">Factura</span>
+                        </button>
+                    </div>
                     <group>
-                        <field name="num_apartamento_id"/>
-                        <field name="fecha_multa"/>
-                        <field name="concepto_multa"/>
+                        <group>
+                            <field name="num_apartamento_id"/>
+                            <field name="fecha_multa"/>
+                            <field name="concepto_multa"/>
+                        </group>
+                        <group>
+                            <field name="monto_multa"/>
+                            <field name="estado"/>
+                            <field name="facturada" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Información de Facturación" name="facturacion" invisible="estado == 'pendiente'">
+                        <field name="factura_line_id" readonly="1"/>
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="view_gc_multas_search" model="ir.ui.view">
+        <field name="name">gc.multas.search</field>
+        <field name="model">gc.multas</field>
+        <field name="arch" type="xml">
+            <search string="Multas">
+                <field name="num_apartamento_id"/>
+                <field name="concepto_multa"/>
+                <field name="estado"/>
+                <separator/>
+                <filter name="pendientes" string="Pendientes" domain="[('estado', '=', 'pendiente')]"/>
+                <filter name="facturadas" string="Facturadas" domain="[('estado', '=', 'facturada')]"/>
+                <filter name="pagadas" string="Pagadas" domain="[('estado', '=', 'pagada')]"/>
+            </search>
         </field>
     </record>
 
@@ -32,6 +66,7 @@
         <field name="name">Multas</field>
         <field name="res_model">gc.multas</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gc_multas_search"/>
         <field name="help" type="html">
             <p>Gestione las multas y sanciones asociadas a los apartamentos.</p>
         </field>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vista Formulario del Wizard -->
+    <record id="view_wizard_generar_facturas_form" model="ir.ui.view">
+        <field name="name">Generar Facturas - Formulario</field>
+        <field name="model">gc.wizard_generar_facturas</field>
+        <field name="arch" type="xml">
+            <form string="Generar Facturas de Apartamentos">
+                <group>
+                    <group>
+                        <field name="fecha_facturacion" required="1"/>
+                    </group>
+                    <group>
+                        <field name="incluir_activos_solo"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generar_facturas" string="Generar Facturas" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir el Wizard -->
+    <record id="action_wizard_generar_facturas" model="ir.actions.act_window">
+        <field name="name">Generar Facturas</field>
+        <field name="res_model">gc.wizard_generar_facturas</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_ids" eval="[(5, 0, 0)]"/>
+    </record>
+
+    <!-- Elemento de Menú para el Wizard -->
+    <menuitem
+        id="menu_wizard_generar_facturas"
+        name="Generar Facturas Masivas"
+        parent="account.menu_finance_receivables"
+        action="action_wizard_generar_facturas"
+        sequence="200"
+    />
+
+</odoo>

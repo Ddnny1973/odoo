@@ -15,7 +15,14 @@ class AccountMoveLine(models.Model):
         store=True,
         readonly=True,
     )
-
+    
+    gc_multa_id = fields.Many2one(
+        'gc.multas',
+        string='Multa Facturada',
+        readonly=True,
+        help='Multa asociada a esta línea de factura (si aplica)',
+    )
+    
     @api.depends('move_id.apartamento_id', 'move_id.apartamento_id.coeficiente', 'move_id.invoice_date', 'product_id')
     def _compute_gc_coeficiente(self):
         ValoresConceptos = self.env['gc.valores_conceptos']
@@ -147,7 +154,7 @@ class AccountMove(models.Model):
 
     def _crear_lineas_conceptos(self):
         """
-        Genera/actualiza las líneas de factura basadas en conceptos recurrentes y cobros registrados.
+        Genera/actualiza las líneas de factura basadas en conceptos recurrentes y multas.
         Importante: debe ser idempotente para que autosave/cambio de pestaña no duplique líneas.
         """
         if not self.apartamento_id or not self.invoice_date:
@@ -168,7 +175,7 @@ class AccountMove(models.Model):
         
         # Preparar datos deseados
         datos_lineas_recurrentes_por_producto = {}
-        datos_lineas_cobros = []
+        datos_lineas_multas = []
         coef = self.apartamento_id.coeficiente
         
         # 1. PROCESAR CONCEPTOS RECURRENTES
@@ -194,19 +201,30 @@ class AccountMove(models.Model):
                     'name': valor.producto_id.name,
                 }
         
-        # 2. PROCESAR COBROS REGISTRADOS (gc.cobros_admon)
-        cobros = self.env['gc.cobros_admon'].search([
-            ('numero_apartamento_id', '=', self.apartamento_id.id),
-            ('fecha_cobro', '<=', self.invoice_date),
+        # 2. PROCESAR MULTAS DEL MISMO MES (gc.multas)
+        # Buscar multas no facturadas del mismo mes/año que la factura
+        primer_dia_mes = self.invoice_date.replace(day=1)
+        if self.invoice_date.month == 12:
+            ultimo_dia_mes = self.invoice_date.replace(year=self.invoice_date.year + 1, month=1, day=1)
+        else:
+            ultimo_dia_mes = self.invoice_date.replace(month=self.invoice_date.month + 1, day=1)
+        
+        # Buscar multas pendientes (no facturadas) del mismo mes que la factura
+        multas = self.env['gc.multas'].search([
+            ('num_apartamento_id', '=', self.apartamento_id.id),
+            ('estado', '=', 'pendiente'),  # Solo multas pendientes
+            ('fecha_multa', '>=', primer_dia_mes),
+            ('fecha_multa', '<', ultimo_dia_mes),
         ])
         
-        for cobro in cobros:
-            if cobro.monto_pago > 0:
-                datos_lineas_cobros.append({
-                    'product_id': cobro.producto_id.id,
+        for multa in multas:
+            if multa.monto_multa > 0:
+                datos_lineas_multas.append({
+                    'product_id': multa.concepto_multa.id,
                     'quantity': 1.0,
-                    'price_unit': cobro.monto_pago,
-                    'name': f'{cobro.producto_id.name} ({cobro.fecha_cobro})',
+                    'price_unit': multa.monto_multa,
+                    'name': f'{multa.concepto_multa.name} - Multa ({multa.fecha_multa})',
+                    'gc_multa_id': multa.id,  # Guardar referencia a la multa
                 })
 
         # --- Aplicar de forma idempotente ---
@@ -233,14 +251,26 @@ class AccountMove(models.Model):
                 # Creamos un registro virtual y lo concatenamos al one2many.
                 self.invoice_line_ids += line_model.new(datos)
 
-        # 2) Cobros: pueden existir múltiples; evitamos duplicar por (product_id, name).
-        for datos in datos_lineas_cobros:
+        # 2) Multas: pueden existir múltiples; evitamos duplicar por (product_id, name).
+        for datos in datos_lineas_multas:
             ya_existe = self.invoice_line_ids.filtered(
                 lambda l: l.product_id.id == datos['product_id'] and (l.name or '') == datos['name']
             )[:1]
             if ya_existe:
                 continue
-            self.invoice_line_ids += line_model.new(datos)
+            
+            # Extraer gc_multa_id de los datos (sin pop, para que no se afecten los datos)
+            gc_multa_id = datos.get('gc_multa_id')
+            
+            # Crear línea sin el gc_multa_id en el diccionario inicial
+            datos_sin_multa = {k: v for k, v in datos.items() if k != 'gc_multa_id'}
+            nueva_linea = line_model.new(datos_sin_multa)
+            
+            # Asignar el gc_multa_id después de crear la línea
+            if gc_multa_id:
+                nueva_linea.gc_multa_id = gc_multa_id
+            
+            self.invoice_line_ids += nueva_linea
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -298,4 +328,70 @@ class AccountMove(models.Model):
             if propietarios and len(propietarios) > 1:
                 vals['propietarios_adicionales_ids'] = [(6, 0, propietarios[1:].ids)]
         
-        return super().create(vals)
+        resultado = super().create(vals)
+        
+        # Marcar multas como facturadas después de crear la factura
+        resultado._marcar_multas_facturadas()
+        
+        return resultado
+    
+    def write(self, vals):
+        """
+        Sobreescribir write para mantener sincronización al cambiar apartamento
+        """
+        # Si se está cambiando el apartamento, recalcular propietarios
+        if 'apartamento_id' in vals and vals['apartamento_id']:
+            apartamento = self.env['gc.apartamento'].browse(vals['apartamento_id'])
+            propietarios = apartamento.propietario_ids
+            
+            if propietarios:
+                # Actualizar propietarios adicionales
+                if len(propietarios) > 1:
+                    vals['propietarios_adicionales_ids'] = [(6, 0, propietarios[1:].ids)]
+                else:
+                    vals['propietarios_adicionales_ids'] = [(5, 0, 0)]
+        
+        # Si se limpia el apartamento, limpiar propietarios adicionales
+        if 'apartamento_id' in vals and not vals['apartamento_id']:
+            vals['propietarios_adicionales_ids'] = [(5, 0, 0)]
+        
+        resultado = super().write(vals)
+        
+        # Marcar multas como facturadas después de escribir la factura
+        self._marcar_multas_facturadas()
+        
+        return resultado
+    
+    def _marcar_multas_facturadas(self):
+        """
+        Marca como facturadas las multas que están en líneas de esta factura.
+        Se ejecuta cuando la factura se guarda, incluso en estado posted.
+        """
+        import logging
+        _logger = logging.getLogger(__name__)
+        
+        for factura in self:
+            # Procesar multas si la factura tiene al menos las líneas confirmadas
+            # (no solo en draft, también en posted)
+            if factura.state in ('draft', 'posted'):
+                # Buscar líneas que tengan gc_multa_id asignado
+                lineas_con_multa = factura.invoice_line_ids.filtered('gc_multa_id')
+                _logger.info(f"Factura {factura.id}: Encontradas {len(lineas_con_multa)} líneas con multas")
+                
+                for linea in lineas_con_multa:
+                    multa = linea.gc_multa_id
+                    if multa and not multa.facturada:
+                        _logger.info(f"Marcando multa {multa.id} como facturada en línea {linea.id}")
+                        multa.write({
+                            'facturada': True,
+                            'factura_line_id': linea.id,
+                        })
+
+    def action_post(self):
+        """
+        Sobreescribir action_post para marcar multas cuando la factura se confirma
+        """
+        resultado = super().action_post()
+        # Marcar multas como facturadas cuando se confirma la factura
+        self._marcar_multas_facturadas()
+        return resultado

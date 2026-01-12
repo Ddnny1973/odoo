@@ -31,8 +31,6 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
-                
-                <!-- Añadir campos de apartamento después del partner_shipping_id -->
                 <xpath expr="//field[@name='partner_shipping_id']" position="after">
                     <field name="apartamento_id" 
                            invisible="move_type not in ('out_invoice', 'out_refund')"
@@ -45,14 +43,10 @@
                            options="{'no_create': True}"
                            readonly="1"/>
                 </xpath>
-
-                <!-- Añadir columna coeficiente en líneas de factura -->
                 <xpath expr="//field[@name='product_id']" position="after">
                     <field name="coeficiente" optional="hide" readonly="1"/>
                 </xpath>
-
             </field>
         </record>
-
     </data>
 </odoo>

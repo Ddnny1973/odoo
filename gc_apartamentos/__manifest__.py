@@ -14,7 +14,7 @@
         'views/account_move_views.xml',
         'views/multas_views.xml',
         'views/multas_menu.xml',
-        'views/cobros_admon_views.xml',
+        'wizard/wizard_generar_facturas_views.xml',
     ],
     'images': ['static/description/icon.png'],
     'assets': {

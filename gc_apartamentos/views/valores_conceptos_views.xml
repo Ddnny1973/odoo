@@ -52,14 +52,5 @@
         <!-- Menú Principal -->
         <menuitem id="gc_valores_menu" name="Valores Conceptos" parent="gc_apartamento_menu" action="action_gc_valor_concepto" sequence="25"/>
 
-        <!-- Cobros Administración action & submenu -->
-        <record id="action_gc_cobros_admon" model="ir.actions.act_window">
-            <field name="name">Cobros Administración</field>
-            <field name="res_model">gc.cobros_admon</field>
-            <field name="view_mode">list,form</field>
-            <field name="help">Registro de cobros de administración.</field>
-        </record>
-        <menuitem id="gc_cobros_admon_menu" name="Cobros" parent="gc_apartamento_menu" action="action_gc_cobros_admon" sequence="5"/>
-
     </data>
 </odoo>
