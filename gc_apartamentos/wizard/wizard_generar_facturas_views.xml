@@ -8,14 +8,15 @@
             <form string="Generar Facturas de Apartamentos">
                 <group>
                     <group>
-                        <field name="fecha_facturacion" required="1"/>
+                        <field name="fecha_facturacion" required="1" help="Fecha que se asignará a todas las facturas"/>
+                        <field name="fecha_vencimiento" required="1" help="Fecha de vencimiento (por defecto igual a fecha de facturación)"/>
                     </group>
                     <group>
-                        <field name="incluir_activos_solo"/>
+                        <field name="incluir_activos_solo" help="Solo generar facturas para apartamentos activos"/>
                     </group>
                 </group>
                 <footer>
-                    <button name="action_generar_facturas" string="Generar Facturas" type="object" class="btn-primary"/>
+                    <button name="action_generar_facturas" string="Generar Facturas" type="object" class="btn-primary" confirm="¿Estás seguro de que deseas generar las facturas? Este proceso puede tomar algunos minutos."/>
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
