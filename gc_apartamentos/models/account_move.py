@@ -400,7 +400,10 @@ class AccountMove(models.Model):
 
     def action_post(self):
         """
-        Sobreescribir action_post para marcar multas cuando la factura se confirma
+        Sobreescribir action_post para:
+        1. Marcar multas cuando la factura se confirma
+        2. Asignar partner_id a los apuntes contables de cuentas por cobrar/pagar
+           (Fix para Odoo 16+, donde ya no se asigna automáticamente)
         """
         # Validar que no haya líneas con multas que ya no existen
         for move in self:
@@ -416,6 +419,16 @@ class AccountMove(models.Model):
                         )
         
         resultado = super().action_post()
+        
+        # FIX: Asignar partner_id a los apuntes de cuentas por cobrar/pagar
+        # En Odoo 16+ ya no se asigna automáticamente, hay que hacerlo explícitamente
+        for move in self:
+            for line in move.line_ids:
+                # Si la línea es de una cuenta receivable/payable y no tiene partner, asignarlo
+                # En Odoo 18, el campo es 'account_type', no 'type'
+                if not line.partner_id and line.account_id.account_type in ('asset_receivable', 'liability_payable'):
+                    line.partner_id = move.partner_id
+        
         # Marcar multas como facturadas cuando se confirma la factura
         self._marcar_multas_facturadas()
         return resultado
