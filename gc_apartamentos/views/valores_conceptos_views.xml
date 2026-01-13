@@ -19,8 +19,8 @@
                     <field name="fecha_final"/>
                     <field name="monto" widget="monetary"/>
                     <field name="usar_coeficiente" widget="boolean_toggle"/>
-                    <field name="recurrente" widget="boolean" readonly="1"/>
-                    <field name="activo" widget="boolean" readonly="1"/>
+                    <field name="recurrente" widget="boolean_toggle" readonly="1"/>
+                    <field name="activo" widget="boolean_toggle" readonly="1"/>
                 </list>
             </field>
         </record>
@@ -48,6 +48,10 @@
                 </form>
             </field>
         </record>
+
+
+        <!-- Submenú Registro Aptos -->
+        <menuitem id="gc_registro_aptos_menu" name="Registro Aptos" parent="gc_apartamento_menu" action="gc_apartamento_action" sequence="20"/>
 
         <!-- Menú Principal -->
         <menuitem id="gc_valores_menu" name="Valores Conceptos" parent="gc_apartamento_menu" action="action_gc_valor_concepto" sequence="25"/>
