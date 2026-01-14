@@ -50,16 +50,16 @@ _reconcile_plan_with_sync()
 
 ## 🔧 Solución: Código a Agregar
 
-### **Paso 1: Crear el Método** (agregarlo en `account_move.py`)
+### **Paso 1: Crear el Método** (agregarlo en `addons/account_payment.py`)
 
 ```python
 def _auto_reconcile_payment(self):
-    """Busca facturas pendientes y las reconcilia automáticamente"""
+    """Busca facturas pendientes del cliente y las reconcilia automáticamente con este pago"""
     import logging
     _logger = logging.getLogger(__name__)
     
     # Validaciones
-    if not self.partner_id or not self.apartamento_id:
+    if not self.partner_id:
         return False
     
     # Obtener líneas de pago sin reconciliar
@@ -107,15 +107,14 @@ def _auto_reconcile_payment(self):
         return False
 ```
 
-### **Paso 2: Modificar `action_post()`**
+### **Paso 2: Modificar `action_post()` en `account_payment.py`**
 
-En el método `action_post()`, agregar DESPUÉS de `_marcar_multas_facturadas()`:
+En el método `action_post()` de `account.payment` (línea 1069), agregar DESPUÉS de confirmar el estado:
 
 ```python
-# Intentar reconciliación automática
-for move in self:
-    if move.move_type == 'out_invoice':
-        move._auto_reconcile_payment()
+def action_post(self):
+    # ... código existente ...\n    self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'\n    
+    # 🆕 NUEVO: Intentar reconciliación automática\n    for payment in self:\n        if payment.state in ('in_process', 'paid'):\n            payment._auto_reconcile_payment()
 ```
 
 ---

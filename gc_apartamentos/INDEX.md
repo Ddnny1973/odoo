@@ -13,6 +13,17 @@
 
 ## 📖 DOCUMENTOS COMPLETOS
 
+### 0. **CORRECCION_UBICACION_RECONCILIACION.md** ⭐ IMPORTANTE
+   - **Para qué sirve**: Explicar la corrección realizada
+   - **Duración lectura**: 10 minutos
+   - **Contenido**:
+     - Problema identificado por el usuario
+     - Ubicación incorrecta vs correcta
+     - Cambios realizados en documentación
+     - Flujo correcto
+     - Código actualizado
+   - **Mejor para**: Todos (validar que entienden la corrección)
+
 ### 1. **RESUMEN_RECONCILIACION_AUTOMATICA.md** ⭐ PRINCIPAL
    - **Para qué sirve**: Visión general completa
    - **Duración lectura**: 15-20 minutos

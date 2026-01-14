@@ -59,9 +59,9 @@ Hace clic en "Reconciliar"
 ### **Flujo con Automatización (Propuesto)**
 
 ```
-Usuario registra pago
+Usuario registra PAGO
     ↓
-Se ejecuta action_post()
+Se ejecuta account.payment.action_post()  ← 🎯 AQUÍ es donde ocurre
     ↓
 Se llama _auto_reconcile_payment()
     ↓
@@ -93,22 +93,26 @@ Se llama account.move.line.reconcile() automáticamente
 
 ## 📝 CÓDIGO A AGREGAR
 
-### **Paso 1: Agregar el método en `gc_apartamentos/models/account_move.py`**
+### **Paso 1: Agregar el método en `gc_apartamentos/addons/account_payment.py`**
 
 ```python
 def _auto_reconcile_payment(self):
     """
-    Busca facturas pendientes del mismo apartamento y cliente, y las reconcilia 
-    automáticamente.
+    Busca facturas pendientes del cliente y las reconcilia automáticamente con este pago.
+    Se ejecuta cuando se registra el pago (en action_post).
     """
     import logging
     _logger = logging.getLogger(__name__)
     
-    if not self.partner_id or not self.apartamento_id:
+    # Validaciones
+    if not self.partner_id:
         return False
     
-    # Obtener líneas de pago sin reconciliar
-    current_lines = self.line_ids.filtered(
+    # Obtener líneas de pago sin reconciliar del movimiento creado
+    if not self.move_id:
+        return False
+    
+    current_lines = self.move_id.line_ids.filtered(
         lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable')
         and not l.reconciled
     )
@@ -116,14 +120,13 @@ def _auto_reconcile_payment(self):
     if not current_lines:
         return False
     
-    # Buscar facturas pendientes del mismo cliente y apartamento
+    # Buscar facturas pendientes del mismo cliente
     pending_invoices = self.env['account.move'].search([
         ('move_type', 'in', ('out_invoice', 'out_refund')),
         ('partner_id', '=', self.partner_id.id),
-        ('apartment_id', '=', self.apartamento_id.id),
         ('state', '=', 'posted'),
         ('payment_state', '!=', 'paid'),
-        ('id', '!=', self.id),
+        ('id', '!=', self.move_id.id),
     ])
     
     if not pending_invoices:
@@ -139,43 +142,34 @@ def _auto_reconcile_payment(self):
         return False
     
     try:
-        # 🎯 ESTA ES LA FUNCIÓN CLAVE
+        # 🎯 FUNCIÓN CLAVE: Sin parámetros
         lines_to_reconcile = current_lines + invoice_lines
-        lines_to_reconcile.reconcile()  # ← Sin parámetros
+        lines_to_reconcile.reconcile()  # ← Esto es todo lo necesario
         
         _logger.warning(
-            f"✅ Reconciliación automática para {self.partner_id.name} - "
-            f"{self.apartamento_id.name}"
+            f"✅ Reconciliación automática completada para cliente {self.partner_id.name}"
         )
         return True
-        
     except Exception as e:
         _logger.error(f"❌ Error en reconciliación: {str(e)}", exc_info=True)
         return False
 ```
 
-### **Paso 2: Modificar `action_post()` para llamar al nuevo método**
+### **Paso 2: Modificar `action_post()` en `gc_apartamentos/addons/account_payment.py`**
+
+En el método `action_post()` (línea 1069), agregar DESPUÉS de la línea que cambia el estado:
 
 ```python
 def action_post(self):
-    """Registra la factura e intenta reconciliación automática"""
-    resultado = super().action_post()
+    ''' draft -> posted '''
+    # ... validaciones existentes ...
+    self.filtered(lambda pay: pay.outstanding_account_id.account_type == 'asset_cash').state = 'paid'
+    self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'
     
-    # FIX: Asignar partner_id a cuentas por cobrar/pagar
-    for move in self:
-        for line in move.line_ids:
-            if not line.partner_id and line.account_id.account_type in ('asset_receivable', 'liability_payable'):
-                line.partner_id = move.partner_id
-    
-    # Marcar multas como facturadas
-    self._marcar_multas_facturadas()
-    
-    # 🆕 NUEVO: Intentar reconciliación automática
-    for move in self:
-        if move.move_type == 'out_invoice':
-            move._auto_reconcile_payment()
-    
-    return resultado
+    # 🆕 NUEVO: Intentar reconciliación automática del pago con facturas
+    for payment in self:
+        if payment.state in ('in_process', 'paid'):
+            payment._auto_reconcile_payment()
 ```
 
 ---

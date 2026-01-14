@@ -13,13 +13,15 @@
 
 ## 🔧 Implementación: Modificar Código
 
-### Fase 1: Crear el Método (`account_move.py`)
+### Fase 1: Crear el Método (`account_payment.py`)
 
-- [ ] Abrir archivo: `gc_apartamentos/models/account_move.py`
+- [ ] Abrir archivo: `gc_apartamentos/addons/account_payment.py`
+
+- [ ] Localizar la clase `AccountPayment` y el método `action_post()` (línea 1069)
 
 - [ ] Copiar el método `_auto_reconcile_payment()` del archivo `IMPLEMENTACION_CODIGO_RECONCILIACION.py`
 
-- [ ] Pegarlo en la clase `AccountMove` (después de `_marcar_multas_facturadas()`)
+- [ ] Pegarlo en la clase `AccountPayment` (antes del método `action_post()`)
 
 - [ ] Verificar imports necesarios:
   ```python
@@ -27,18 +29,23 @@
   _logger = logging.getLogger(__name__)
   ```
 
-- [ ] Verificar que no hay errores de sintaxis (Ctrl+Shift+P > "Python: Lint")
+- [ ] Verificar que no hay errores de sintaxis
 
-### Fase 2: Modificar `action_post()` (en `account_move.py`)
+### Fase 2: Modificar `action_post()` (en `account_payment.py`)
 
-- [ ] Localizar el método `action_post()` (línea ~401)
+- [ ] Localizar el método `action_post()` (línea ~1069)
 
-- [ ] Agregar la llamada al nuevo método DESPUÉS de `_marcar_multas_facturadas()`:
+- [ ] Encontrar la línea:
   ```python
-  # Intentar reconciliación automática
-  for move in self:
-      if move.move_type == 'out_invoice':
-          move._auto_reconcile_payment()
+  self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'
+  ```
+
+- [ ] Agregar DESPUÉS de esa línea:
+  ```python
+  # 🆕 NUEVO: Intentar reconciliación automática del pago
+  for payment in self:
+      if payment.state in ('in_process', 'paid'):
+          payment._auto_reconcile_payment()
   ```
 
 - [ ] Guardar el archivo

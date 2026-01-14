@@ -13,75 +13,73 @@ _logger = logging.getLogger(__name__)
 
 
 # ==============================================================================
-# MÉTODOS A AGREGAR EN LA CLASE AccountMove (en gc_apartamentos/models/account_move.py)
+# MÉTODOS A AGREGAR EN LA CLASE AccountPayment (en gc_apartamentos/addons/account_payment.py)
 # ==============================================================================
 
 def _auto_reconcile_payment(self):
     """
-    Busca facturas pendientes del mismo apartamento y cliente, y las reconcilia 
-    automáticamente.
+    Busca facturas pendientes del cliente y las reconcilia automáticamente 
+    con este pago.
     
     Este método intenta reconciliar automáticamente el pago con las facturas 
-    pendientes del mismo cliente y apartamento.
+    pendientes del mismo cliente.
     
     Funciona de la siguiente manera:
     1. Obtiene las líneas de pago (líneas de cuenta por pagar/cobrar)
-    2. Busca facturas pendientes del mismo cliente y apartamento
+    2. Busca facturas pendientes del mismo cliente
     3. Obtiene las líneas de factura no reconciliadas
     4. Ejecuta la reconciliación utilizando account.move.line.reconcile()
     """
     
-    _logger.info(f"🔄 Iniciando reconciliación automática para factura {self.name}")
+    _logger.info(f"🔄 Iniciando reconciliación automática para pago {self.name}")
     
     # ========================================================================
     # VALIDACIONES PREVIAS
     # ========================================================================
     
     if not self.partner_id:
-        _logger.debug(f"⚠️ Factura {self.name}: Sin cliente definido, abortando reconciliación")
+        _logger.debug(f"⚠️ Pago {self.name}: Sin cliente definido, abortando reconciliación")
         return False
     
-    if not self.apartamento_id:
-        _logger.debug(f"⚠️ Factura {self.name}: Sin apartamento definido, abortando reconciliación")
+    if not self.move_id:
+        _logger.debug(f"⚠️ Pago {self.name}: Sin movimiento contable asociado")
         return False
     
     # ========================================================================
-    # PASO 1: OBTENER LÍNEAS DE PAGO/ENTRADA DE LA FACTURA ACTUAL
+    # PASO 1: OBTENER LÍNEAS DE PAGO DEL MOVIMIENTO CREADO
     # ========================================================================
     
     # Filtrar solo las líneas que corresponden a la cuenta por cobrar/pagar
-    current_lines = self.line_ids.filtered(
+    current_lines = self.move_id.line_ids.filtered(
         lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable')
         and not l.reconciled  # Solo las no reconciliadas
     )
     
     if not current_lines:
         _logger.debug(
-            f"⚠️ Factura {self.name}: No hay líneas de cuenta por cobrar/pagar sin reconciliar"
+            f"⚠️ Pago {self.name}: No hay líneas de cuenta por cobrar/pagar sin reconciliar"
         )
         return False
     
     _logger.info(f"✅ Se encontraron {len(current_lines)} líneas de pago sin reconciliar")
     
     # ========================================================================
-    # PASO 2: BUSCAR FACTURAS PENDIENTES DEL MISMO CLIENTE Y APARTAMENTO
+    # PASO 2: BUSCAR FACTURAS PENDIENTES DEL MISMO CLIENTE
     # ========================================================================
     
     # Buscar facturas salientes (facturas de cliente) que no estén pagadas
-    # y del mismo cliente y apartamento
+    # del mismo cliente
     pending_invoices = self.env['account.move'].search([
         ('move_type', 'in', ('out_invoice', 'out_refund')),  # Solo facturas salientes
         ('partner_id', '=', self.partner_id.id),             # Del mismo cliente
-        ('apartment_id', '=', self.apartamento_id.id),       # Del mismo apartamento
         ('state', '=', 'posted'),                             # Solo confirmadas
         ('payment_state', '!=', 'paid'),                     # Que no estén pagadas
-        ('id', '!=', self.id),                               # Diferentes a la actual
+        ('id', '!=', self.move_id.id),                       # Diferentes al movimiento del pago
     ])
     
     if not pending_invoices:
         _logger.debug(
-            f"⚠️ No hay facturas pendientes para cliente {self.partner_id.name} "
-            f"en apartamento {self.apartamento_id.name}"
+            f"⚠️ No hay facturas pendientes para cliente {self.partner_id.name}"
         )
         return False
     
@@ -131,8 +129,7 @@ def _auto_reconcile_payment(self):
         )
         
         _logger.warning(
-            f"✅ Reconciliación automática completada para apartamento {self.apartamento_id.name}, "
-            f"cliente {self.partner_id.name}"
+            f"✅ Reconciliación automática completada para cliente {self.partner_id.name}"
         )
         
         return True
@@ -140,46 +137,45 @@ def _auto_reconcile_payment(self):
     except Exception as e:
         _logger.error(
             f"❌ ERROR en reconciliación automática: {str(e)}\n"
-            f"   Factura: {self.name}\n"
-            f"   Cliente: {self.partner_id.name}\n"
-            f"   Apartamento: {self.apartamento_id.name}",
+            f"   Pago: {self.name}\n"
+            f"   Cliente: {self.partner_id.name}",
             exc_info=True
         )
         return False
 
 
 # ==============================================================================
-# INTEGRACIÓN CON action_post()
+# INTEGRACIÓN CON action_post() - UBICACIÓN CORRECTA
 # ==============================================================================
 # 
-# Modificar el método action_post() actual para incluir la reconciliación:
+# IMPORTANTE: La reconciliación debe ejecutarse en account.payment.action_post()
+# (línea 1069 en gc_apartamentos/addons/account_payment.py)
+# 
+# NO en account.move.action_post() porque:
+# - account.payment es el modelo específico para pagos
+# - Tiene acceso a move_id (el movimiento contable creado)
+# - Es el punto correcto donde se registra un pago
+#
+# Modificar el método action_post() de account.payment():
 #
 # def action_post(self):
-#     """
-#     Sobreescribir action_post para:
-#     1. Marcar multas cuando la factura se confirma
-#     2. Asignar partner_id a los apuntes contables
-#     3. **NUEVO**: Ejecutar reconciliación automática si es un pago
-#     """
-#     # ... código existente ...
-#     resultado = super().action_post()
+#     ''' draft -> posted '''
+#     # Do not allow posting if the account is required but not trusted
+#     for payment in self:
+#         if (
+#             payment.require_partner_bank_account
+#             and not payment.partner_bank_id.allow_out_payment
+#             and payment.payment_type == 'outbound'
+#         ):
+#             raise UserError(...)
+#     self.filtered(lambda pay: pay.outstanding_account_id.account_type == 'asset_cash').state = 'paid'
+#     self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'
 #     
-#     # FIX: Asignar partner_id a los apuntes de cuentas por cobrar/pagar
-#     for move in self:
-#         for line in move.line_ids:
-#             if not line.partner_id and line.account_id.account_type in ('asset_receivable', 'liability_payable'):
-#                 line.partner_id = move.partner_id
-#     
-#     # **NUEVO**: Marcar multas y reconciliar
-#     self._marcar_multas_facturadas()
-#     
-#     # **NUEVO**: Intentar reconciliación automática
-#     for move in self:
-#         if move.move_type == 'out_invoice':
-#             # Si es una factura saliente, intentar reconciliarla automáticamente
-#             move._auto_reconcile_payment()
-#     
-#     return resultado
+#     # 🆕 NUEVO: Intentar reconciliación automática
+#     for payment in self:
+#         if payment.state in ('in_process', 'paid'):
+#             payment._auto_reconcile_payment()  # ← Llamar al método nuevo aquí
+#
 
 
 # ==============================================================================
