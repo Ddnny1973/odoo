@@ -125,7 +125,6 @@ class AccountPayment(models.Model):
             )
             
             # 🎯 FUNCIÓN CLAVE: reconcile() sin parámetros
-            # Esta es la función de Odoo que realiza toda la reconciliación
             lines_to_reconcile.reconcile()
             
             # ================================================================
@@ -133,16 +132,39 @@ class AccountPayment(models.Model):
             # ================================================================
             
             reconciled_count = sum(1 for line in lines_to_reconcile if line.reconciled)
-            _logger.warning(
-                f"✅ RECONCILIACIÓN EXITOSA - Líneas reconciliadas: "
-                f"{reconciled_count}/{len(lines_to_reconcile)}"
+            total_lines = len(lines_to_reconcile)
+            
+            _logger.info(
+                f"✅ Reconciliación ejecutada - Líneas: {reconciled_count}/{total_lines}"
             )
             
-            _logger.warning(
-                f"✅ Reconciliación automática completada para cliente {self.partner_id.name}"
-            )
-            
-            return True
+            # Si todas las líneas quedaron reconciliadas, actualizar estados
+            if reconciled_count == total_lines:
+                # Cambiar estado del pago a 'paid'
+                self.state = 'paid'
+                
+                # Refresco para asegurar que se actualize payment_state
+                self.move_id._compute_payment_state()
+                
+                # También actualizar las facturas
+                for invoice in pending_invoices:
+                    invoice._compute_payment_state()
+                
+                _logger.info(
+                    f"✅ Estados actualizados a PAID para pago {self.name} "
+                    f"y {len(pending_invoices)} factura(s)"
+                )
+                
+                _logger.info(
+                    f"✅ Reconciliación automática completada para {self.partner_id.name}"
+                )
+                
+                return True
+            else:
+                _logger.warning(
+                    f"⚠️ Reconciliación parcial - Solo {reconciled_count}/{total_lines} líneas"
+                )
+                return False
             
         except Exception as e:
             _logger.error(
