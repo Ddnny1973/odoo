@@ -153,18 +153,30 @@ class GcApartamento(models.Model):
         help='Saldo pendiente de administración calculado a partir de facturas y pagos asociados al apartamento.'
     )
 
-    @api.depends('invoice_ids.amount_residual', 'invoice_ids.state', 'invoice_ids.payment_state')
+    @api.depends('invoice_ids.amount_residual', 'invoice_ids.state', 'invoice_ids.payment_state', 'invoice_ids.invoice_line_ids.price_unit', 'invoice_ids.invoice_line_ids.product_id', 'invoice_ids.invoice_line_ids.name')
     def _compute_saldo_admon(self):
         """
         Calcula el saldo de administración sumando el residual de todas las facturas de cliente (account.move)
-        asociadas a este apartamento, menos los pagos conciliados.
+        asociadas a este apartamento, menos los pagos conciliados. Si la última factura tiene una línea de producto
+        SALDO y nombre SALDO PENDIENTE, se resta el precio unitario de esa línea al saldo calculado.
         """
         for rec in self:
             saldo = 0.0
-            for factura in rec.invoice_ids:
-                if factura.move_type == 'out_invoice' and factura.state == 'posted' and factura.partner_id in rec.propietario_ids:
-                    # El campo residual ya descuenta los pagos conciliados
-                    saldo += factura.amount_residual if factura.currency_id == rec.currency_id else factura.currency_id._convert(factura.amount_residual, rec.currency_id, factura.company_id, factura.invoice_date or factura.date)
+            facturas_validas = [f for f in rec.invoice_ids if f.move_type == 'out_invoice' and f.state == 'posted' and f.partner_id in rec.propietario_ids]
+            for factura in facturas_validas:
+                saldo += factura.amount_residual if factura.currency_id == rec.currency_id else factura.currency_id._convert(factura.amount_residual, rec.currency_id, factura.company_id, factura.invoice_date or factura.date)
+
+            # Buscar la última factura válida (más reciente por fecha)
+            ultima_factura = False
+            if facturas_validas:
+                ultima_factura = sorted(facturas_validas, key=lambda f: f.invoice_date or f.date, reverse=True)[0]
+
+            if ultima_factura:
+                for linea in ultima_factura.invoice_line_ids:
+                    if (getattr(linea.product_id, 'default_code', '') == 'SALDO' and
+                        (linea.name or '').strip().upper() == 'SALDO PENDIENTE'):
+                        saldo -= linea.price_unit if ultima_factura.currency_id == rec.currency_id else ultima_factura.currency_id._convert(linea.price_unit, rec.currency_id, ultima_factura.company_id, ultima_factura.invoice_date or ultima_factura.date)
+                        break
             rec.saldo_admon = saldo
     
     @api.onchange('habitado_por')
