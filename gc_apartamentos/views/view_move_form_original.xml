@@ -165,6 +165,11 @@
                                 <div class="o_col" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt')">
                                     <field name="partner_id" widget="res_partner_many2one" nolabel="1" context="{                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}" domain="[('company_id', 'in', (False, company_id))]" options="{&quot;no_quick_create&quot;: True}" default_focus="1" invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')" placeholder="Search a name or Tax ID..." readonly="state != 'draft'"/>
                                     <button name="action_update_fpos_values" type="object" string="Update Taxes and Accounts" help="Recompute all taxes and accounts based on this fiscal position" class="btn-link mb-1 px-0" icon="fa-refresh" confirm="This will update all taxes and accounts based on the currently selected fiscal position." invisible="not show_update_fpos or state in ['cancel', 'posted']"/>
+                                    <!-- Campo número de apartamento debajo del cliente -->
+                                    <field name="apartamento_id" invisible="not apartamento_id" readonly="1"/>
+                                    <span t-if="apartamento_id">
+                                        <strong>Apartamento:</strong> <field name="apartamento_id.numero_apartamento" readonly="1"/>
+                                    </span>
                                 </div>
 
                                 <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'"/>

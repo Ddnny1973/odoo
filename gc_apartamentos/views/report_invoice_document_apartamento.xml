@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_invoice_document_apartamento" inherit_id="account.report_invoice_document">
+        <!-- Insertar el número de apartamento después del primer div del reporte, con fuente grande -->
+        <xpath expr="//div" position="after">
+            <t t-if="o.apartamento_id">
+                <div style="margin-bottom: 2px;">
+                    <strong style="font-size: 18pt;">Apartamento:</strong>
+                    <span t-field="o.apartamento_id.numero_apartamento" style="font-size: 18pt; font-weight: bold;"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
