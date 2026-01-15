@@ -233,23 +233,18 @@ class AccountMove(models.Model):
 
         # 1) Recurrentes: actualizar si ya existe línea del producto, crear si no.
         for product_id, datos in datos_lineas_recurrentes_por_producto.items():
-            # Preferimos actualizar líneas "simples" del producto (name exacto) si existen.
             existente = self.invoice_line_ids.filtered(
                 lambda l: l.product_id.id == product_id and (l.name or '') == datos['name']
             )[:1]
             if existente:
-                # Si existe duplicado en cero para el mismo producto, lo removemos.
                 ceros = self.invoice_line_ids.filtered(
                     lambda l: l.product_id.id == product_id and l.id != existente.id and (l.price_unit == 0 or l.price_unit is False)
                 )
                 if ceros:
                     self.invoice_line_ids -= ceros
-
                 existente.price_unit = datos['price_unit']
                 existente.quantity = datos['quantity']
             else:
-                # En onchange no se puede hacer `+= [Command.create(...)]` (eso produce TypeError).
-                # Creamos un registro virtual y lo concatenamos al one2many.
                 self.invoice_line_ids += line_model.new(datos)
 
         # 2) Multas: pueden existir múltiples; evitamos duplicar por (product_id, name).
@@ -259,19 +254,29 @@ class AccountMove(models.Model):
             )[:1]
             if ya_existe:
                 continue
-            
-            # Extraer gc_multa_id de los datos (sin pop, para que no se afecten los datos)
             gc_multa_id = datos.get('gc_multa_id')
-            
-            # Crear línea sin el gc_multa_id en el diccionario inicial
             datos_sin_multa = {k: v for k, v in datos.items() if k != 'gc_multa_id'}
             nueva_linea = line_model.new(datos_sin_multa)
-            
-            # Asignar el gc_multa_id después de crear la línea
             if gc_multa_id:
                 nueva_linea.gc_multa_id = gc_multa_id
-            
             self.invoice_line_ids += nueva_linea
+
+        # 3) SALDO PENDIENTE: agregar línea si saldo_admon > 0 y producto existe
+        producto_saldo = self.env['product.product'].search([
+            ('default_code', '=', 'SALDO')
+        ], limit=1)
+        saldo_admon = self.apartamento_id.saldo_admon
+        if producto_saldo and saldo_admon > 0:
+            existe_saldo = self.invoice_line_ids.filtered(
+                lambda l: l.product_id.id == producto_saldo.id and (l.name or '') == 'Saldo pendiente'
+            )
+            if not existe_saldo:
+                self.invoice_line_ids += line_model.new({
+                    'product_id': producto_saldo.id,
+                    'quantity': 1.0,
+                    'price_unit': saldo_admon,
+                    'name': 'Saldo pendiente',
+                })
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
