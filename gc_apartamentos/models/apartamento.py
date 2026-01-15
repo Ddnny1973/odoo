@@ -6,6 +6,13 @@ class GcApartamento(models.Model):
     _description = 'Apartamento'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    invoice_ids = fields.One2many(
+        comodel_name='account.move',
+        inverse_name='apartamento_id',
+        string='Facturas asociadas',
+        help='Facturas de cliente asociadas a este apartamento.'
+    )
+
     # Campos básicos del apartamento
     numero_apartamento = fields.Integer(
         string='Número de Apartamento',
@@ -138,7 +145,27 @@ class GcApartamento(models.Model):
     )
 
     currency_id = fields.Many2one('res.currency', string='Moneda', default=lambda self: self.env.company.currency_id, ondelete='restrict')
-    saldo_admon = fields.Monetary(string='Saldo administración', currency_field='currency_id')
+    saldo_admon = fields.Monetary(
+        string='Saldo administración',
+        currency_field='currency_id',
+        compute='_compute_saldo_admon',
+        store=True,
+        help='Saldo pendiente de administración calculado a partir de facturas y pagos asociados al apartamento.'
+    )
+
+    @api.depends('invoice_ids.amount_residual', 'invoice_ids.state', 'invoice_ids.payment_state')
+    def _compute_saldo_admon(self):
+        """
+        Calcula el saldo de administración sumando el residual de todas las facturas de cliente (account.move)
+        asociadas a este apartamento, menos los pagos conciliados.
+        """
+        for rec in self:
+            saldo = 0.0
+            for factura in rec.invoice_ids:
+                if factura.move_type == 'out_invoice' and factura.state == 'posted' and factura.partner_id in rec.propietario_ids:
+                    # El campo residual ya descuenta los pagos conciliados
+                    saldo += factura.amount_residual if factura.currency_id == rec.currency_id else factura.currency_id._convert(factura.amount_residual, rec.currency_id, factura.company_id, factura.invoice_date or factura.date)
+            rec.saldo_admon = saldo
     
     @api.onchange('habitado_por')
     def _onchange_habitado_por(self):
