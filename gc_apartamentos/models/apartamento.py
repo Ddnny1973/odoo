@@ -157,8 +157,8 @@ class GcApartamento(models.Model):
     def _compute_saldo_admon(self):
         """
         Calcula el saldo de administración sumando el residual de todas las facturas de cliente (account.move)
-        asociadas a este apartamento, menos los pagos conciliados. Si la última factura tiene una línea de producto
-        SALDO y nombre SALDO PENDIENTE, se resta el precio unitario de esa línea al saldo calculado.
+        asociadas a este apartamento, menos los pagos conciliados. Si existen líneas de producto SALDO y nombre SALDO PENDIENTE
+        en facturas anteriores a la última, se resta el precio unitario de esas líneas al saldo calculado.
         """
         for rec in self:
             saldo = 0.0
@@ -171,12 +171,13 @@ class GcApartamento(models.Model):
             if facturas_validas:
                 ultima_factura = sorted(facturas_validas, key=lambda f: f.invoice_date or f.date, reverse=True)[0]
 
-            if ultima_factura:
-                for linea in ultima_factura.invoice_line_ids:
+            # Restar el subtotal de todas las líneas SALDO PENDIENTE de todas las facturas asociadas
+            for factura in facturas_validas:
+                for linea in factura.invoice_line_ids:
                     if (getattr(linea.product_id, 'default_code', '') == 'SALDO' and
                         (linea.name or '').strip().upper() == 'SALDO PENDIENTE'):
-                        saldo -= linea.price_unit if ultima_factura.currency_id == rec.currency_id else ultima_factura.currency_id._convert(linea.price_unit, rec.currency_id, ultima_factura.company_id, ultima_factura.invoice_date or ultima_factura.date)
-                        break
+                        valor_linea = linea.price_subtotal if factura.currency_id == rec.currency_id else factura.currency_id._convert(linea.price_subtotal, rec.currency_id, factura.company_id, factura.invoice_date or factura.date)
+                        saldo -= valor_linea
             rec.saldo_admon = saldo
     
     @api.onchange('habitado_por')
