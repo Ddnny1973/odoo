@@ -5,3 +5,4 @@ access_gc_apartamento_admin,gc.apartamento.admin,model_gc_apartamento,base.group
 access_gc_valores_conceptos,user_gc_valores_conceptos,model_gc_valores_conceptos,base.group_user,1,1,1,1
 access_gc_multas,user_gc_multas,model_gc_multas,base.group_user,1,1,1,1
 access_gc_wizard_generar_facturas,user_gc_wizard_generar_facturas,model_gc_wizard_generar_facturas,base.group_user,1,1,1,0
+access_account_reconciliation_file,account.reconciliation.file,model_account_reconciliation_file,base.group_user,1,1,1,1

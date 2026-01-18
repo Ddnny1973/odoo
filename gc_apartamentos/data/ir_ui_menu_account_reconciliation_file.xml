@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Menú: Archivos de Conciliación (debajo de Generar Facturas Masivas) -->
+        <menuitem
+            id="menu_account_reconciliation_file"
+            name="Archivos de Conciliación"
+            parent="account.menu_finance_receivables"
+            action="action_account_reconciliation_file"
+            sequence="210"/>
+
+    </data>
+</odoo>

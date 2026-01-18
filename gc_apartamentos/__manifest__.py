@@ -14,8 +14,10 @@
         'views/account_move_views.xml',
         'views/multas_views.xml',
         'views/multas_menu.xml',
-            'views/report_invoice_document_apartamento.xml',
+        'views/report_invoice_document_apartamento.xml',
         'wizard/wizard_generar_facturas_views.xml',
+        'data/ir_ui_view_account_reconciliation_file.xml',
+        'data/ir_ui_menu_account_reconciliation_file.xml',
     ],
     'images': ['static/description/icon.png'],
     'assets': {

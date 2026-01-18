@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Vista List -->
+        <record id="account_reconciliation_file_list" model="ir.ui.view">
+            <field name="name">Archivos de Conciliación - Lista</field>
+            <field name="model">account.reconciliation.file</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="fecha"/>
+                    <field name="filename"/>
+                    <field name="documento"/>
+                    <field name="descripcion"/>
+                    <field name="apartamento_id"/>
+                    <field name="valor"/>
+                    <field name="pasarela"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Vista Form -->
+        <record id="account_reconciliation_file_form" model="ir.ui.view">
+            <field name="name">Archivos de Conciliación - Formulario</field>
+            <field name="model">account.reconciliation.file</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Información Básica">
+                                <field name="fecha"/>
+                                <field name="state" widget="statusbar" nolabel="1" readonly="1"/>
+                            </group>
+                            <group string="Identificación">
+                                <field name="documento"/>
+                                <field name="apartamento_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Datos de Conciliación">
+                            <group>
+                                <field name="sucursal_canal"/>
+                                <field name="referencia_1"/>
+                                <field name="referencia_2"/>
+                                <field name="pasarela"/>
+                            </group>
+                            <group>
+                                <field name="valor"/>
+                                <field name="currency_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Descripción">
+                            <field name="descripcion" nolabel="1"/>
+                        </group>
+
+                        <group string="Archivo">
+                            <field name="filename"/>
+                            <field name="hash_file"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción -->
+        <record id="action_account_reconciliation_file" model="ir.actions.act_window">
+            <field name="name">Archivos de Conciliación</field>
+            <field name="res_model">account.reconciliation.file</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Registros de conciliación recibidos desde n8n
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
