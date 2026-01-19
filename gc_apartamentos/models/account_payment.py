@@ -204,12 +204,12 @@ class AccountPayment(models.Model):
     
     @api.model
     def create_from_reconciliation(
-        self, *, partner_id, amount, payment_date, currency_id, reference=None, journal_code='BNK1', **extra_vals):
+        self, *, partner_id, amount, date, currency_id, reference=None, journal_code='BNK1', **extra_vals):
         """
         Crea un pago inbound asociado a conciliación, usando el diario Banco (BNK1).
         Devuelve el record de pago creado.
         """
-        _logger.info(f"🆕 Creando pago desde conciliación para partner {partner_id}, valor {amount}, fecha {payment_date}")
+        _logger.info(f"🆕 Creando pago desde conciliación para partner {partner_id}, valor {amount}, fecha {date}")
 
         # Buscar diario Banco
         journal = self.env['account.journal'].search([('code', '=', journal_code)], limit=1)
@@ -227,13 +227,13 @@ class AccountPayment(models.Model):
         payment_vals = {
             'partner_id': partner_id,
             'amount': amount,
-            'payment_date': payment_date,
+            'date': date,
             'currency_id': currency_id,
             'journal_id': journal.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'payment_method_id': payment_method.id,
-            'ref': reference or '',
+            'memo': reference or '',
         }
         payment_vals.update(extra_vals)
 

@@ -130,7 +130,7 @@ class AccountReconciliationFile(models.Model):
                     payment = self.env['account.payment'].create_from_reconciliation(
                         partner_id=propietario.id,
                         amount=record.valor,
-                        payment_date=record.fecha,
+                        date=record.fecha,
                         currency_id=record.currency_id.id,
                         reference=record.documento or record.filename or record.descripcion,
                         reconciliation_file_id=record.id
@@ -211,6 +211,7 @@ class AccountReconciliationFile(models.Model):
         """
         Acción masiva: genera y asocia el pago para los registros seleccionados que no tengan pago relacionado.
         """
+        _logger.info("==== INICIO acción_generar_pago_masivo ====")
         _logger.info(f"▶️ Acción masiva: Generar pagos para conciliaciones seleccionadas ({len(self)})")
         creados = 0
         for record in self:
@@ -229,7 +230,7 @@ class AccountReconciliationFile(models.Model):
                 payment = self.env['account.payment'].create_from_reconciliation(
                     partner_id=propietario.id,
                     amount=record.valor,
-                    payment_date=record.fecha,
+                    date=record.fecha,
                     currency_id=record.currency_id.id,
                     reference=record.documento or record.filename or record.descripcion
                 )
@@ -240,4 +241,4 @@ class AccountReconciliationFile(models.Model):
             except Exception as e:
                 _logger.error(f"❌ Error creando pago para registro {record.id}: {e}")
         _logger.info(f"▶️ Pagos generados y asociados: {creados}")
-        return True
+        return {"type": "ir.actions.act_window_close"}
