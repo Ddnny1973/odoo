@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountReconciliationFile(models.Model):
+
     _name = 'account.reconciliation.file'
     _description = 'Archivo de Conciliación'
     _order = 'fecha desc'
@@ -82,6 +83,14 @@ class AccountReconciliationFile(models.Model):
         readonly=False,
         help='Apartamento asociado a este pago'
     )
+
+    # Pago relacionado
+    payment_id = fields.Many2one(
+        comodel_name='account.payment',
+        string='Pago relacionado',
+        readonly=True,
+        help='Pago generado a partir de este archivo de conciliación'
+    )
     
     # Estado
     state = fields.Selection(
@@ -95,9 +104,9 @@ class AccountReconciliationFile(models.Model):
 
     @api.model
     def create(self, vals):
-        """Buscar apartamento al crear el registro"""
+        """Buscar apartamento y crear pago al crear el registro"""
         _logger.info(f"🔄 Creando archivo de conciliación: {vals.get('documento')}")
-        
+
         if not vals.get('apartamento_id'):
             # Intentar buscar por documento (cédula) o por referencia_1 (número apt)
             apartamento_id = self._buscar_apartamento(
@@ -109,8 +118,33 @@ class AccountReconciliationFile(models.Model):
                 _logger.info(f"✅ Apartamento asignado: {apartamento_id}")
             else:
                 _logger.warning(f"⚠️ No se encontró apartamento para documento: {vals.get('documento')}")
-        
-        return super().create(vals)
+
+        record = super().create(vals)
+
+        # Si hay apartamento, intentar crear pago y asociar
+        if record.apartamento_id:
+            # Buscar propietario principal (primer propietario)
+            propietario = record.apartamento_id.propietario_ids[:1]
+            if propietario:
+                try:
+                    payment = self.env['account.payment'].create_from_reconciliation(
+                        partner_id=propietario.id,
+                        amount=record.valor,
+                        payment_date=record.fecha,
+                        currency_id=record.currency_id.id,
+                        reference=record.documento or record.filename or record.descripcion,
+                        reconciliation_file_id=record.id
+                    )
+                    record.payment_id = payment.id
+                    _logger.info(f"✅ Pago creado y asociado: {payment.id}")
+                except Exception as e:
+                    _logger.error(f"❌ Error creando pago: {e}")
+            else:
+                _logger.warning(f"⚠️ Apartamento sin propietarios: {record.apartamento_id.id}")
+        else:
+            _logger.info("No se crea pago porque no hay apartamento asociado.")
+
+        return record
 
     def _buscar_apartamento(self, numero_apt=None, cedula=None):
         """
@@ -172,3 +206,38 @@ class AccountReconciliationFile(models.Model):
         """Retorna el valor visual del estado"""
         state_dict = dict(self._fields['state'].selection)
         return state_dict.get(self.state, self.state)
+    
+    def action_generar_pago_masivo(self):
+        """
+        Acción masiva: genera y asocia el pago para los registros seleccionados que no tengan pago relacionado.
+        """
+        _logger.info(f"▶️ Acción masiva: Generar pagos para conciliaciones seleccionadas ({len(self)})")
+        creados = 0
+        for record in self:
+            # Si ya tiene pago relacionado, omitir
+            if hasattr(record, 'payment_id') and record.payment_id:
+                _logger.info(f"Registro {record.id} ya tiene pago asociado: {record.payment_id.id}")
+                continue
+            if not record.apartamento_id:
+                _logger.warning(f"Registro {record.id} sin apartamento asociado")
+                continue
+            propietario = record.apartamento_id.propietario_ids[:1]
+            if not propietario:
+                _logger.warning(f"Registro {record.id} sin propietario principal")
+                continue
+            try:
+                payment = self.env['account.payment'].create_from_reconciliation(
+                    partner_id=propietario.id,
+                    amount=record.valor,
+                    payment_date=record.fecha,
+                    currency_id=record.currency_id.id,
+                    reference=record.documento or record.filename or record.descripcion
+                )
+                if hasattr(record, 'payment_id'):
+                    record.payment_id = payment.id
+                _logger.info(f"✅ Pago creado y asociado para registro {record.id}: {payment.id}")
+                creados += 1
+            except Exception as e:
+                _logger.error(f"❌ Error creando pago para registro {record.id}: {e}")
+        _logger.info(f"▶️ Pagos generados y asociados: {creados}")
+        return True

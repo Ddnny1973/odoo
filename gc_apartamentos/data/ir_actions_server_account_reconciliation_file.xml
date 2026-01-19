@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="action_generar_pago_masivo" model="ir.actions.server">
+            <field name="name">Generar y Asociar Pago</field>
+            <field name="model_id" ref="model_account_reconciliation_file"/>
+            <field name="binding_model_id" ref="model_account_reconciliation_file"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_generar_pago_masivo()</field>
+            <field name="binding_type">action</field>
+            <field name="usage">ir_actions_server</field>
+        </record>
+    </data>
+</odoo>

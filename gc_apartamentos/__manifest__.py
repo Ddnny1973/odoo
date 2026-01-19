@@ -18,6 +18,7 @@
         'wizard/wizard_generar_facturas_views.xml',
         'data/ir_ui_view_account_reconciliation_file.xml',
         'data/ir_ui_menu_account_reconciliation_file.xml',
+        'data/ir_actions_server_account_reconciliation_file.xml',
     ],
     'images': ['static/description/icon.png'],
     'assets': {

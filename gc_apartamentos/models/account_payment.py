@@ -13,6 +13,13 @@ class AccountPayment(models.Model):
     """
     _inherit = 'account.payment'
 
+    # reconciliation_file_id = fields.Many2one(
+    #         comodel_name='account.reconciliation.file',
+    #         string='Archivo de Conciliación',
+    #         readonly=True,
+    #         help='Archivo de conciliación que originó este pago'
+    #     )
+
     def _auto_reconcile_payment(self):
         """
         Busca facturas pendientes del cliente y las reconcilia automáticamente con este pago.
@@ -194,3 +201,42 @@ class AccountPayment(models.Model):
                 payment._auto_reconcile_payment()
         
         return result
+    
+    @api.model
+    def create_from_reconciliation(
+        self, *, partner_id, amount, payment_date, currency_id, reference=None, journal_code='BNK1', **extra_vals):
+        """
+        Crea un pago inbound asociado a conciliación, usando el diario Banco (BNK1).
+        Devuelve el record de pago creado.
+        """
+        _logger.info(f"🆕 Creando pago desde conciliación para partner {partner_id}, valor {amount}, fecha {payment_date}")
+
+        # Buscar diario Banco
+        journal = self.env['account.journal'].search([('code', '=', journal_code)], limit=1)
+        if not journal:
+            raise ValueError(f"No se encontró el diario con código {journal_code}")
+
+        # Buscar método de pago inbound por defecto
+        payment_method = self.env['account.payment.method'].search([
+            ('payment_type', '=', 'inbound'),
+            ('code', '=', 'manual')
+        ], limit=1)
+        if not payment_method:
+            raise ValueError("No se encontró método de pago inbound (manual)")
+
+        payment_vals = {
+            'partner_id': partner_id,
+            'amount': amount,
+            'payment_date': payment_date,
+            'currency_id': currency_id,
+            'journal_id': journal.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'payment_method_id': payment_method.id,
+            'ref': reference or '',
+        }
+        payment_vals.update(extra_vals)
+
+        payment = self.create(payment_vals)
+        _logger.info(f"✅ Pago creado: {payment.name} (ID: {payment.id})")
+        return payment

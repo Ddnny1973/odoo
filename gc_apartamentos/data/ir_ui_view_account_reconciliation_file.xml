@@ -16,6 +16,7 @@
                     <field name="valor"/>
                     <field name="pasarela"/>
                     <field name="state"/>
+                    <field name="payment_id"/>
                 </list>
             </field>
         </record>
@@ -35,6 +36,7 @@
                             <group string="Identificación">
                                 <field name="documento"/>
                                 <field name="apartamento_id"/>
+                                <field name="payment_id"/>
                             </group>
                         </group>
 
