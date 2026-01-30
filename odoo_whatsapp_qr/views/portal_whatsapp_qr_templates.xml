@@ -39,21 +39,36 @@
                 <p><b>Teléfono:</b> <t t-esc="qr.phone_number"/></p>
                 <p><b>Servicio:</b> <t t-esc="qr.name"/></p>
                 <p><b>QR Code:</b></p>
-                <pre id="qr_code_block" style="font-size:16px; background:#f8f8f8; padding:10px;"><t t-esc="qr.qr_code or ''"/></pre>
+                <pre id="qr_code_block" style="font-size:11px; background:#f8f8f8; padding:10px; line-height: 1; display: inline-block; min-width: 320px;"><t t-esc="qr.qr_code or ''"/></pre>
                 <p><b>Últimos logs:</b></p>
-                <pre id="logs_block" style="font-size:12px; background:#f8f8f8; padding:10px; max-height:300px; overflow:auto;"><t t-esc="qr.logs_preview or ''"/></pre>
+                <pre id="logs_block" style="font-size:10px; background:#f8f8f8; padding:10px; max-height:500px; overflow:auto; min-width: 320px;"><t t-esc="qr.logs_preview or ''"/></pre>
                 <button class="btn btn-secondary" id="update_logs_btn" type="button">Actualizar logs</button>
             </div>
             <script type="text/javascript">
                 $(function(){
-                    $('#update_logs_btn').on('click', function(){
-                        var url = '/my/whatsapp_qr/' + <t t-esc="qr.id"/> + '/update_logs';
+                    var qr_id = <t t-esc="qr.id"/>;
+                    function updateLogs() {
+                        var url = '/my/whatsapp_qr/' + qr_id + '/update_logs';
                         $.jsonRpc(url, 'call', {}).then(function(data){
                             if(data.logs){
                                 $('#logs_block').text(data.logs);
                             }
                         });
-                    });
+                    }
+                    function updateQR() {
+                        var url = '/my/whatsapp_qr/' + qr_id + '/update_qr';
+                        $.jsonRpc(url, 'call', {}).then(function(data){
+                            if(data.qr_code){
+                                $('#qr_code_block').text(data.qr_code);
+                            }
+                        });
+                    }
+                    $('#update_logs_btn').on('click', updateLogs);
+                    // Actualización automática cada 5 segundos
+                    setInterval(function(){
+                        updateLogs();
+                        updateQR();
+                    }, 5000);
                 });
             </script>
         </t>

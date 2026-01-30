@@ -2,6 +2,14 @@ from odoo import http
 from odoo.http import request
 
 class WhatsappQRPortal(http.Controller):
+
+    @http.route(['/my/whatsapp_qr/<int:qr_id>/update_qr'], type='json', auth='user', website=True)
+    def portal_whatsapp_qr_update_qr(self, qr_id, **kw):
+        qr = request.env['whatsapp.qr'].sudo().browse(qr_id)
+        if qr.user_id.id != request.env.user.id:
+            return {'error': 'No autorizado'}
+        qr.action_update_qr()
+        return {'qr_code': qr.qr_code}
     @http.route(['/my/whatsapp_qr/<int:qr_id>/ejecutar_consola'], type='http', auth='user', website=True)
     def portal_whatsapp_qr_ejecutar_consola(self, qr_id, **kw):
         qr = request.env['whatsapp.qr'].sudo().browse(qr_id)
