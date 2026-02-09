@@ -11,6 +11,8 @@
                     <field name="fecha"/>
                     <field name="filename"/>
                     <field name="documento"/>
+                    <field name="referencia_1"/>
+                    <field name="referencia_2"/>
                     <field name="descripcion"/>
                     <field name="apartamento_id"/>
                     <field name="valor"/>

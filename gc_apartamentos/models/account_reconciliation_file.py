@@ -31,12 +31,12 @@ class AccountReconciliationFile(models.Model):
     
     referencia_1 = fields.Char(
         string='Referencia 1',
-        size=50
+        size=250
     )
     
     referencia_2 = fields.Char(
         string='Referencia 2',
-        size=100
+        size=250
     )
     
     documento = fields.Char(
@@ -103,21 +103,23 @@ class AccountReconciliationFile(models.Model):
     )
 
     @api.model
+
     def create(self, vals):
         """Buscar apartamento y crear pago al crear el registro"""
         _logger.info(f"🔄 Creando archivo de conciliación: {vals.get('documento')}")
 
         if not vals.get('apartamento_id'):
-            # Intentar buscar por documento (cédula) o por referencia_1 (número apt)
+            # Intentar buscar por documento (cédula), referencia_1 (número apt) o referencia_2
             apartamento_id = self._buscar_apartamento(
                 numero_apt=vals.get('referencia_1'),
-                cedula=vals.get('documento')
+                cedula=vals.get('documento'),
+                referencia_2=vals.get('referencia_2')
             )
             if apartamento_id:
                 vals['apartamento_id'] = apartamento_id
                 _logger.info(f"✅ Apartamento asignado: {apartamento_id}")
             else:
-                _logger.warning(f"⚠️ No se encontró apartamento para documento: {vals.get('documento')}")
+                _logger.warning(f"⚠️ No se encontró apartamento para documento: {vals.get('documento')}, referencia_1: {vals.get('referencia_1')}, referencia_2: {vals.get('referencia_2')}")
 
         record = super().create(vals)
 
@@ -146,14 +148,14 @@ class AccountReconciliationFile(models.Model):
 
         return record
 
-    def _buscar_apartamento(self, numero_apt=None, cedula=None):
+    def _buscar_apartamento(self, numero_apt=None, cedula=None, referencia_2=None):
         """
-        Buscar apartamento por número o cédula del propietario.
+        Buscar apartamento por número, cédula del propietario o usando referencia_2 como alternativa.
         Retorna el ID del apartamento o None
         """
-        _logger.info(f"🔍 Buscando apartamento - Número: {numero_apt}, Cédula: {cedula}")
-        
-        # Buscar por número de apartamento primero
+        _logger.info(f"🔍 Buscando apartamento - Número: {numero_apt}, Cédula: {cedula}, Referencia 2: {referencia_2}")
+
+        # Buscar por número de apartamento primero (referencia_1)
         if numero_apt:
             try:
                 num = int(numero_apt)
@@ -166,8 +168,8 @@ class AccountReconciliationFile(models.Model):
                     return apartamento.id
             except (ValueError, TypeError):
                 _logger.debug(f"⚠️ No se pudo convertir número de apartamento: {numero_apt}")
-        
-        # Buscar por cédula del propietario
+
+        # Buscar por cédula del propietario (documento)
         if cedula:
             _logger.info(f"🔍 Buscando partner con cédula: {cedula}")
             partner = self.env['res.partner'].search(
@@ -176,7 +178,6 @@ class AccountReconciliationFile(models.Model):
             )
             if partner:
                 _logger.info(f"✅ Partner encontrado: {partner.name}")
-                # Buscar apartamento donde este partner sea propietario
                 apartamento = self.env['gc.apartamento'].search(
                     [('propietario_ids', 'in', [partner.id])],
                     limit=1
@@ -188,7 +189,78 @@ class AccountReconciliationFile(models.Model):
                     _logger.warning(f"⚠️ Partner {partner.name} no tiene apartamentos asociados")
             else:
                 _logger.warning(f"⚠️ No se encontró partner con cédula: {cedula}")
-        
+
+        # Si no se encontró por referencia_1 ni documento, intentar con referencia_2
+        if referencia_2:
+            # Buscar por número de apartamento usando referencia_2
+            try:
+                num2 = int(referencia_2)
+                apartamento = self.env['gc.apartamento'].search(
+                    [('numero_apartamento', '=', num2)],
+                    limit=1
+                )
+                if apartamento:
+                    _logger.info(f"✅ Apartamento encontrado por referencia_2 como número: {num2} → ID: {apartamento.id}")
+                    return apartamento.id
+            except (ValueError, TypeError):
+                _logger.debug(f"⚠️ No se pudo convertir referencia_2 a número: {referencia_2}")
+
+            # Buscar por cédula del propietario usando referencia_2
+            _logger.info(f"🔍 Buscando partner con referencia_2 como cédula: {referencia_2}")
+            partner2 = self.env['res.partner'].search(
+                [('vat', '=', referencia_2)],
+                limit=1
+            )
+            if partner2:
+                _logger.info(f"✅ Partner encontrado por referencia_2: {partner2.name}")
+                apartamento = self.env['gc.apartamento'].search(
+                    [('propietario_ids', 'in', [partner2.id])],
+                    limit=1
+                )
+                if apartamento:
+                    _logger.info(f"✅ Apartamento encontrado por referencia_2 como cédula: {referencia_2} → ID: {apartamento.id}")
+                    return apartamento.id
+                else:
+                    _logger.warning(f"⚠️ Partner {partner2.name} no tiene apartamentos asociados (referencia_2)")
+            else:
+                _logger.warning(f"⚠️ No se encontró partner con referencia_2 como cédula: {referencia_2}")
+
+        # Si no se encontró por referencia_1 ni referencia_2, intentar con documento
+        if cedula:
+            # Buscar por número de apartamento usando documento
+            try:
+                num_doc = int(cedula)
+                apartamento = self.env['gc.apartamento'].search(
+                    [('numero_apartamento', '=', num_doc)],
+                    limit=1
+                )
+                if apartamento:
+                    _logger.info(f"✅ Apartamento encontrado por documento como número: {num_doc} → ID: {apartamento.id}")
+                    return apartamento.id
+            except (ValueError, TypeError):
+                _logger.debug(f"⚠️ No se pudo convertir documento a número: {cedula}")
+
+        # Buscar por nombre del contacto usando descripción (case-insensitive)
+        if descripcion := self.descripcion if hasattr(self, 'descripcion') else None:
+            _logger.info(f"🔍 Buscando partner por nombre usando descripción: {descripcion}")
+            partner_name = descripcion.strip().lower() if descripcion else None
+            if partner_name:
+                partner = self.env['res.partner'].search([
+                    ('name', 'ilike', partner_name)
+                ], limit=1)
+                if partner:
+                    _logger.info(f"✅ Partner encontrado por nombre: {partner.name}")
+                    apartamento = self.env['gc.apartamento'].search([
+                        ('propietario_ids', 'in', [partner.id])
+                    ], limit=1)
+                    if apartamento:
+                        _logger.info(f"✅ Apartamento encontrado por nombre: {partner.name} → ID: {apartamento.id}")
+                        return apartamento.id
+                    else:
+                        _logger.warning(f"⚠️ Partner {partner.name} no tiene apartamentos asociados (por nombre/descripción)")
+                else:
+                    _logger.warning(f"⚠️ No se encontró partner por nombre: {partner_name}")
+
         return None
 
     def unlink(self):
