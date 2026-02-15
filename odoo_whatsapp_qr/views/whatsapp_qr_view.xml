@@ -13,8 +13,12 @@
                         <field name="name" groups="base.group_system"/>
                         <field name="phone_number"/>
                         <field name="user_id"/>
-                        <field name="qr_code" style="min-height: 220px; font-size: 16px; white-space: pre; font-family: monospace;"/>
-                        <field name="logs_preview" readonly="1" style="height: 200px; white-space: pre; font-size: 12px;"/>
+                    </group>
+                    <group string="Código QR de Vinculación">
+                        <field name="qr_code" widget="text" nolabel="1" style="min-height: 200px; font-size: 6px; white-space: pre; font-family: 'Courier New', monospace; line-height: 1; letter-spacing: 0; background-color: #f8f8f8; padding: 10px;"/>
+                    </group>
+                    <group string="Últimos Logs del Contenedor">
+                        <field name="logs_preview" widget="text" nolabel="1" readonly="1" style="height: 250px; white-space: pre-wrap; font-size: 11px; font-family: monospace; background-color: #2d2d2d; color: #cccccc; padding: 10px;"/>
                     </group>
                 </sheet>
             </form>
