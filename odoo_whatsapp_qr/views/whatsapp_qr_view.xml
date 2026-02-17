@@ -15,7 +15,7 @@
                         <field name="user_id"/>
                     </group>
                     <group string="Código QR de Vinculación">
-                        <field name="qr_code" widget="text" nolabel="1" style="min-height: 200px; font-size: 6px; white-space: pre; font-family: 'Courier New', monospace; line-height: 1; letter-spacing: 0; background-color: #f8f8f8; padding: 10px;"/>
+                        <field name="qr_code" widget="text" nolabel="1" style="min-height: 400px; font-size: 10px; white-space: pre; font-family: 'Courier New', monospace; line-height: 0.9; letter-spacing: 2px; background-color: #f8f8f8; padding: 20px;"/>
                     </group>
                     <group string="Últimos Logs del Contenedor">
                         <field name="logs_preview" widget="text" nolabel="1" readonly="1" style="height: 250px; white-space: pre-wrap; font-size: 11px; font-family: monospace; background-color: #2d2d2d; color: #cccccc; padding: 10px;"/>

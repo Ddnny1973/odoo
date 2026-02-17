@@ -35,41 +35,44 @@ class WhatsappQR(models.Model):
         try:
             client = docker.from_env()
             container = client.containers.get(self.name)
-            logs = container.logs(tail=150).decode('utf-8')
-            # Log para depuración
-            with open('/tmp/odoo_qr_debug.log', 'w', encoding='utf-8') as f:
-                f.write(logs)
+            # Obtener más logs para asegurar que tenemos el más reciente
+            logs = container.logs(tail=200).decode('utf-8')
             
             # Buscar imagen base64
             match = re.search(r'(data:image\/png;base64,[A-Za-z0-9+/=]+)', logs)
             if match:
                 return match.group(1)
             
-            # Buscar el QR ASCII más reciente usando el patrón de wppconnect
-            # El QR aparece precedido por texto como "Escanea este QR para vincular"
-            qr_marker_pattern = r'Escanea este QR.*?[\r\n]+(.*?)(?=\n\n|\n[^\s█]|$)'
-            qr_match = re.findall(qr_marker_pattern, logs, re.DOTALL | re.IGNORECASE)
+            # Búsqueda mejorada: encontrar bloques QR puros (solo caracteres de QR)
+            # Los QR ASCII tienen un patrón consistente: líneas repetidas y similares en tamaño
+            lines = logs.split('\n')
+            qr_blocks = []
+            current_block = []
             
-            if qr_match:
-                # Retornar el ÚLTIMO QR encontrado (el más reciente)
-                qr_ascii = qr_match[-1].strip()
-                # Validar que tenga el patrón de bloques del QR
-                if '█' in qr_ascii and len(qr_ascii) > 200:
-                    return qr_ascii
+            for line in lines:
+                qr_char_count = line.count('█') + line.count('▀') + line.count('▁') + line.count('▂') + line.count('▓')
+                
+                # Si la línea tiene muchos caracteres de QR, es parte de un bloque QR
+                if qr_char_count > 10:
+                    current_block.append(line)
+                else:
+                    # Si terminamos un bloque (línea sin QR chars)
+                    if current_block and len(current_block) > 15:  # Mínimo 15 líneas para ser un QR válido
+                        qr_blocks.append('\n'.join(current_block))
+                    current_block = []
             
-            # Fallback: buscar bloques que contengan el carácter █ (típico de QR ASCII)
-            # Dividir los logs en bloques y buscar el que tenga el patrón QR
-            qr_blocks = re.split(r'\n\s*\n', logs)
-            qr_candidates = [block for block in qr_blocks if '█' in block and block.count('\n') > 15]
+            # No olvidar el último bloque si existe
+            if current_block and len(current_block) > 15:
+                qr_blocks.append('\n'.join(current_block))
             
-            if qr_candidates:
-                # Retornar el ÚLTIMO bloque QR encontrado
-                return qr_candidates[-1].strip()
+            if qr_blocks:
+                # Retornar el ÚLTIMO bloque QR (el más reciente)
+                last_qr = qr_blocks[-1].strip()
+                if last_qr:
+                    return last_qr
                 
             return 'QR no encontrado. Espera unos segundos y actualiza.'
         except Exception as e:
-            with open('/tmp/odoo_qr_debug.log', 'a', encoding='utf-8') as f:
-                f.write(f'\n--- Error: {str(e)} ---\n')
             return f'Error: {str(e)}'
     
     def _get_logs_without_qr(self):

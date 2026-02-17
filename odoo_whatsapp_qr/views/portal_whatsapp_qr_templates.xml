@@ -49,12 +49,15 @@
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Código QR de Vinculación</h5>
                     </div>
-                    <div class="card-body text-center" style="background-color: #f8f8f8;">
-                        <pre id="qr_code_block" style="font-size:6px; background:#ffffff; padding:20px; line-height: 1; display: inline-block; font-family: 'Courier New', monospace; letter-spacing: 0; white-space: pre; border: 2px solid #ddd; border-radius: 5px;"><t t-esc="qr.qr_code or 'Cargando QR...'"/></pre>
+                    <div class="card-body text-center" style="background-color: #f8f8f8; padding: 20px; display: flex; justify-content: center; align-items: center;">
+                        <div style="display: inline-block; border: 3px solid #333; padding: 15px; background: white;">
+                            <pre id="qr_code_block" style="font-size:8px; background:#ffffff; line-height: 1; font-family: 'Courier New', monospace; white-space: pre; letter-spacing: 0; margin: 0; padding: 0; aspect-ratio: 1 / 1; max-height: 500px; overflow: hidden;"><t t-esc="qr.qr_code or 'Cargando QR...'"/></pre>
+                        </div>
                         <div class="mt-3">
                             <button class="btn btn-primary" id="update_qr_btn" type="button">
                                 <i class="fa fa-refresh"></i> Actualizar QR
                             </button>
+                            <p class="small text-muted mt-2" style="margin: 0;">Última actualización: <span id="qr_last_update">--:--:--</span></p>
                         </div>
                     </div>
                 </div>
@@ -69,41 +72,84 @@
                             <button class="btn btn-secondary" id="update_logs_btn" type="button">
                                 <i class="fa fa-refresh"></i> Actualizar Logs
                             </button>
+                            <p class="small" style="margin: 0; margin-top: 10px; color: #cccccc;">Última actualización: <span id="logs_last_update">--:--:--</span></p>
                         </div>
                     </div>
                 </div>
             </div>
             <script type="text/javascript">
+                <![CDATA[
                 $(function(){
                     var qr_id = <t t-esc="qr.id"/>;
+                    var qrLastUpdate = $('#qr_last_update');
+                    var logsLastUpdate = $('#logs_last_update');
+                    
+                    function updateTimestamp(element) {
+                        if (element.length) {
+                            var now = new Date();
+                            var hours = String(now.getHours()).padStart(2, '0');
+                            var minutes = String(now.getMinutes()).padStart(2, '0');
+                            var seconds = String(now.getSeconds()).padStart(2, '0');
+                            element.text(hours + ':' + minutes + ':' + seconds);
+                        }
+                    }
+                    
                     function updateLogs() {
-                        $('#update_logs_btn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Actualizando...');
-                        var url = '/my/whatsapp_qr/' + qr_id + '/update_logs';
-                        $.jsonRpc(url, 'call', {}).then(function(data){
-                            if(data.logs){
-                                $('#logs_block').text(data.logs);
-                            }
-                            $('#update_logs_btn').prop('disabled', false).html('<i class="fa fa-refresh"></i> Actualizar Logs');
-                        });
+                        $('#update_logs_btn').prop('disabled', true).text('Actualizando...');
+                        $.jsonRpc('/my/whatsapp_qr/' + qr_id + '/update_logs', 'call', {})
+                            .done(function(data) {
+                                if (data.logs) {
+                                    $('#logs_block').text(data.logs);
+                                    $('#logs_block').parent().scrollTop($('#logs_block').parent()[0].scrollHeight);
+                                    console.log('Logs actualizados');
+                                }
+                                updateTimestamp(logsLastUpdate);
+                            })
+                            .fail(function(error) {
+                                console.error('Error actualizando logs:', error);
+                            })
+                            .always(function() {
+                                $('#update_logs_btn').prop('disabled', false).html('<i class="fa fa-refresh"></i> Actualizar Logs');
+                            });
                     }
+                    
                     function updateQR() {
-                        $('#update_qr_btn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Actualizando...');
-                        var url = '/my/whatsapp_qr/' + qr_id + '/update_qr';
-                        $.jsonRpc(url, 'call', {}).then(function(data){
-                            if(data.qr_code){
-                                $('#qr_code_block').text(data.qr_code);
-                            }
-                            $('#update_qr_btn').prop('disabled', false).html('<i class="fa fa-refresh"></i> Actualizar QR');
-                        });
+                        $('#update_qr_btn').prop('disabled', true).text('Actualizando...');
+                        $.jsonRpc('/my/whatsapp_qr/' + qr_id + '/update_qr', 'call', {})
+                            .done(function(data) {
+                                if (data.qr_code) {
+                                    $('#qr_code_block').text(data.qr_code);
+                                    $('#qr_code_block')[0].scrollTop = $('#qr_code_block')[0].scrollHeight;
+                                    console.log('QR actualizado');
+                                }
+                                updateTimestamp(qrLastUpdate);
+                            })
+                            .fail(function(error) {
+                                console.error('Error actualizando QR:', error);
+                            })
+                            .always(function() {
+                                $('#update_qr_btn').prop('disabled', false).html('<i class="fa fa-refresh"></i> Actualizar QR');
+                            });
                     }
+                    
+                    // Inicializar timestamps
+                    updateTimestamp(qrLastUpdate);
+                    updateTimestamp(logsLastUpdate);
+                    
+                    // Event listeners
                     $('#update_logs_btn').on('click', updateLogs);
                     $('#update_qr_btn').on('click', updateQR);
-                    // Actualización automática cada 10 segundos
+                    
+                    // Scroll inicial
+                    $('#qr_code_block')[0].scrollTop = $('#qr_code_block')[0].scrollHeight;
+                    
+                    // Auto-update cada 10 segundos
                     setInterval(function(){
-                        updateLogs();
                         updateQR();
+                        updateLogs();
                     }, 10000);
                 });
+                ]]>
             </script>
         </t>
     </template>
