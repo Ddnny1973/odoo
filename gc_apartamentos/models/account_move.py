@@ -266,6 +266,9 @@ class AccountMove(models.Model):
             ('default_code', '=', 'SALDO')
         ], limit=1)
         saldo_admon = self.apartamento_id.saldo_admon
+        import logging
+        _logger = logging.getLogger(__name__)
+
         if producto_saldo and saldo_admon > 0:
             existe_saldo = self.invoice_line_ids.filtered(
                 lambda l: l.product_id.id == producto_saldo.id and (l.name or '') == 'Saldo pendiente'
@@ -278,21 +281,23 @@ class AccountMove(models.Model):
                     'name': 'Saldo pendiente',
                 })
 
-            # 4) SALFA: agregar línea si saldo_admon < 0 y producto existe
-            producto_salfa = self.env['product.product'].search([
-                ('default_code', '=', 'SALFAV')
-            ], limit=1)
-            if producto_salfa and saldo_admon < 0:
-                existe_salfa = self.invoice_line_ids.filtered(
-                    lambda l: l.product_id.id == producto_salfa.id and (l.name or '') == 'Saldo a Favor'
-                )
-                if not existe_salfa:
-                    self.invoice_line_ids += line_model.new({
-                        'product_id': producto_salfa.id,
-                        'quantity': 1.0,
-                        'price_unit': saldo_admon,
-                        'name': 'Saldo a Favor',
-                    })
+        # 4) SALFA: agregar línea si saldo_admon < 0 y producto existe
+        producto_salfa = self.env['product.product'].search([
+            ('default_code', '=', 'SALFAV')
+        ], limit=1)
+        _logger.warning(f"[GC_APARTAMENTOS] saldo_admon={saldo_admon}, producto_salfa={producto_salfa}")
+        if producto_salfa and saldo_admon < 0:
+            existe_salfa = self.invoice_line_ids.filtered(
+                lambda l: l.product_id.id == producto_salfa.id and (l.name or '') == 'Saldo a Favor'
+            )
+            _logger.warning(f"[GC_APARTAMENTOS] existe_salfa={existe_salfa}")
+            if not existe_salfa:
+                self.invoice_line_ids += line_model.new({
+                    'product_id': producto_salfa.id,
+                    'quantity': 1.0,
+                    'price_unit': saldo_admon,
+                    'name': 'Saldo a Favor',
+                })
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
