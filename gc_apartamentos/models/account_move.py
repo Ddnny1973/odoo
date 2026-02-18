@@ -284,14 +284,14 @@ class AccountMove(models.Model):
             ], limit=1)
             if producto_salfa and saldo_admon < 0:
                 existe_salfa = self.invoice_line_ids.filtered(
-                    lambda l: l.product_id.id == producto_salfa.id and (l.name or '').strip().upper() == 'SALFA'
+                    lambda l: l.product_id.id == producto_salfa.id and (l.name or '') == 'Saldo a favor'
                 )
                 if not existe_salfa:
                     self.invoice_line_ids += line_model.new({
                         'product_id': producto_salfa.id,
                         'quantity': 1.0,
                         'price_unit': saldo_admon,
-                        'name': 'SALFA',
+                        'name': 'Saldo a favor',
                     })
 
     @api.onchange('partner_id')
