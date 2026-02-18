@@ -278,6 +278,22 @@ class AccountMove(models.Model):
                     'name': 'Saldo pendiente',
                 })
 
+            # 4) SALFA: agregar línea si saldo_admon < 0 y producto existe
+            producto_salfa = self.env['product.product'].search([
+                ('default_code', '=', 'SALFA')
+            ], limit=1)
+            if producto_salfa and saldo_admon < 0:
+                existe_salfa = self.invoice_line_ids.filtered(
+                    lambda l: l.product_id.id == producto_salfa.id and (l.name or '').strip().upper() == 'SALFA'
+                )
+                if not existe_salfa:
+                    self.invoice_line_ids += line_model.new({
+                        'product_id': producto_salfa.id,
+                        'quantity': 1.0,
+                        'price_unit': saldo_admon,
+                        'name': 'SALFA',
+                    })
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """
