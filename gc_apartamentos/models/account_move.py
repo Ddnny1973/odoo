@@ -280,7 +280,7 @@ class AccountMove(models.Model):
 
             # 4) SALFA: agregar línea si saldo_admon < 0 y producto existe
             producto_salfa = self.env['product.product'].search([
-                ('default_code', '=', 'SALFA')
+                ('default_code', '=', 'SALFAV')
             ], limit=1)
             if producto_salfa and saldo_admon < 0:
                 existe_salfa = self.invoice_line_ids.filtered(
