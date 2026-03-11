@@ -1,0 +1,46 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="reconocimiento_logistico_team_form_view" model="ir.ui.view">
+       <field name="name">reconocimiento.logistico.team.form.view</field>
+       <field name="model">gestor.reconocimiento.logistico.team</field>
+       <field name="arch" type="xml">
+         <form string="Reconocimiento logístico TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="fecha"/>
+                   <field name="precio_final"/>
+                   <field name="precio_final_sin_iva"/>
+                   <field name="valor_sim_iva"/>
+                   <field name="reconocimiento"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="reconocimiento_logistico_team_tree_view" model="ir.ui.view">
+        <field name="name">reconocimiento.logistico.team.tree</field>
+        <field name="model">gestor.reconocimiento.logistico.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field colspan="4" name="name"/>
+                <field colspan="4" name="fecha"/>
+                <field name="precio_final"/>
+                <field name="precio_final_sin_iva"/>
+                <field name="valor_sim_iva"/>
+                <field name="reconocimiento"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_reconocimiento_logistico_team">
+        <field name="name">Reconocimiento Logístico TEAM</field>
+        <field name="res_model">gestor.reconocimiento.logistico.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,79 @@
+<table style="width:100%;border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;"><tbody><tr><td style="border-collapse:collapse;padding: 0" valign="top" align="center">
+            % set user = ctx.get('user', user)
+            % set company = user.company_id
+            % set data = object.compute_kpis(company, user)
+            % set tips = object.compute_tips(company, user)
+            % set kpi_actions = object.compute_kpis_actions(company, user)
+            % set kpis = data.yesterday.keys()
+            <table style="width:100%;max-width: 600px; border-spacing: 0; border: 1px solid #e7e7e7; border-bottom: none; color: #6e7172; line-height: 23px; text-align: left;">
+                <tbody>
+                    <tr>
+                        <td style="border-collapse:collapse;padding: 10px 20px; text-align: left;">
+                            <strong style="color:#000000;font-size: 22px; line-height: 32px;">${object.name}</strong>
+                            <div style="color:#000000;font-size: 15px;">${datetime.date.today().strftime('%B %d, %Y')}</div>
+                        </td>
+                        <td style="text-align:right;padding: 10px 20px">
+                            <img style="padding:0px;margin: 0px; height: auto; width: 80px;" src="https://erp.gestorconsultoria.com.co/logo.png?company=${company.id}">
+                            <div style="padding-top:5px;">
+                                <a href="https://erp.gestorconsultoria.com.co/web/login" style="text-decoration:none;background-color:#875A7B;margin-left: 5px; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Conectar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr><td colspan="2" style="text-align:center;">
+                        <hr style="border-top-style:solid;background-color:rgb(204,204,204);border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 14px;" width="95%">
+                    </td></tr>
+                </tbody>
+            </table>
+            <table style="border-spacing:0;width: 100%; max-width: 600px;">
+                <tbody>
+                    <tr>
+                        <td style="border-collapse:collapse;background-color: #ffffff; border-left: 1px solid #e7e7e7; border-right: 1px solid #e7e7e7; line-height: 21px; padding: 0 20px 10px 20px; text-align: left;"><br></td>
+                    </tr>
+                    <tr>
+                        <td style="border-collapse:collapse;margin: 0; padding:0;">
+
+                        <br></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="width:100%;max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
+                    <tbody><tr>
+                        <td style="border-collapse:collapse;background-color: #ffffff; line-height: 21px; padding: 0px 20px 20px;"><br></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="width:100%;max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
+                <tbody>
+                    <tr>
+                        <td style="border-collapse:collapse;background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;"><h1><br></h1>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h1><font class="text-alpha">${object.kpi_empleado_noexistentes_value}</font></h1><h4>Empleados Activos</h4>
+                                        </td>
+                                        <td>
+                                            <h1><font class="text-alpha">${object.kpi_empleado_sin_identificacion_value}</font></h1><h4>Empleados Sin Identificación<br></h4>
+                                        </td>
+                                        <td>
+                                            <h1><font class="text-alpha">${object.kpi_empleado_sin_correo_value}</font></h1><h4>Empleados Sin Correo</h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table><h1><br><font class="text-alpha"><br></font></h1><h4><br></h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:20px;">
+                            <div style="text-align:center;"><a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank" style="text-decoration:none;"></a><a href="https://itunes.apple.com/us/app/odoo/id1272543640" target="_blank" style="text-decoration:none;"></a>
+                            </div>
+                            <br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="margin-top:5px;border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;">
+                <tbody>
+                    <tr><td style="border-collapse:collapse;margin: 0; padding: 10px 20px;"><div style="margin-top:20px;"> ¿Quieres personalizar este correo electrónico? <a href="https://erp.gestorconsultoria.com.co/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="text-decoration:none;color:#875A7B;">Elige las métricas que te interesan</a></div><p style="font-size:11px;margin-top: 10px;"><strong> Enviado por <a href="https://www.odoo.com" style="text-decoration:none;color: #875A7B;">G</a>estor Contable ERP - <a href="https://erp.gestorconsultoria.com.co/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="text-decoration:none;color:#888888;">Cancelar suscripción</a></strong></p></td></tr></tbody></table></td></tr>
+            </tbody>
+</table>

@@ -1,0 +1,96 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Productos -->
+    <!-- Forms -->
+    <record id="productos_team_form_view" model="ir.ui.view">
+       <field name="name">productos.team.form.view</field>
+       <field name="model">gestor.productos.team</field>
+       <field name="arch" type="xml">
+         <form string="Productos">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="codigo"/>
+                   <field name="descripcion"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="productos_team_tree_view" model="ir.ui.view">
+        <field name="name">productos.team.tree</field>
+        <field name="model">gestor.productos.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field colspan="4" name="name"/>
+                <field colspan="4" name="codigo"/>
+                <field name="descripcion"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_productos_team">
+        <field name="name">Productos TEAM</field>
+        <field name="res_model">gestor.productos.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Tipo de productos -->
+    <!-- Forms -->
+    <record id="tipo_productos_team_form_view" model="ir.ui.view">
+       <field name="name">tipo.productos.team.form.view</field>
+       <field name="model">gestor.tipo.productos.team</field>
+       <field name="arch" type="xml">
+         <form string="Tipo de Productos">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="tipo_productos_team_tree_view" model="ir.ui.view">
+        <field name="name">tipo.productos.team.tree</field>
+        <field name="model">gestor.tipo.productos.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field colspan="4" name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_tipo_productos_team">
+        <field name="name">Tipo Productos TEAM</field>
+        <field name="res_model">gestor.tipo.productos.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- Sub Productos -->
+    <!-- Root -->
+    <!-- <menuitem
+      id="submenu_productos"
+      action="gestor_productos_team"
+      parent="gestor_team.menu_gestor_team"
+      sequence="3"/> -->
+
+    <!-- Productos -->
+    <!-- <menuitem
+      id="gestor_productos"
+      action="gestor_productos_team"
+      parent="submenu_productos"
+      sequence="10"/> -->
+
+    <!-- Tipo de productos -->
+    <!-- <menuitem
+      id="gestor_productos"
+      action="gestor_tipo_productos_team"
+      parent="submenu_productos"
+      sequence="20"/> -->
+
+</odoo>

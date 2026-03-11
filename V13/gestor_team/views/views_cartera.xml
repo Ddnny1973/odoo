@@ -1,0 +1,38 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="gestor_cartera_form_view" model="ir.ui.view">
+       <field name="name">gestor.cartera.team.form.view</field>
+       <field name="model">gestor.cartera.team</field>
+       <field name="arch" type="xml">
+         <form string="Saldo en Cartera">
+               <group col="4">
+                    <field colspan="4" name="name" />
+                    <field colspan="4" name="saldo" />
+                </group>
+          </form>
+        </field>
+     </record>
+
+     <!-- tree -->
+     <record id="gestor_cartera_team_tree_view" model="ir.ui.view">
+         <field name="name">gestor.cartera.team.tree</field>
+         <field name="model">gestor.cartera.team</field>
+         <field name="arch" type="xml">
+             <tree>
+                 <field name="name" />
+                 <field name="saldo" />
+             </tree>
+         </field>
+     </record>
+
+     <!-- actions -->
+     <record model="ir.actions.act_window"
+         id="gestor_cartera_team">
+         <field name="name">Saldo en Cartera</field>
+         <field name="res_model">gestor.cartera.team</field>
+         <field name="view_mode">tree,form</field>
+     </record>
+
+ </odoo>

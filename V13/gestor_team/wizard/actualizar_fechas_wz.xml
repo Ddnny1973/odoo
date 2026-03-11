@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_actualizar_fechas_wizard" model="ir.ui.view">
+        <field name="name">gestor.actualizar.fechas.wizard</field>
+        <field name="model">gestor.actualizar.fechas.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Actualizar Fechas de Ventas en TIPS">
+                <label
+                    string="Este proceso actualizará las fechas en TIPS de acuerdo a como estan en RP"
+                    colspan="2"
+                    for=""
+                />
+                <footer>
+                    <button
+                        name="action_fechas_update"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menú acciones -->
+    <act_window id="action_fechas_update"
+                name="Actualizar Fechas"
+                res_model="gestor.actualizar.fechas.wizard"
+                binding_model="gestor.cruce.ventas.tips"
+                view_mode="form"
+                target="new"
+                binding_views="list,form"  />
+
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_carga_hogares_wizard" model="ir.ui.view">
+        <field name="name">gestor.carga.hogares.wizard</field>
+        <field name="model">gestor.carga.hogares.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Carga de archivos Claro Hogar">
+                <label
+                    string="Este proceso cargará el archivo Claro Hogar."
+                    colspan="2"
+                    for=""
+                />
+                <footer>
+                    <button
+                        name="action_ok"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_cargar_hogar_wizard" model="ir.actions.act_window">
+        <field name="name">Cargar archivo de Hogares Claro</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.carga.hogares.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

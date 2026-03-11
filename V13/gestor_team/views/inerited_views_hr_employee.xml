@@ -1,0 +1,207 @@
+<odoo>
+    <record id="gestor_hr_employee_tree_view" model="ir.ui.view">
+        <field name="name">gestor.hr.employee.tree.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='identification_id']" position="after">
+                <field name="sucursal_id"/>
+                <field name="category_id"/>
+                <field name="tarifa_especial_id"/>
+                <field name="tipo_cuenta" optional="hide"/>
+                <field name="banco_id" optional="hide"/>
+                <field name="cuenta_id" optional="hide"/>
+                <field name="nombre_titular" optional="hide"/>
+                <field name="tipo_documento_titular" optional="hide"/>
+                <field name="identificacion_titular" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="gestor_hr_employee_kanban_view" model="ir.ui.view">
+        <field name="name">gestor.hr.employee.kanban.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_phone']" position="after">
+                <li t-if="record.sucursal_id.raw_value" class="o_force_ltr"><field name="sucursal_id"/></li>
+                <li t-if="record.category_id.raw_value" class="o_force_ltr"><field name="category_id"/></li>
+                <li t-if="record.tarifa_especial_id.raw_value" class="o_force_ltr"><field name="tarifa_especial_id"/></li>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="gestor_hr_employee_form_view" model="ir.ui.view">
+        <field name="name">gestor.hr.employee.form.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[2]" position="after">
+                <button name="cargar_liquidaciones" string="Liquidaciones" type="object" groups="gestor_team.group_gestor_team"/>
+            </xpath>
+
+            <xpath expr="//field[@name='job_id']" position="after">
+                <!-- <field name="sucursal_id" readonly="True" /> -->
+                <field name="sucursal_historico_cont" invisible='True'/>
+                <field name="responsable_historico_cont" invisible='True'/>
+                <field name="job_historico_cont" invisible='True'/>
+                <field name="categoria_historico_cont" invisible='True'/>
+                <field name="sucursal_id" attrs="{'readonly': [('sucursal_historico_cont', '>', 0)]}" />
+                <field name="comision_propia"/>
+                <field name="no_biometrias"/>
+                <field name="validar_api"/>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="replace">
+                <!-- <attribute name='readonly'>1</attribute> -->
+                <field name="job_id" attrs="{'readonly': [('job_historico_cont', '>', 0)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="estado_vendedor" />
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="replace">
+                <!-- <attribute name='readonly'>1</attribute> -->
+                 <field name="parent_id" attrs="{'readonly': [('responsable_historico_cont', '>', 0)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='category_ids']" position="replace">
+                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags" groups="hr.group_hr_manager" attrs="{'readonly': [('categoria_historico_cont', '>', 0)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='category_ids']" position="after">
+                <group>
+                    <field name="tarifa_especial_id" options="{'color_field': 'color'}" placeholder="Tarifa Especial" groups="hr.group_hr_manager" readonly="True"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='category_ids']" position="replace">
+                <group>
+                    <field name="category_id" options="{'color_field': 'color'}" placeholder="Categoría" groups="hr.group_hr_manager" />
+                </group>
+            </xpath>
+            <!-- <xpath expr="//page[@name='personal_information']/group/group[@name='Education']" position="after"> -->
+            <xpath expr="//page[@name='personal_information']/group/group[7]" position="after">
+                <group string="Datos Bancarios">
+                    <field name="tipo_cuenta"/>
+                    <field name="banco_id" options="{'no_create_edit': True}"/>
+                    <field name="cuenta_id"/>
+                    <field name="otro_titular"/>
+                    <field name="nombre_titular" attrs="{'invisible': [('otro_titular', '=', False)]}"/>
+                    <field name="tipo_documento_titular" attrs="{'invisible': [('otro_titular', '=', False)]}"/>
+                    <field name="identificacion_titular" attrs="{'invisible': [('otro_titular', '=', False)]}"/>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']" position="after">
+                <page name="comisiones" string="Comisiones">
+                    <group string="Impuestos y retenciones">
+                        <field name="iva"/>
+                        <field name="retencion"/>
+                        <field name="reteiva"/>
+                        <field name="descuento_biometria"/>
+                        <field name="pagar_a"/>
+                    </group>
+                    <group>
+                        <field name="comisiones_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+                <page name="Historicos" string="Historicos">
+                    <group>
+                        <field name="tarifa_especial_ids" />
+                    </group>
+                    <group>
+                        <field name="categoria_historico_ids" />
+                    </group>
+                    <group>
+                        <field name="job_historico_ids" />
+                    </group>
+                    <group>
+                        <field name="sucursal_historico_ids" />
+                    </group>
+                    <group>
+                        <field name="responsable_historico_ids" />
+                    </group>
+                </page>
+                <page name="Comisiones Hogar" string="Comisión Hogar">
+                    <group nolabel="1">
+                        <field name="comisiones_hogar_ids" nolabel="1"/>
+                    </group>
+                </page>
+                <page name="porcentajepresupuestales_ids" string="Presupuestos">
+                    <group>
+                        <field name="porcentajepresupuestales_ids" nolabel="1" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Histórico Categoría -->
+    <!-- tree -->
+    <record id="gestor_hr_categoria_historicotree_view" model="ir.ui.view">
+        <field name="name">gestor_hr_categoria_historico_tree</field>
+        <field name="model">gestor.hr.categoria.historico</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" delete="false">
+                <field name="name" options="{'no_create_edit': True, 'no_create':True, 'no_quick_create':True}"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Histórico Cargo -->
+    <!-- tree -->
+    <record id="hr_job_historico_tree_view" model="ir.ui.view">
+        <field name="name">hr_job_historico_tree</field>
+        <field name="model">hr.job.historico</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" delete="false">
+                <field name="name" options="{'no_create_edit': True, 'no_create':True, 'no_quick_create':True}"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Histórico Cargo -->
+    <!-- tree -->
+    <record id="gestor_hr_sucursal_historico_tree_view" model="ir.ui.view">
+        <field name="name">gestor_hr_sucursal_historico_tree</field>
+        <field name="model">gestor.hr.sucursal.historico</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" delete="false">
+                <field name="name" options="{'no_create_edit': True, 'no_create':True, 'no_quick_create':True}"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Histórico Cargo -->
+    <!-- tree -->
+    <record id="hr_responsable_historico_tree_view" model="ir.ui.view">
+        <field name="name">hr_responsable_historico_tree</field>
+        <field name="model">hr.responsable.historico</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" delete="false">
+                <field name="name" options="{'no_create_edit': True, 'no_create':True, 'no_quick_create':True}" />
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Descuentos -->
+    <record model="ir.ui.view" id="view_hr_employee_form_inherited">
+        <field name="name">hr.employee.descuentos.form.inherited</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="90"/>
+        <field name="arch" type="xml">
+           <xpath expr="//page[@name='hr_settings']/group" position="after">
+             <group string="Descuentos" name="descuentos">
+                 <field name="prestamos" string=""/>
+             </group>
+          </xpath>
+          <xpath expr="//page[@name='hr_settings']/group/group/field[@name='user_id']" position="after">
+                <field name="user_id_tips" string="USER ID TIPSII"/>
+         </xpath>
+        </field>
+    </record>
+</odoo>

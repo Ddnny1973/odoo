@@ -63,12 +63,12 @@ class HomeTkobr(Home):
                 user = request.env.user
                 if uid is not SUPERUSER_ID:
                     # check for multiple sessions block
-                    sessions = session_obj.search(
-                        [('user_id', '=', uid), ('logged_in', '=', True)])
-
-                    if sessions and user.multiple_sessions_block:
-                        multi_ok = False
-
+                # IMPORTANTE: Solo contar sesiones VÁLIDAS (no expiradas)
+                # para evitar que sesiones antiguas bloqueen nuevos logins
+                sessions = session_obj.search(
+                    [('user_id', '=', uid),
+                     ('logged_in', '=', True),
+                     ('date_expiration', '>', now.strftime(DEFAULT_SERVER_DATETIME_FORMAT))])
                     if multi_ok:
                         # check calendars
                         attendance_obj = request.env[
@@ -203,10 +203,13 @@ class HomeTkobr(Home):
             logged_in = False
             sessions = False
         else:
+            # IMPORTANTE: Filtrar por date_expiration para no reutilizar
+            # sesiones expiradas que aún tienen logged_in=True
             sessions = session_obj.search([('session_id', '=', sid),
                                            ('ip', '=', ip),
                                            ('user_id', '=', uid),
-                                           ('logged_in', '=', True)],
+                                           ('logged_in', '=', True),
+                                           ('date_expiration', '>', now.strftime(DEFAULT_SERVER_DATETIME_FORMAT))],
                                           )
         if not sessions:
             date_expiration = (now + relativedelta(

@@ -1,0 +1,54 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="gestor_kit_prepagos_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.kit.prepagos.team.form.view</field>
+       <field name="model">gestor.kit.prepagos.team</field>
+       <field name="arch" type="xml">
+         <form string="Equipos KIT Prepago">
+               <group col="4">
+                    <field colspan="4" name="identificacion" />
+                    <field colspan="4" name="vendedor" />
+                    <field colspan="4" name="producto" />
+                    <field colspan="4" name="numerofefactura" />
+                    <field colspan="4" name="fechadeventa" />
+                    <field colspan="4" name="cantidad" />
+                </group>
+                <group col="4">
+                     <field colspan="4" name="vendedor_id" />
+                     <field colspan="4" name="job_id" />
+                     <field colspan="4" name="responsable_id" />
+                 </group>
+          </form>
+        </field>
+     </record>
+
+     <!-- tree -->
+     <record id="gestor_kit_prepagos_team_tree_view" model="ir.ui.view">
+         <field name="name">gestor.kit.prepagos.team.tree</field>
+         <field name="model">gestor.kit.prepagos.team</field>
+         <field name="arch" type="xml">
+             <tree>
+                 <field name="identificacion" />
+                 <field name="vendedor" />
+                 <field name="job_id" />
+                 <field name="producto" />
+                 <field name="numerofefactura" />
+                 <field name="fechadeventa" />
+                 <field name="cantidad" />
+                 <field name="responsable_id" />
+
+             </tree>
+         </field>
+     </record>
+
+     <!-- actions -->
+     <record model="ir.actions.act_window"
+         id="gestor_kit_prepagos_team">
+         <field name="name">Equipos Kit Prepago</field>
+         <field name="res_model">gestor.kit.prepagos.team</field>
+         <field name="view_mode">tree,form</field>
+     </record>
+
+ </odoo>

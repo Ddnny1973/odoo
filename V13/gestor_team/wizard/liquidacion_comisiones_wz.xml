@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_liquidacion_comisiones_wizard" model="ir.ui.view">
+        <field name="name">gestor.liquidacion.comisiones.wizard</field>
+        <field name="model">gestor.liquidacion.comisiones.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Liquidación de comisiones">
+                <label
+                    string="Este proceso realizará la liquidación de comisiones."
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <field name="employee_id"/>
+                </group>
+                <group>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                </group>
+                <footer>
+                    <button
+                        name="liquidar"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_liquidacion_comisiones_wizard" model="ir.actions.act_window">
+        <field name="name">Liquidación de comisiones</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.liquidacion.comisiones.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

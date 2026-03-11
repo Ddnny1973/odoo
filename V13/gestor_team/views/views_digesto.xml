@@ -1,0 +1,20 @@
+<odoo>
+    <record id="digest_from_view" model="ir.ui.view">
+        <field name="name">digest_form.view</field>
+        <field name="model">digest.digest</field>
+        <field name="inherit_id" ref="digest.digest_digest_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='kpi_general']" position="after">
+                <group name="kpi_empleado_noexistentes" string="Empleado Activos" >
+                    <field name="kpi_empleado_noexistentes"/>
+                </group>
+                <group name="kpi_empleado_sin_identificacion" string="Empleado Sin Identificación" >
+                    <field name="kpi_empleado_sin_identificacion"/>
+                </group>
+                <group name="kpi_empleado_sin_correo" string="Empleado Sin Correo" >
+                    <field name="kpi_empleado_sin_correo"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,214 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_liquidacion_hogar_wizard" model="ir.ui.view">
+        <field name="name">gestor.liquidacion.hogar.wizard.view</field>
+        <field name="model">gestor.liquidacion.comisiones.hogar.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Procesos de liquidación de Ventas de HOGAR">
+                <label
+                    string="Procesos de liquidación de Ventas de HOGAR"
+                    colspan="2"
+                    for=""
+                />
+                <sheet>
+                    <group>
+                        <div class="oe_title">
+                            <group >
+                                <field name="fecha_inicial"/>
+                                <field name="fecha_final"/>
+                            </group>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="categoria_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                        <field name="job_id" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                        <!-- <field name="sucursal_ids" widget="many2many_tags" options="{'no_create_edit': True}"/> -->
+                        <!--
+                        <field name="empleados_ids" string="Sin filtro" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': ['|', ('job_id','!=', False), ('category_id','!=', False)]}"/>
+                        <field name="empleados_ids" string="Filtro job" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': ['|', ('job_id','=', False), ('category_id','!=', False)]}" domain="[('job_id.id','=', job_id)]"/>
+                        <field name="empleados_ids" string="Filtro Job + Categoría" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': ['|', ('job_id','=', False), ('category_id','=', False)]}" domain="[('job_id.id','=', job_id), ('category_id.id','=', category_id)]"/>
+                        -->
+                        <!--<field name="dependientes_ids"/>-->
+                    </group>
+                    <group>
+                        <field name="empleados_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="['|', ('active','=', True), ('active','=', False)]"/>
+                        <field name="excluir_empleados" />
+                    </group>
+                    <group>
+                        <!-- <field name="tipo_plan_id" options="{'no_create_edit': True}" domain="[('tipo_producto','=', 'Hogar')]"/> -->
+                        <field name="tipo_plan_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('tipo_producto','=', 'Hogar')]"/>
+                    </group>
+                    <group>
+                        <div class="oe_title">
+                            <group>
+                                <!-- <field name="estado_venta"/> -->
+                                <field name="estado_venta_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                                <field name="estado_posterior_al_pago_claro"/>
+                                <!--<field name="registros_liquidados"/>-->
+                            </group>
+                        </div>
+                    </group>
+                    <div class="oe_title">
+                        <group col="3">
+                            <field name="aplicar"/>
+                            <field name="accion"/>
+                            <field name="registros_count" readonly="1" colspan="3"/>
+                            <field name="registros_agrupados_count" readonly="1" colspan="3"/>
+                            <field name="empleados_count" readonly="1" colspan="3"/>
+                            <!-- <field name="registros_comision_cero_count" readonly="1" colspan="3"/> -->
+                            <!-- <field name="registros_a_pagar" readonly="1" colspan="3"/> -->
+                        </group>
+                    </div>
+                    <separator string="Comisiones a tener en cuenta para el proceso de descuentos" />
+                    <div class="oe_title">
+                        <group>
+                            <!-- <field name="aplicar"/> -->
+                            <field name="sw_comision_ventas" invisible="1"/>
+                            <field name="sw_comision_responsable"/>
+                            <field name="sw_comision_incentivo"/>
+                        </group>
+                    </div>
+                    <notebook>
+                        <page name="capturas_hogar_agrupado_ids" string="Capturas Agrupadas">
+                            <field name="capturas_hogar_agrupado_ids" nolabel="1">
+                                <tree>
+                                    <!-- <field name="cuenta" />
+                                    <field name="ot" /> -->
+                                    <field name="tipo_plan" />
+                                    <field name="renta_total" widget='monetary'/>
+                                    <field name="estrato_claro" optional="show"/>
+                                    <field name="cod_tarifa" optional="show"/>
+                                    <field name="petar" optional="show"/>
+                                    <field name="servicio" optional="show"/>
+                                    <field name="valor_comision" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <field name="base_liquidacion_id" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <field name="convergencia" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <field name="comision_claro" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                    <field name="comision_team" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <field name="tipo_cobro" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <!-- <field name="comision_director" optional="hide" groups="gestor_team.group_gestor_team"/> -->
+                                    <field name="comision_padre" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                    <field name="comision_liquidada" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <field name="comision_pagada" optional="show" groups="gestor_team.group_gestor_team"/>
+                                    <field name="fecha_liquidacion_comision" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                    <field name="usuario_liquidador" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page name="capturas_hogar_ids" string="Capturas">
+                            <group colspan="4" >
+                                <!-- <separator string="Ventas Hogar" colspan="4"/> -->
+                                <!--<newline/>-->
+                                <field name="capturas_hogar_ids" nolabel="1">
+                                    <tree string="Captura HOGAR">
+                                        <field name="cuenta"/>
+                                        <field name="ot"/>
+                                        <field name="id_cliente"/>
+                                        <field name="nombre_cliente"/>
+                                        <field name="tel_cliente"/>
+                                        <field name="paquete_global"/>
+                                        <field name="estado_venta"/>
+                                        <field name="fecha"/>
+                                        <field name="idasesor" optional='hide' groups="gestor_team.group_gestor_team"/>
+                                        <field name="cargo" optional='hide' groups="gestor_team.group_gestor_team"/>
+                                        <field name="nombreasesor" optional='hide' groups="gestor_team.group_gestor_team"/>
+                                        <field name="cantserv" optional="show" groups="gestor_team.group_gestor_team"/>
+                                        <field name="area" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="zona" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="poblacion" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="d_distrito" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="tercero" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="punto" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="renta_global" optional="show" groups="gestor_team.group_gestor_team"/>
+                                        <field name="grupo" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="categoria" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="tipo_registro" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="canal2" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="no_contrato" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="estrato" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="paquete_global" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="venta_convergente" groups="gestor_team.group_gestor_team"/>
+                                        <field name="mintic" groups="gestor_team.group_gestor_team"/>
+                                        <field name="gv_area" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="cod_tarifa" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="venta_convergente" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="visor_movil" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="val_identidad" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="serial_captor" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="estado_venta" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="estado_posterior_al_pago_claro" optional="hide" groups="gestor_team.group_gestor_team"/>
+                                        <field name="vendedor"/>
+                                        <!-- <field name="digitador" optional="hide"/> -->
+                                        <field name="create_date"  optional="hide" />
+                                        <!-- <field name="create_uid" optional="hide"/> -->
+                                        <field name="identificacion_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                                        <field name="categoria_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                                        <field name="departamento_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                                        <field name="cargo_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                                        <field name="sucursal_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                                        <field name="id_responsable" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                                        <field name="valor_comision" groups="gestor_team.group_gestor_team" readonly="1" />
+                                        <field name="referido" />
+                                        <field name="nombre_referido" optional="hide" />
+                                        <field name="cedula_referido" optional="hide" />
+                                        <field name="telefono_referido" optional="hide" />
+                                        <field name="correo_referido" optional="hide" />
+                                        <field name="banco_referido" optional="hide" />
+                                        <field name="tipo_cuenta_referido" optional="hide" />
+                                        <field name="cuenta_referido" optional="hide" />
+                                        <field name="comision_liquidada" optional="hide" />
+                                        <field name="fecha_liquidacion_comision" optional="hide" />
+                                        <field name="usuario_liquidador" optional="hide" />
+                                        <field name="comision_pagada" optional="hide" />
+                                        <field name="fecha_pago_comision" optional="hide" />
+                                        <field name="usuario_pagador" optional="hide" />
+                                        <field name="estado_posterior_al_pago_claro" optional="hide" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+                <footer>
+                    <!--<button name="pagar_capturas" string="Pagar" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('estado_posterior_al_pago_claro', '!=', False), ('estado_venta','!=', 2)]}"/>-->
+
+                    <!-- attrs="{'invisible': ['|', ('estado_posterior_al_pago_claro', '!=', False), ('estado_venta','!=', 2)]}" -->
+                    <!-- attrs="{'invisible': ['|', ('estado_posterior_al_pago_claro', '=', 1)]}" -->
+                    <button name="liquidar_capturas"
+                            string="Liquidar" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('accion', '=', 'recalcular')]}"/>
+
+                    <button name="recalcular_liquidacion"
+                            string="Recalcular" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('accion', '=', 'liquidar')]}"/>
+
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menú acciones -->
+    <act_window id="action_liquidacion_hogar"
+                name="Liquidar HOGAR"
+                res_model="gestor.liquidacion.comisiones.hogar.wizard"
+                binding_model="gestor.captura.hogar.team"
+                view_mode="form"
+                target="new"
+                binding_views="list,form"
+                groups="gestor_team.group_gestor_actualizar_team"  />
+
+    <record id="action_liquidacion_ventas_hogar_wizard" model="ir.actions.act_window">
+        <field name="name">Liquidar HOGAR</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.liquidacion.comisiones.hogar.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

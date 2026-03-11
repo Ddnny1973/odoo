@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_cerrar_mes_wizard" model="ir.ui.view">
+        <field name="name">gestor.cerrar.mes.wizard</field>
+        <field name="model">gestor.cerrar.mes.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cierre ventas del mes">
+                <label
+                    string="Este proceso captura las ventas pendientes del mes."
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                </group>
+                <footer>
+                    <button
+                        name="action_cerrar_mes"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_cierre_mes" model="ir.actions.act_window">
+        <field name="name">Cerrar mes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.cerrar.mes.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

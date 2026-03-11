@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_pos_order_form_inherited">
+            <field name="name">view.pos.order.form.inherited</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[3]" position="after">
+                    <button string="Cargar Hogares" name="action_cargar_hogares" type="object" class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_presupuestos" model="ir.actions.report">
+            <field name="name">Tax Report</field>
+            <field name="model">account.tax.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_tax</field>
+            <field name="report_file">accounting_pdf_reports.report_tax</field>
+        </record>
+
+        <report
+            id='report_presupuestos'
+            string='Reporte Presupuestos'
+            model='gestor.presupuestos.team'
+            report_type='qweb-pdf'
+            name='gestor_team.report_presupuestos'
+            file='gestor_team.report_prsesupuestos'
+        />
+
+    </data>
+</odoo>

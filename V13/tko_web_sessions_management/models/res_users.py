@@ -9,6 +9,9 @@ from odoo.addons.base.models.ir_cron import _intervalTypes
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -19,20 +22,22 @@ class ResUsers(models.Model):
             return
         now = fields.datetime.now()
         session = request.session
-        if session.db and session.uid:
-            session_obj = request.env['ir.sessions']
-            cr = self._cr
-            # autocommit: our single update request will be performed
-            # atomically.
-            # (In this way, there is no opportunity to have two transactions
-            # interleaving their cr.execute()..cr.commit() calls and have one
-            # of them rolled back due to a concurrent access.)
+        if not (session.db and session.uid):
+            return True
+
+        session_obj = request.env['ir.sessions']
+
+        # FIX: No usamos self._cr porque puede estar cerrado (fue abierto y
+        # cerrado en check()). Abrimos un cursor propio y lo cerramos al final.
+        cr = self.pool.cursor()
+        try:
             cr.autocommit(True)
             session_ids = session_obj.sudo().search(
                 [('session_id', '=', session.sid),
                  ('date_expiration', '>',
                   now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
                  ('logged_in', '=', True)], order='date_expiration asc')
+
             if session_ids:
                 if request.httprequest.path[:5] == '/web/' or \
                         request.httprequest.path[:9] == '/im_chat/' or \
@@ -55,18 +60,46 @@ class ResUsers(models.Model):
                                                               session_id.id,))
                     cr.commit()
             else:
-                session.logout(keep_db=True)
+                # FIX: Solo hacer logout si la sesión existe en BD pero expiró.
+                # Si no existe en BD (primer login o sesión nueva), NO hacer logout
+                # porque eso bloquea al usuario recién autenticado.
+                expired_sessions = session_obj.sudo().search(
+                    [('session_id', '=', session.sid),
+                     ('logged_in', '=', True)])
+                if expired_sessions:
+                    _logger.info(
+                        'Session %s expired for user %s, marking as closed.',
+                        session.sid, uid)
+                    # Marcar la sesión como cerrada en BD sin cerrar la sesión HTTP actual
+                    # (que es la NUEVA sesión del usuario que está intentando loguear)
+                    expired_sessions._on_session_logout(logout_type='to')
+                else:
+                    _logger.debug(
+                        'No session record found for sid %s user %s — '
+                        'skipping logout (new session or first login).',
+                        session.sid, uid)
+        except Exception as e:
+            _logger.error(
+                '_check_session_validity error for uid %s: %s', uid, e)
+        finally:
             cr.close()
+
         return True
 
     @classmethod
     def check(cls, db, uid, passwd):
         res = super(ResUsers, cls).check(db, uid, passwd)
+        # FIX: Abrimos cursor solo para construir el Environment, lo cerramos
+        # antes de llamar a _check_session_validity para evitar cursor leak.
         cr = cls.pool.cursor()
-        self = api.Environment(cr, uid, {})[cls._name]
-        cr.commit()
-        cr.close()
-        self.browse(uid)._check_session_validity(db, uid, passwd)
+        try:
+            self = api.Environment(cr, uid, {})[cls._name]
+            user = self.browse(uid)
+        finally:
+            cr.commit()
+            cr.close()
+        # _check_session_validity abre su propio cursor internamente
+        user._check_session_validity(db, uid, passwd)
         return res
 
     @api.depends('interval_number', 'interval_type',

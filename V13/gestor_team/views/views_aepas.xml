@@ -1,0 +1,134 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="gestor_aepas_form_view" model="ir.ui.view">
+       <field name="name">gestor.aepas.team.form.view</field>
+       <field name="model">gestor.aepas.team</field>
+       <field name="arch" type="xml">
+         <form string="AEPAS">
+               <group col="4">
+                    <field colspan="4" name="co_id" />
+                    <field colspan="4" name="tele_numb" />
+                    <field colspan="4" name="iccid" />
+                    <field colspan="4" name="activacion" />
+                    <field colspan="4" name="razon_inicial" />
+                    <field colspan="4" name="clasecausalinic" />
+                    <field colspan="4" name="clasecausalfin" />
+                    <field colspan="4" name="ef" />
+                    <field colspan="4" name="prep" />
+                    <field colspan="4" name="tmcyspc" />
+                    <field colspan="4" name="dia_aepa" />
+                    <field colspan="4" name="cd_agente" />
+                    <field colspan="4" name="custcode_agente" />
+                    <field colspan="4" name="nomdistribuidor" />
+                    <field colspan="4" name="vl_acum_recargas" />
+                    <field colspan="4" name="clase_prepago" />
+                    <field colspan="4" name="tipo" />
+                    <field colspan="4" name="producto" />
+                    <field colspan="4" name="canal_comercial" />
+                    <field colspan="4" name="subcanal" />
+                    <field colspan="4" name="direccion" />
+                    <field colspan="4" name="gerencia" />
+                    <field colspan="4" name="departamento" />
+                    <field colspan="4" name="nit" />
+                    <field colspan="4" name="unidad" />
+                    <field colspan="4" name="sim_prendida" />
+                    <field colspan="4" name="vendedor" />
+                    <field colspan="4" name="vendedor_id" />
+                    <field colspan="4" name="id_responsable" />
+                    <field name="codigo_aepas_id" />
+                    <field name="codigo_aepas"/>
+
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_aepas_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.aepas.team.tree</field>
+        <field name="model">gestor.aepas.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="co_id" optional="show"/>
+                <field name="tele_numb" optional="show"/>
+                <field name="iccid" optional="show"/>
+                <field name="activacion" optional="show"/>
+                <field name="razon_inicial" optional="show"/>
+                <field name="clasecausalinic" optional="show"/>
+                <field name="clasecausalfin" optional="show"/>
+                <field name="ef" optional="show"/>
+                <field name="prep" optional="show"/>
+                <field name="tmcyspc" optional="show"/>
+                <field name="dia_aepa" optional="show"/>
+                <field name="cd_agente" optional="show"/>
+                <field name="custcode_agente" optional="show"/>
+                <field name="nomdistribuidor" optional="show"/>
+                <field name="vl_acum_recargas" optional="show"/>
+                <field name="clase_prepago" optional="show"/>
+                <field name="tipo" optional="show"/>
+                <field name="producto" optional="show"/>
+                <field name="canal_comercial" optional="show"/>
+                <field name="subcanal" optional="show"/>
+                <field name="direccion" optional="show"/>
+                <field name="gerencia" optional="show"/>
+                <field name="departamento" optional="show"/>
+                <field name="nit" optional="show"/>
+                <field name="unidad" optional="show"/>
+                <field name="sim_prendida" optional="show"/>
+                <field name="vendedor" optional="show"/>
+                <field name="vendedor_id" optional="show"/>
+                <field name="id_responsable" optional="show" />
+                <field name="codigo_aepas_id" optional="hide"/>
+                <field name="codigo_aepas" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_aepas_team">
+        <field name="name">AEPAS</field>
+        <field name="res_model">gestor.aepas.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Códigos AEPAS-->
+    <!-- Forms -->
+    <record id="gestor_codigos_aepas_form_view" model="ir.ui.view">
+       <field name="name">gestor.codigos.aepas.team.form.view</field>
+       <field name="model">gestor.codigos.aepas.team</field>
+       <field name="arch" type="xml">
+         <form string="AEPAS">
+               <group col="4">
+                   <field name="name"/>
+                   <field name="descripcion"/>
+
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_codigos_aepas_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.codigos.aepas.team.tree</field>
+        <field name="model">gestor.codigos.aepas.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" optional="show"/>
+                <field name="descripcion" optional="show"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_codigos_aepas_team">
+        <field name="name">Códigos AEPAS</field>
+        <field name="res_model">gestor.codigos.aepas.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

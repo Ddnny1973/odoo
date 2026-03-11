@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_fecha_fechas_periodo_wizard_form" model="ir.ui.view">
+        <field name="name">gestor.cambiar.fechas.periodo.wizard.form</field>
+        <field name="model">gestor.actualizar.fechas.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cambiar Fechas del período de liquidación">
+                <label
+                    string="Este proceso cambia las fechas del período de liquidación"
+                    colspan="2"
+                    for=""
+                />
+                <footer>
+                    <button
+                        name="action_fechas_update"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menú acciones -->
+    <act_window id="action_fechas_update"
+                name="Cambiar Fechas"
+                res_model="gestor.actualizar.fechas.wizard"
+                view_mode="form"
+                target="new"
+                binding_views="list,form"  />
+
+</odoo>

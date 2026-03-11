@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_cartera_wizard" model="ir.ui.view">
+        <field name="name">gestor.cartera.wizard</field>
+        <field name="model">gestor.cartera.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Actualizar Saldo en Cartera">
+                <label
+                    string="Este proceso actualizará el saldo en cartera desde la plataforma STOCK."
+                    colspan="2"
+                    for=""
+                />
+                <footer>
+                    <button
+                        name="actualizar_Saldo_cartera"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="actualizar_Empleados_TIPSS"
+                        string="User ID TipsII"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cartera_wizard" model="ir.actions.act_window">
+        <field name="name">Actualizar Cartera desde la plataforma STOCK</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.cartera.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

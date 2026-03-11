@@ -1,0 +1,42 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="sims_prendidas_form_view" model="ir.ui.view">
+       <field name="name">gestor.sims.prendidas.form.view</field>
+       <field name="model">gestor.sims.prendidas</field>
+       <field name="arch" type="xml">
+         <form string="SIMS Prendidas">
+               <group col="4">
+                   <field colspan="4" name="iccid"/>
+                   <field colspan="4" name="min"/>
+                   <field colspan="4" name="fecha"/>
+                   <field colspan="4" name="recarga"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="sims_prendidas_tree_view" model="ir.ui.view">
+        <field name="name">gestor.sims.prendidas.tree</field>
+        <field name="model">gestor.sims.prendidas</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="iccid"/>
+                <field name="min"/>
+                <field name="fecha"/>
+                <field name="recarga"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_sims_prendidas">
+        <field name="name">Sims Prendidas</field>
+        <field name="res_model">gestor.sims.prendidas</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

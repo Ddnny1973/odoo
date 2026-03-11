@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_actualizar_proceso_biometrias_wizard" model="ir.ui.view">
+        <field name="name">gestor.actualizar.proceso.biometria.wizard</field>
+        <field name="model">gestor.actualizar.proceso.biometria.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Actualizar Proceso de biometrías">
+                <label
+                    string="Este proceso actualiza el proceso de biometrías"
+                    colspan="2"
+                    for=""
+                />
+                <footer>
+                    <button
+                        name="action_actualizar_biometrias"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menú acciones -->
+    <act_window id="action_proceso_biometrias"
+                name="Actualizar Proceso Biometrías"
+                res_model="gestor.actualizar.proceso.biometria.wizard"
+                binding_model="gestor.actualizar.proceso.biometria.wizard"
+                view_mode="form"
+                target="new"
+                binding_views="list,form"  />
+
+</odoo>

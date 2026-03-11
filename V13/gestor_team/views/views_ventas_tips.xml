@@ -1,0 +1,108 @@
+<odoo>
+    <!-- views Gestor Consulta Ventas-->
+
+    <!-- Forms -->
+
+    <!-- tree -->
+    <record id="ventas_tips_tree_view" model="ir.ui.view">
+        <field name="name">gestor.consulta.ventas.tips.tree</field>
+        <field name="model">gestor.consulta.ventas.tips</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="fecha"/>
+                <field name="min"/>
+                <field name="iccid"/>
+                <field name="imei"/>
+                <field name="estado_tips" optional="hide"/>
+                <field name="nombre_del_plan" string="Nombre del plan TIPS"/>
+                <field name="plan_id"/>
+                <field name="tipo_de_plan"/>
+                <field name="contrato" optional="hide"/>
+                <field name="valor" optional="hide"/>
+                <field name="custcode" optional="hide"/>
+                <field name="marca_del_equipo" optional="hide"/>
+                <field name="nombre_de_equipo_en_stok" optional="hide"/>
+                <field name="nombre_de_la_simcard_en_stok" optional="hide"/>
+                <field name="modelo_del_equipo" optional="hide"/>
+                <field name="valor_del_equipo" optional="hide"/>
+                <field name="nombre_para_mostrar_del_vendedor" optional="hide"/>
+                <field name="tipo_de_vendedor" optional="hide"/>
+                <field name="regional" optional="hide"/>
+                <field name="sucursal" optional="hide"/>
+                <field name="ciudad" optional="hide"/>
+                <field name="valor_cobrado" optional="hide"/>
+                <field name="codigo_distribuidor" optional="hide"/>
+                <field name="cliente_nombre" optional="hide"/>
+                <field name="cliente_id" optional="hide"/>
+                <field name="vendedor_nombre" optional="show"/>
+                <field name="vendedor_id" optional="show"/>
+                <field name="cargo_fijo_mensual" optional="hide"/>
+                <field name="permanencia_pendiente" optional="hide"/>
+                <field name="clasificacion_del_plan" optional="hide"/>
+                <field name="es_multiplay" optional="hide"/>
+                <field name="es_upgrade" optional="hide"/>
+                <field name="es_linea_nueva" optional="hide"/>
+                <field name="es_venta_digital" optional="hide"/>
+                <field name="es_con_equipo" optional="hide"/>
+                <field name="es_telemercadeo" optional="hide"/>
+                <field name="fecha_de_activacion_en_punto_de_activacion" optional="hide"/>
+                <field name="usuario_creador" optional="hide"/>
+                <field name="venta_id" optional="hide"/>
+                <field name="valor_a_pagar" optional="show"/>
+                <field name="cargo" optional="show"/>
+                <field name="categoria_empleado" optional="show"/>
+                <field name="responsable_nombre" optional="show"/>
+                <field name="tipo_plan" optional="show"/>
+                <field name="categoria_tipo_plan" optional="show"/>
+                <field name="mes" optional="show"/>
+                <field name="year" optional="show"/>
+                <field name="presupuesto" optional="show"/>
+                <field name="empleado_id" optional="show"/>
+                <field name="comision_pagada" optional="show"/>
+                <field name="reconocimiento_pagado" optional="show"/>
+                <field name="tipo_de_activacion" optional="show"/>
+                <field name="con_equipo" optional="show"/>
+                <field name="cfm" optional="show"/>
+                <field name="tipo_linea" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtros -->
+    <!-- <record id="ventas_tips_filter_view" model="ir.ui.view">
+        <field name="model">gestor.consulta.ventas.tips</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="imei" string="IMEI" filter_domain="[('imei','ilike',self)]"/>
+                <field name="nombre_del_plan" string="Nombre del plan" filter_domain="[('nombre_del_plan','ilike',self)]"/>
+                <separator/>
+                <filter name="nombre_del_plan" string="Nombre del plan" context="{'group_by': 'nombre_del_plan'}"/>
+            </search>
+        </field>
+    </record> -->
+
+    <!-- Filtross -->
+    <record id="ventas_team_filter_view" model="ir.ui.view">
+        <field name="name">Ventas TEAMS Filtros</field>
+        <field name="model">gestor.consulta.ventas.tips</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="imei" string="Ventas" filter_domain="['|', ('imei','ilike',self), ('min','ilike',self)]"/>
+                <field name="imei" string="IMEI" context="{'imei': self}" filter_domain="[('imei','ilike',self)]"/>
+                <field name="min" string="MIN" context="{'min': self}" filter_domain="[('min','ilike',self)]"/>
+                <separator/>
+                <filter name="nombre_del_plan" string="Nombre del plan" context="{'group_by': 'nombre_del_plan'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_ventas_tips">
+        <field name="name">Ventas TIPS</field>
+        <field name="res_model">gestor.consulta.ventas.tips</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+</odoo>

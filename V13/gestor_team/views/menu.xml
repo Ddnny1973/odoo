@@ -1,0 +1,708 @@
+<odoo>
+
+        <!-- Menu Aplicación TEAM-->
+        <menuitem
+            id="menu_gestor_team"
+            name="Gestor TEAM"
+            action="gestor_planes_team"
+            sequence="20"
+            web_icon="gestor_team,static/src/img/icon.png"/>
+
+        <!-- Menu Aplicación Hogar-->
+        <menuitem
+            id="menu_gestor_hogar_team"
+            name="HOGARES"
+            action="gestor_captura_hogar_team"
+            sequence="30"
+            web_icon="gestor_team,static/src/img/icon.png"/>
+
+        <!-- Menu Aplicación Pymes-->
+        <menuitem
+            id="menu_gestor_pymes_team"
+            name="PYMES"
+            action="gestor_captura_pyme_team"
+            sequence="40"
+            web_icon="gestor_team,static/src/img/icon.png"/>
+
+        <!-- Menu Aplicación Biometrías-->
+        <menuitem
+            id="menu_app_biometrias_team"
+            name="BIOMETRÍAS"
+            action="gestor_biometrias_team"
+            sequence="50"
+            web_icon="gestor_team,static/src/img/icon.png"
+            />
+
+        <!-- Sub menú Planes -->
+        <!-- Root -->
+        <menuitem
+            id="submenu_planes"
+            name="Planes TEAM"
+            parent="menu_gestor_team"
+            sequence="1"
+            groups="gestor_team.group_planes_team"/>
+
+            <!-- Planes -->
+            <menuitem
+                id="gestor_planes"
+                action="gestor_planes_team"
+                parent="submenu_planes"
+                sequence="10"/>
+
+            <!-- Tipo de plan -->
+            <menuitem
+                id="gestor_tipo_plan"
+                action="gestor_tipo_plan_team"
+                parent="submenu_planes"
+                sequence="15"/>
+
+            <!-- Tipología de plan -->
+            <menuitem
+                id="gestor_tipologia_planes"
+                action="gestor_tipologia_lineas_planes_team"
+                parent="submenu_planes"
+                sequence="20"/>
+
+            <!-- Línea Planes -->
+            <menuitem
+                id="gestor_linea_planes"
+                action="gestor_lineas_planes_team"
+                parent="submenu_planes"
+                sequence="25"/>
+
+            <!-- Tipo Línea Planes -->
+            <menuitem
+                id="gestor_tipo_linea_planes"
+                action="gestor_tipo_lineas_planes_team"
+                parent="submenu_planes"
+                sequence="30"/>
+
+            <!-- Precio Planes -->
+            <menuitem
+                id="gestor_precio_planes"
+                action="gestor_precio_planes_team"
+                parent="submenu_planes"
+                sequence="35"/>
+
+            <!-- Tipología de plan -->
+            <menuitem
+                id="gestor_categoria_tipo_planes"
+                action="gestor_categoria_tipo_planes_team"
+                parent="submenu_planes"
+                sequence="40"/>
+
+            <!-- Configuración -->
+            <menuitem
+                id="gestor_planes_configuracion"
+                name="Configuración"
+                parent="submenu_planes"
+                sequence="99"/>
+
+                <!-- Actualizar planes desde TIPS -->
+                <menuitem
+                    id="actualizar_planes_wizard"
+                    action="action_actualizar_planes_wizard"
+                    parent="gestor_planes_configuracion"
+                    sequence="10"
+                />
+
+                <!-- Actualizar equivalencias de equipos -->
+                <menuitem
+                    id="gestor_equipos_tips_wizard"
+                    action="gestor_equipos_tips"
+                    parent="gestor_planes_configuracion"
+                    sequence="15"
+                />
+
+                <menuitem
+                action="gestor_equipos_stok"
+                id="action_gestor_equipos_stok"
+                parent="gestor_planes_configuracion"
+                sequence="20"
+                />
+
+                <!-- Nombre de plan equivalente -->
+                <menuitem
+                    id="gestor_nombre_equivalente_planes"
+                    action="gestor_nombre_equivalente_plan_team"
+                    parent="gestor_planes_configuracion"
+                    sequence="25"/>
+
+        <!-- Sub menú RP -->
+        <!-- Root -->
+        <menuitem
+            id="submenu_RP"
+            action="gestor_rp_team"
+            parent="menu_gestor_team"
+            sequence="2"
+            groups="gestor_team.group_rp_claro"/>
+
+            <!-- Reconocimiento Logístico
+            <menuitem
+                id="gestor_reconocimiento"
+                action="gestor_reconocimiento_logistico_team"
+                parent="submenu_RP"
+                sequence="30"/>-->
+
+            <!--SIMS Prendidas-->
+            <menuitem
+                id="gestor_sims_prendidas_team"
+                action="gestor_sims_prendidas"
+                parent="submenu_RP"
+                groups="gestor_team.group_rp_claro"
+                sequence="10"/>
+
+            <!--AEPAS-->
+            <menuitem
+                id="gestor_team_gestor_aepas_team"
+                action="gestor_aepas_team"
+                parent="submenu_RP"
+                groups="gestor_team.group_rp_claro"
+                sequence="20"/>
+
+            <!--AEPAS-->
+            <menuitem
+                id="gestor_team_gestor_codigos_aepas_team"
+                action="gestor_codigos_aepas_team"
+                parent="gestor_rp_configuracion"
+                groups="gestor_team.group_rp_claro"
+                sequence="40"/>
+
+            <!--Portabilidad Prepago-->
+            <menuitem
+                id="gestor_gestor_portabilidad_prepago_menu"
+                action="gestor_gestor_portabilidad_prepago_action"
+                parent="gestor_rp_configuracion"
+                groups="gestor_team.group_rp_claro"
+                sequence="45"/>
+
+            <!--Pago Comisiones-->
+            <menuitem
+                id="gestor_pago_comision_menu"
+                action="gestor_pago_comision_action"
+                parent="gestor_rp_configuracion"
+                groups="gestor_team.group_rp_claro"
+                sequence="50"/>                
+
+            <!-- Configuración -->
+            <menuitem
+                id="gestor_rp_configuracion"
+                name="Configuración"
+                parent="submenu_RP"
+                groups="gestor_team.group_rp_claro"
+                sequence="99"/>
+
+                <!-- Sucursales -->
+                <menuitem
+                    id="gestor_sucursales"
+                    action="gestor_sucursales_team"
+                    parent="gestor_rp_configuracion"
+                    sequence="10"/>
+
+                <menuitem
+                    id="gestor_distritos"
+                    action="gestor_distritos_team"
+                    parent="gestor_rp_configuracion"
+                    sequence="10"/>
+
+                <!-- Zonas -->
+                <menuitem
+                    id="gestor_zonas"
+                    action="gestor_zonas_team"
+                    parent="gestor_rp_configuracion"
+                    groups="gestor_team.group_rp_claro"
+                    sequence="20"/>
+
+                <!-- Zonas -->
+                <menuitem
+                    id="gestor_archivos"
+                    action="gestor_archivos_team"
+                    parent="gestor_rp_configuracion"
+                    groups="gestor_team.group_rp_claro"
+                    sequence="30"/>
+
+                <menuitem
+                    id="cargar_eventos_wz"
+                    name="Cargar Eventos"
+                    action="action_cargar_archivos"
+                    parent="gestor_rp_configuracion"
+                    sequence="35"
+                    groups="gestor_team.group_rp_claro"
+                />
+
+            <!-- Administración de archivos -->
+            <menuitem
+                id="gestor_rp_admin_archivos"
+                name="Archivos"
+                parent="submenu_RP"
+                sequence="88"/>
+
+                <menuitem
+                    action="gestor_log_carga_archivos"
+                    id="menu_gestor_log_carga_archivos"
+                    parent="gestor_rp_admin_archivos"
+                    groups="gestor_team.group_rp_claro"
+                    sequence="10"
+                />
+
+                <menuitem
+                    action="action_cargar_archivos_wizard"
+                    id="menu_action_cargar_archivos_wizard"
+                    parent="gestor_rp_admin_archivos"
+                    groups="gestor_team.group_rp_claro"
+                    sequence="20"
+                />
+
+            <!-- Administración de cruces -->
+            <menuitem
+                id="gestor_rp_cruces"
+                name="Cruce"
+                parent="submenu_RP"
+                groups="gestor_team.group_rp_claro"
+                sequence="77"/>
+
+                <menuitem
+                    action="gestor_cruce_ventas_tips"
+                    id="menu_cruce_rp"
+                    parent="gestor_rp_cruces"
+                    groups="gestor_team.group_rp_claro"
+                    sequence="10"
+                />
+
+                <menuitem
+                    action="action_cruce_rp_wizard"
+                    id="menu_action_cruce_rp_wizard"
+                    parent="gestor_rp_cruces"
+                    groups="gestor_team.group_rp_claro"
+                    sequence="20"
+                />
+
+                <menuitem
+                    action="action_ventas_tips_update_wizard"
+                    id="menu_action_ventas_tips_update_wizard"
+                    parent="gestor_rp_cruces"
+                    sequence="30"
+                    groups="gestor_team.group_gestor_actualizar_team"
+                />
+
+                <!-- Validar este permiso
+                groups="gestor_team.group_gestor_actualizar_team" -->
+        <!-- Sub menú Hogar-->
+        <!-- Root -->
+        <menuitem
+            id="submenu_Hogar"
+            action="gestor_hogar_team"
+            parent="menu_gestor_team"
+            sequence="3"/>
+
+            <!-- Captura Hogares -->
+            <menuitem
+                id="gestor_captura_hogar"
+                action="gestor_captura_hogar_team"
+                parent="submenu_Hogar"
+                sequence="10"/>
+
+            <!-- Captura Hogares -->
+            <menuitem
+                id="gestor_captura_agrupado_hogar"
+                action="gestor_captura_hogar_detalle_team"
+                parent="submenu_Hogar"
+                sequence="15"/>
+
+            <!-- Hogar -->
+            <menuitem
+                id="gestor_hogar"
+                action="gestor_hogar_team"
+                parent="submenu_Hogar"
+                sequence="20"/>
+
+            <!-- Estado AP -->
+            <menuitem
+                id="estado_ap_hogar"
+                action="gestor_estado_ap_team"
+                parent="submenu_Hogar"
+                sequence="30"/>
+
+            <!-- Estado PP -->
+            <menuitem
+                id="estado_pp_hogar"
+                action="gestor_estado_pp_team"
+                parent="submenu_Hogar"
+                sequence="40"/>
+
+            <!-- Base liquidación HOGAR -->
+            <menuitem
+                id="menu_liquidaciones_team"
+                name="Liquidaciones"
+                parent="submenu_Hogar"
+                sequence="50"
+                groups="gestor_team.group_gestor_admin_team"
+            />
+
+                <menuitem
+                    id="gestor_base_liquidacion"
+                    action="gestor_base_liquidacion_hogar"
+                    parent="menu_liquidaciones_team"
+                    sequence="10"
+                    groups="gestor_team.group_gestor_admin_team"
+                />
+
+                <menuitem
+                    action="action_liquidacion_ventas_hogar_wizard"
+                    id="menu_action_liquidacion_ventas_hogar_wizard"
+                    parent="menu_liquidaciones_team"
+                    sequence="20"
+                    groups="gestor_team.group_gestor_admin_team"
+                />
+
+                <menuitem
+                    action="gestor_liquidacion_servicios_adicionales"
+                    id="menu_gestor_liquidacion_servicios_adicionales"
+                    parent="menu_liquidaciones_team"
+                    sequence="30"
+                    groups="gestor_team.group_gestor_admin_team"
+                />
+
+                <!-- Liquidación directores -->
+                <menuitem
+                    id="action_action_liquidar_directores"
+                    action="action_liquidar_directores"
+                    parent="menu_liquidaciones_team"
+                    sequence="35"
+                />
+
+                <!-- Liquidación directores -->
+                <menuitem
+                    id="action_action_liquidar_descuentos"
+                    action="action_liquidar_descuentos"
+                    parent="menu_liquidaciones_team"
+                    sequence="40"
+                />                   
+
+            <menuitem
+                id="menu_biometrias_team"
+                name="Biometrías"
+                parent="submenu_Hogar"
+                sequence="60"
+                groups="gestor_team.group_gestor_biometrias_team"
+            />
+
+                <menuitem
+                    id="menu_gestor_biometrias_team"
+                    action="gestor_biometrias_team"
+                    parent="menu_biometrias_team"
+                    sequence="10"
+                    groups="gestor_team.group_gestor_biometrias_team"
+                />
+
+                <menuitem
+                    id="menu_gestor_biometrias_claro"
+                    action="gestor_biometrias_claro"
+                    parent="menu_biometrias_team"
+                    sequence="20"
+                    groups="gestor_team.group_gestor_biometrias_team"
+                />
+
+            <menuitem
+                id="menu_configuraciones_hogar_team"
+                name="Configuración"
+                parent="submenu_Hogar"
+                sequence="70"
+                groups="gestor_team.group_gestor_admin_team"
+            />
+                <!-- Código MINTIC -->
+                <!-- <menuitem
+                    id="gestor_mintic"
+                    action="gestor_mintic_team"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="10"
+                    groups="gestor_team.group_gestor_actualizar_team"
+                /> -->
+
+                <!-- Códigos de tarifa -->
+                <menuitem
+                    id="gestor_codigo_tarifas"
+                    action="gestor_codigo_tarifas_hogar_team"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="20"
+                    groups="gestor_team.group_gestor_admin_team"
+                />
+
+                <!-- Clientes TEAM -->
+                <!-- <menuitem
+                    id="gestor_clientes_team_action"
+                    action="gestor_clientes_team"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="30"
+                    groups="gestor_team.group_gestor_admin_team"
+                /> -->
+
+                <!-- Clientes TEAM -->
+                <menuitem
+                    id="gestor_codigo_petar_team_action"
+                    action="gestor_codigo_petar_team"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="40"
+                    groups="gestor_team.group_gestor_admin_team"
+                />
+
+                <menuitem
+                    id="gestor_servicios_internet_team_action"
+                    action="gestor_servicios_internet_team"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="50"
+                    groups="gestor_team.group_gestor_admin_team"
+                />
+
+                <!-- Referidos -->
+                <menuitem
+                    id="gestor_referidos_team_action"
+                    action="gestor_referidos_team"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="50"
+                />
+
+                <!-- Actualización biometrías -->
+                <menuitem
+                    id="action_proceso_biometrias_action"
+                    action="action_proceso_biometrias"
+                    parent="menu_configuraciones_hogar_team"
+                    sequence="60"
+                />
+
+                <!-- Cierre de mes -->
+                <menuitem
+                    id="action_action_cerrar_mes"
+                    action="action_cierre_mes"
+                    parent="submenu_Hogar"
+                    sequence="65"
+                />
+
+
+        <!-- Sub menú PYMES-->
+        <!-- Root -->
+        <menuitem
+            id="submenu_pyme"
+            action="gestor_captura_menu_pyme_team"
+            parent="menu_gestor_team"
+            sequence="3"/>
+
+            <!-- Captura Pymes -->
+            <menuitem
+                id="gestor_pyme"
+                action="gestor_captura_pyme_team"
+                parent="submenu_pyme"
+                sequence="10"/>
+
+            <!-- Pymes Claro-->
+            <menuitem
+                id="action_gestor_pyme_claro"
+                action="gestor_pyme_team"
+                parent="submenu_pyme"
+                sequence="20"/>
+
+            <!-- Estado AP -->
+            <menuitem
+                id="estado_ap_hogar"
+                action="gestor_estado_ap_team"
+                parent="submenu_pyme"
+                sequence="30"/>
+
+            <!-- Estado PP -->
+            <menuitem
+                id="estado_pp_hogar"
+                action="gestor_estado_pp_team"
+                parent="submenu_pyme"
+                sequence="40"/>
+
+        <!-- Sub menú Comisiones -->
+        <!-- Root -->
+        <menuitem
+            id="submenu_Comisiones"
+            action="gestor_comisiones_team"
+            parent="menu_gestor_team"
+            sequence="4"
+            groups="gestor_team.group_esquema_de_comisiones"/>
+
+            <!-- Comisiones -->
+            <menuitem
+                id="comisiones"
+                action="gestor_comisiones_team"
+                parent="submenu_Comisiones"
+                groups="gestor_team.group_esquema_de_comisiones"
+                sequence="5"/>
+
+                <!--Tipo Condiciones -->
+                <!-- <menuitem
+                    id="tipo_condiciones"
+                    action="gestor_tipo_condiciones_comisiones_team"
+                    parent="submenu_Comisiones"
+                    sequence="10"/> -->
+
+            <!-- Menú Wizard -->
+            <menuitem
+                action="action_cambiar_responsable_wizard"
+                sequence="40"
+                id="menu_action_cambiar_responsable_wizard"
+                parent="hr.menu_human_resources_configuration"
+                groups="gestor_team.group_esquema_de_comisiones"
+            />
+
+            <menuitem
+                id="menu_descuentos_team"
+                action="action_descuentos"
+                parent="hr.menu_human_resources_configuration"
+                sequence="7"
+                groups="gestor_team.group_esquema_de_comisiones"
+            />
+
+            <menuitem
+                id="menu_descuentos"
+                action="action_descuentos"
+                parent="menu_descuentos_team"
+                sequence="8"
+                groups="gestor_team.group_esquema_de_comisiones"
+                />
+
+            <menuitem
+                id="menu_tipo_descuentos"
+                action="action_tipo_descuentos"
+                parent="menu_descuentos_team"
+                sequence="9"
+                groups="gestor_team.group_esquema_de_comisiones"
+                />
+
+            <menuitem
+                id="menu_action_cartera"
+                action="action_cartera_wizard"
+                parent="menu_descuentos_team"
+                sequence="10"
+                groups="gestor_team.group_esquema_de_comisiones"
+                />
+
+            <menuitem
+                id="menu_periodo_liquidacion"
+                action="action_periodos_liquidacion"
+                parent="menu_descuentos_team"
+                sequence="10"
+                groups="gestor_team.group_esquema_de_comisiones"
+                />
+
+            <!--<menuitem
+                action="action_cargar_hogar_wizard"
+                sequence="40"
+                id="menu_action_cargar_hogar_wizard"
+                parent="submenu_Hogar"
+            />-->
+
+            <!--Liquidación de comisione -->
+            <!-- <menuitem
+                action="action_liquidacion_comisiones_wizard"
+                id="menu_action_liquidacion_comisiones_wizard"
+                parent="submenu_Comisiones"
+                sequence="10"
+            /> -->
+
+            <menuitem
+                action="gestor_ventas_tips"
+                id="menu_action_ventas_tips"
+                parent="submenu_Comisiones"
+                sequence="20"
+            />
+
+            <menuitem
+                action="gestor_consulta_comisiones_tips"
+                id="menu_consulta_comisiones_tips"
+                parent="submenu_Comisiones"
+                sequence="25"
+            />
+
+            <!-- Nombre de plan equivalente -->
+            <menuitem
+                id="gestor_alto_valor_team_menu"
+                action="gestor_alto_valor_team"
+                parent="submenu_Comisiones"
+                sequence="30"/>
+
+            <menuitem
+                action="action_generacion_planillas_wizard"
+                id="menu_action_generar_planillas_wizard"
+                parent="submenu_Comisiones"
+                sequence="40"
+            />
+
+            <!-- Eliminar despues de hacer pruebas-->
+            <menuitem
+                action="action_generacion_planillas_wizard_2"
+                id="menu_action_generar_planillas_wizard_2"
+                parent="submenu_Comisiones"
+                sequence="40"
+            />
+            <!-- *****HASTA AQUÍ **** -->
+            <menuitem
+                action="gestor_repositorio_comisiones_team"
+                id="menu_action_gestor_repositorio_comisiones_team"
+                parent="submenu_Comisiones"
+                sequence="50"
+            />
+
+
+        <!-- Sub menú Presupuesto -->
+        <!-- Root -->
+        <menuitem
+            id="submenu_presupuesto"
+            name="Presupuestos TEAM"
+            parent="menu_gestor_team"
+            sequence="5"
+            groups="gestor_team.group_gestion_presupuestos"/>
+
+            <!-- Presupuestos -->
+            <menuitem
+                id="gestor_presupuestos"
+                action="gestor_presupuestos_team"
+                parent="submenu_presupuesto"
+                sequence="5"
+                groups="gestor_team.group_gestion_presupuestos"/>
+
+            <!-- Presupuestos Detalle-->
+            <menuitem
+                id="gestor_presupuestos_detalle"
+                action="gestor_presupuestos_detalle_team"
+                parent="submenu_presupuesto"
+                sequence="10"
+                groups="gestor_team.group_gestion_presupuestos"/>
+
+            <!-- Actualizar Presupuestos-->
+            <menuitem
+                id="gestor_actualizar_presupuestos"
+                action="action_actualizar_comisiones_wizard"
+                parent="submenu_presupuesto"
+                sequence="20"
+                groups="gestor_team.group_gestion_presupuestos"/>
+
+            <!-- Presupuestos Cartera-->
+            <menuitem
+                id="gestor_cartera_submenu"
+                name="Cartera"
+                parent="submenu_presupuesto"
+                sequence="99"
+                groups="gestor_team.group_gestion_presupuestos"/>
+
+                <!--Saldo en cartera -->
+                <menuitem
+                    id="gestor_cartera"
+                    action="gestor_cartera_team"
+                    parent="gestor_cartera_submenu"
+                    sequence="15"
+                    groups="gestor_team.group_gestion_presupuestos"/>
+
+                    <menuitem
+                        action="action_cartera_wizard"
+                        id="menu_action_cartera_wizard"
+                        parent="gestor_cartera_submenu"
+                        sequence="20"
+                        groups="gestor_team.group_gestion_presupuestos"
+                    />
+
+
+</odoo>

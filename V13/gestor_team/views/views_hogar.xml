@@ -1,0 +1,810 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Estados antes del pago -->
+    <!-- Forms -->
+    <record id="estado_ap_team_form_view" model="ir.ui.view">
+       <field name="name">estado_ap.team.form.view</field>
+       <field name="model">gestor.estados_ap.team</field>
+       <field name="arch" type="xml">
+         <form string="Estados Antes del Pago TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="estado_ap_team_tree_view" model="ir.ui.view">
+        <field name="name">estado_ap.team.tree</field>
+        <field name="model">gestor.estados_ap.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_estado_ap_team">
+        <field name="name">Estados AP TEAM</field>
+        <field name="res_model">gestor.estados_ap.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Estados Posterior al pago -->
+    <!-- Forms -->
+    <record id="estado_pp_team_form_view" model="ir.ui.view">
+       <field name="name">estado_pp.team.form.view</field>
+       <field name="model">gestor.estados_pp.team</field>
+       <field name="arch" type="xml">
+         <form string="Estados Posterior al Pago TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="estado_pp_team_tree_view" model="ir.ui.view">
+        <field name="name">estado_pp.team.tree</field>
+        <field name="model">gestor.estados_pp.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_estado_pp_team">
+        <field name="name">Estados PP TEAM</field>
+        <field name="res_model">gestor.estados_pp.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Gestor Hogar -->
+    <!-- Forms -->
+    <record id="gestor_hogar_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.hogar.team.form.view</field>
+       <field name="model">gestor.hogar.team</field>
+       <field name="arch" type="xml">
+         <form string="Gestor Hogar TEAM" delete="false">
+                <group col="4">
+                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="cuenta"/>
+                    <field colspan="4" name="ot"/>
+                </group>
+                <group col="4">
+                    <field colspan="4" name="idasesor"/>
+                    <field colspan="4" name="nombreasesor"/>
+                    <field colspan="4" name="vendedor_id"/>
+                </group>
+                <group col="4">
+                    <field colspan="4" name="paquete"/>
+                    <field colspan="4" name="producto_id"/>
+                    <field colspan="4" name="cantserv"/>
+                    <field colspan="4" name="cant_servicios"/>
+                    <field colspan="4" name="tipo_red"/>
+                    <field colspan="4" name="cod_tarifa"/>
+                </group>
+                <group col="4">
+                    <field colspan="4" name="fecha"/>
+                    <field colspan="4" name="fecha_venta"/>
+                </group>
+                <group col="4">
+                    <field name="estrato"/>
+                    <field name="estrato_claro"/>
+                </group>
+                <group col="4">
+                    <field colspan="4" name="venta"/>
+                    <field colspan="4" name="tipo_venta"/>
+                    <field colspan="4" name="tipo_registro"/>
+                    <field colspan="4" name="estado_ap"/>
+                    <field colspan="4" name="estado_pp"/>
+                    <field colspan="4" name="venta_convergente"/>
+                </group>
+                <group col="4">
+                    <field name="visor_movil"/>
+                    <field name="val_identidad"/>
+                    <field name="serial_captor"/>
+                </group>
+                <group col="4">
+                    <field name="create_date"/>
+                </group>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_hogar_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.hogar.team.tree</field>
+        <field name="model">gestor.hogar.team</field>
+        <field name="arch" type="xml">
+            <tree delete="false" >
+                <field name="name"/>
+                <field name="cuenta"/>
+                <field name="ot"/>
+                <field name="idasesor"/>
+                <field name="nombreasesor"/>
+                <field name="vendedor_id"/>
+                <field name="paquete"/>
+                <field name="renta"/>
+                <field name="producto_id"/>
+                <field name="cantserv"/>
+                <field name="cant_servicios"/>
+                <field name="tipo_red"/>
+                <field name="cod_tarifa"/>
+                <field name="fecha"/>
+                <field name="fecha_venta"/>
+                <field name="estrato"/>
+                <field name="estrato_claro"/>
+                <field name="venta"/>
+                <field name="tipo_venta"/>
+                <field name="tipo_registro"/>
+                <field name="estado_ap"/>
+                <field name="estado_pp"/>
+                <field name="visor_movil"/>
+                <field name="val_identidad"/>
+                <field name="serial_captor"/>
+                <field name="venta_convergente"/>
+                <field name="canal2" optional="hide"/>
+                <field name="tipo_de_producto" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_hogar_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR HOGAR Filtros</field>
+        <field name="model">gestor.hogar.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cuenta" string="Cuenta/OT" filter_domain="['|', ('cuenta','ilike',self), ('ot','ilike',self)]"/>
+                <field name="ot" string="OT" context="{'ot': self}" filter_domain="[('ot','ilike',self)]"/>
+                <separator/>
+                <filter name="group_estado_venta" string="Estado Venta" context="{'group_by': 'estado_ap'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_hogar_team">
+        <field name="name">Hogar Claro</field>
+        <field name="res_model">gestor.hogar.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Captura Hogar -->
+    <!-- Forms -->
+    <record id="captura_hogar_form_view" model="ir.ui.view">
+       <field name="name">gestor.captura.hogar.team.form.view</field>
+       <field name="model">gestor.captura.hogar.team</field>
+       <field name="arch" type="xml">
+         <form string="Captura Hogares TEAM" delete="false">
+             <header>
+                 <button name="recalcular_liquidacion_comisiones" string="Recalcular" type="object" class="oe_highlight o_expense_submit" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                 <!-- <button name="liquidacion_comisiones" string="Liquidar" type="object" class="oe_highlight o_expense_submit" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                 <button name="busqueda_esquema_comision" string="Esquema" type="object" class="oe_highlight o_expense_submit" groups="gestor_team.group_gestor_modificar_creador_team"/>
+             </header>
+
+             <h1><font color="red">HOGAR</font></h1>
+             <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="id_cliente"/>
+                        <field colspan="4" name="nombre_cliente"/>
+                        <field colspan="4" name="tel_cliente"/>
+                        <!-- <field colspan="4" name="idasesor" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                        <!-- <field colspan="4" name="cargo" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                        <!-- <field colspan="4" name="nombreasesor" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                        <!-- <field colspan="4" name="id_responsable" readonly="True" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                    </group>
+                </div>
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="fecha" readonly="1" force_save="True"/>
+                    </group>
+                    <group col="4">
+                        <field colspan="4" name="cuenta" attrs="{'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="ot" attrs="{'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="paquete_global" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <!--<field colspan="4" name="paquete_pvd" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <field colspan="4" name="tipo_registro" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="venta_convergente" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="mintic" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                    </group>
+                    <group>
+                        <field colspan="4" name="log_estados" attrs="{'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                    </group>
+                </div>
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="referido" attrs="{'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="tipo_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('comision_pagada','=', True)]}"/>
+                        <field colspan="4" name="cedula_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('comision_pagada','=', True)]}"/>
+                        <field colspan="4" name="nombre_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('referido_existente', '=', True)], 'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="telefono_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('referido_existente', '=', True)], 'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="correo_referido" attrs="{'invisible': [('referido','!=', True)], 'readonly': [('referido_existente', '=', True)]}" force_save="True"/>
+                        <field colspan="4" name="banco_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('referido_existente', '=', True)], 'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="tipo_cuenta_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('referido_existente', '=', True)], 'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="cuenta_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)], 'readonly': [('referido_existente', '=', True)], 'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="referido_existente" invisible="1"/>
+
+                    </group>
+                </div>
+            </group>
+            <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="cantserv" readonly="1" force_save="True"/>
+                        <!--<field colspan="4" name="tipored" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <!--<field colspan="4" name="division" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <field colspan="4" name="area" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="zona" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="d_distrito" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="poblacion" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                    </group>
+                </div>
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="tercero" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="punto" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="grupo" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="categoria" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="canal2" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="tipo_de_producto" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                    </group>
+                </div>
+            </group>
+            <div class="oe_title">
+                <!-- <group>
+                    <field colspan="4" name="comision_liquidada" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                    <field colspan="4" name="fecha_liquidacion_comision" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                    <field colspan="4" name="usuario_liquidador" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                </group> -->
+                <group>
+                    <field colspan="4" name="comision_pagada" groups="gestor_team.group_gestor_modificar_creador_team" invisible="1"/>
+                    <!-- <field colspan="4" name="fecha_pago_comision" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                    <field colspan="4" name="usuario_pagador" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                </group>
+            </div>
+            <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <!--<field colspan="4" name="renta" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <field colspan="4" name="renta_global" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="valor_comision" readonly="1" force_save="True"/>
+
+                        <field colspan="4" name="no_contrato" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="estrato" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <!--<field colspan="4" name="paquete_pg" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <!--<field colspan="4" name="mintic" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <!--<field colspan="4" name="tipo_de_producto" groups="gestor_team.group_gestor_modificar_creador_team"/>-->
+                        <field colspan="4" name="gv_area" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="cod_tarifa" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="visor_movil" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="val_identidad" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="serial_captor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="True"/>
+                        <field colspan="4" name="estado_venta" groups="gestor_team.group_gestor_modificar_creador_team" attrs="{'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="estado_posterior_al_pago_claro" string="Est. Post. Pago" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                        <field colspan="4" name="vendedor" groups="gestor_team.group_gestor_modificar_creador_team" options="{'no_create_edit': True}" attrs="{'readonly': [('comision_pagada','=', True)]}" force_save="True"/>
+                        <field colspan="4" name="identificacion_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="categoria_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="departamento_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="cargo_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="sucursal_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="id_responsable" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="especial_hogar" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="tarifa_especial_id" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="contar_servicios" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" force_save="1"/>
+                        <!-- <field colspan="4" name="create_uid" groups="gestor_team.group_gestor_modificar_creador_team" /> -->
+                        <!-- <fild colspan="4" name="digitador" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1"/> -->
+                        <field colspan="4" name="create_date" readonly="1" string="Fecha de creación"/>
+                    </group>
+                </div>
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="detalle_agrupado_captura_hogar_ids" groups="gestor_team.group_gestor_modificar_creador_team"  readonly="1"/>
+                    </group>
+                </div>
+            </group>
+
+            <group>
+                <field colspan="4" name="detalle_captura_hogar_ids" groups="gestor_team.group_gestor_modificar_creador_team"  readonly="1"/>
+            </group>
+
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="captura_hogar_tree_view" model="ir.ui.view">
+        <field name="name">gestor.captura.hogar.team.tree</field>
+        <field name="model">gestor.captura.hogar.team</field>
+        <field name="arch" type="xml">
+            <tree delete="false" decoration-danger ="estado_venta not in (1,2)">
+                <field name="cuenta"/>
+                <field name="ot"/>
+                <field name="id_cliente"/>
+                <field name="nombre_cliente"/>
+                <field name="tel_cliente"/>
+                <field name="paquete_global"/>
+                <field name="estado_venta"/>
+                <field name="fecha"/>
+                <field name="idasesor" optional='hide' groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="cargo" optional='hide' groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="nombreasesor" optional='hide' groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="cantserv" optional="show" />
+                <field name="area" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="zona" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="poblacion" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="d_distrito" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="tercero" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="punto" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="renta_global" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="grupo" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="categoria" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="tipo_registro" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="canal2" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="tipo_de_producto" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="no_contrato" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="estrato" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="paquete_global" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="venta_convergente" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="mintic" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="gv_area" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="cod_tarifa" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="venta_convergente" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="visor_movil" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="val_identidad" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="serial_captor" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="estado_venta" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="estado_posterior_al_pago_claro" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="vendedor"/>
+                <!-- <field name="digitador" optional="hide"/> -->
+                <field name="create_date"  optional="hide" />
+                <!-- <field name="create_uid" optional="hide"/> -->
+                <field name="identificacion_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="categoria_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="departamento_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="cargo_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="sucursal_vendedor" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="tarifa_especial_id" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="id_responsable" groups="gestor_team.group_gestor_modificar_creador_team" readonly="1" optional="hide"/>
+                <field name="valor_comision" readonly="1" />
+                <field name="referido" />
+                <field name="tipo_referido" />
+                <field name="nombre_referido" optional="hide" />
+                <field name="cedula_referido" optional="hide" />
+                <field name="telefono_referido" optional="hide" />
+                <field name="correo_referido" optional="hide" />
+                <field name="banco_referido" optional="hide" />
+                <field name="tipo_cuenta_referido" optional="hide" />
+                <field name="cuenta_referido" optional="hide" />
+                <!-- <field name="comision_liquidada" optional="hide" />
+                <field name="fecha_liquidacion_comision" optional="hide" />
+                <field name="usuario_liquidador" optional="hide" /> -->
+                <field name="create_date" optional="show" />
+                <field name="log_estados" optional="hide"/>
+                <!-- <field name="comision_pagada" optional="hide" />
+                <field name="fecha_pago_comision" optional="hide" />
+                <field name="usuario_pagador" optional="hide" /> -->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_captura_hogar_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR CAPTURA HOGAR Filtros</field>
+        <field name="model">gestor.captura.hogar.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cuenta" string="Cuenta/OT" filter_domain="['|', ('cuenta','ilike',self), ('ot','ilike',self)]"/>
+                <field name="ot" string="OT" context="{'ot': self}" filter_domain="[('ot','ilike',self)]"/>
+                <separator/>
+                <filter name="group_estado_venta" string="Estado Venta" context="{'group_by': 'estado_venta'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_captura_hogar_team">
+        <field name="name">Captura Hogares</field>
+        <field name="res_model">gestor.captura.hogar.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- tree detalle -->
+    <record id="captura_hogar_detalle_tree_view" model="ir.ui.view">
+        <field name="name">gestor.captura.hogar.detalle.team.tree</field>
+        <field name="model">gestor.captura.hogar.detalle.team</field>
+        <field name="arch" type="xml">
+            <tree delete="false">
+                <field name="paquete"/>
+                <field name="tipored"/>
+                <field name="tipo_plan_id"/>
+                <field name="division"/>
+                <field name="serviciointernet_id" optional="show"/>
+                <field name="renta" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="fecha" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="venta" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="paquete_pg" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="paquete_pvd" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="mintic" optional="hide"/>
+                <field name="tipo_de_producto" optional="hide"/>
+                <field name="estrato_claro" optional="hide"/>
+                <field name="cod_tarifa" optional="hide"/>
+                <field name="petar" optional="hide"/>
+                <field name="servicio" optional="hide"/>
+                <field name="valor_comision" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- tree detalle -->
+    <record id="captura_hogar_detalle_agrupado_tree_view" model="ir.ui.view">
+        <field name="name">gestor.captura.hogar.detalle.agrupado.team.tree</field>
+        <field name="model">gestor.captura.hogar.detalle.agrupado.team</field>
+        <field name="arch" type="xml">
+            <tree delete="false">
+                <field name="tipo_plan" />
+                <field name="renta_total" widget='monetary'/>
+                <field name="estrato_claro" optional="show"/>
+                <field name="cod_tarifa" optional="show"/>
+                <field name="contar_servicios" optional="show"/>
+                <field name="petar" optional="show"/>
+                <field name="servicio" optional="show"/>
+                <field name="serviciointernet_id" optional="show"/>
+                <field name="valor_comision" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="base_liquidacion_id" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="convergencia" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="convergencia_pagada" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="comision_claro" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="comision_team" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="tipo_cobro" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <!-- <field name="comision_director" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                <field name="comision_padre" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="comision_liquidada" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="fecha_liquidacion_comision" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="usuario_liquidador" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="comision_pagada" optional="show" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="fecha_pago_comision" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="usuario_pagador" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="ot" optional="hide" />
+                <field name="cuenta" optional="hide" />
+                <field name="vendedor" optional="hide"/>
+                <field name="fecha_captura" optional="hide"/>
+                <!-- <field name="tiene_descuento" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/> -->
+                <field name="tiene_descuento_tmp" optional="hide" groups="gestor_team.group_gestor_modificar_creador_team"/>
+                <field name="paquete_pvd" optional="hide"/>
+                <field name="estado_venta_2" optional="hide"/>
+                <field name="estado_venta" optional="hide"/>
+                <field name="id" optional="hide"/>
+
+
+                <!-- <field name="estado_venta" optional="hide"/> -->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_captura_detalle_hogar_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR CAPTURA DETALLE HOGAR Filtros</field>
+        <field name="model">gestor.captura.hogar.detalle.agrupado.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cuenta" string="Cuenta/OT" filter_domain="['|', ('cuenta','ilike',self), ('ot','ilike',self)]"/>
+                <field name="ot" string="OT" context="{'ot': self}" filter_domain="[('ot','ilike',self)]"/>
+                <field name="vendedor" string="Vendedor" context="{'vendedor': self}" filter_domain="[('vendedor','ilike',self)]"/>
+                <field name="fecha_captura" string="Fecha" context="{'fecha_captura': self}" filter_domain="[('fecha_captura','ilike',self)]"/>
+                <!-- <filter string="Comisión Liquidada" domain="[('comision_liquidada', 'is', True)]"/>
+                <filter string="Comisión Pagada" domain="[('comision_pagada', 'is', True)]"/> -->
+                <separator/>
+                <!-- <filter name="group_estado_venta" string="Estado Venta" context="{'group_by': 'estado_venta'}"/> -->
+                <filter name="group_tipo_plan" string="Tipo de Plan" context="{'group_by': 'tipo_plan'}"/>
+                <filter name="group_servicio" string="Servicio" context="{'group_by': 'servicio'}"/>
+                <filter name="group_vendedor" string="Vendedor" context="{'group_by': 'vendedor'}"/>
+                <filter name="group_fecha_captura" string="Fecha" context="{'group_by': 'fecha_captura'}"/>
+                <filter name="group_comision_liquidada" string="Comisión Liquidada" context="{'group_by': 'comision_liquidada'}"/>
+                <filter name="group_comision_pagada" string="Comisión Pagada" context="{'group_by': 'comision_pagada'}"/>
+                <!-- <filter name="group_tiene_descuento" string="Tiene descuentos" context="{'group_by': 'tiene_descuento'}"/> -->
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_captura_hogar_detalle_team">
+        <field name="name">Vista de detalle ventas</field>
+        <field name="res_model">gestor.captura.hogar.detalle.agrupado.team</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+
+    <!-- Código MINTIC -->
+    <!-- Forms -->
+    <record id="gestor_codigo_mintic_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.codigo.mintic.team.form.view</field>
+       <field name="model">gestor.codigo.mintic.team</field>
+       <field name="arch" type="xml">
+         <form string="Códigos MINTIC">
+                <group col="4">
+                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="descripcion"/>
+                    <field colspan="4" name="id_codigo"/>
+                </group>
+
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_codigo_mintic_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.codigo.mintic.team.tree</field>
+        <field name="model">gestor.codigo.mintic.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="descripcion"/>
+                <field name="id_codigo"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_mintic_team">
+        <field name="name">Código MINTIC</field>
+        <field name="res_model">gestor.codigo.mintic.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Código PETAR MINTIC -->
+    <!-- Forms -->
+    <record id="gestor_codigo_petar_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.codigo.petar.team.form.view</field>
+       <field name="model">gestor.codigo.petar.team</field>
+       <field name="arch" type="xml">
+         <form string="Códigos PETAR MINTIC">
+                <group col="4">
+                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="active"/>
+                </group>
+
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_codigo_petar_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.codigo.petar.team.tree</field>
+        <field name="model">gestor.codigo.petar.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_codigo_petar_team">
+        <field name="name">Código PETAR MINTIC</field>
+        <field name="res_model">gestor.codigo.petar.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Servicios de Internet -->
+    <!-- tree -->
+    <record id="gestor_servicios_internet_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.servicios.internet.team.tree</field>
+        <field name="model">gestor.servicios.internet.team</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_servicios_internet_team">
+        <field name="name">Servicios Internet</field>
+        <field name="res_model">gestor.servicios.internet.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Códigos de tarifa -->
+    <!-- tree -->
+    <record id="gestor_codigo_tarifas_hogar_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.codigo.tarifa.hogar.tree</field>
+        <field name="model">gestor.codigo.tarifa.hogar</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="name"/>
+                <field name="red" optional="show"/>
+                <field name="convergencia"/>
+                <field name="megas"/>
+                <field name="estrato" optional="show"/>
+                <field name="servicio" optional="show"/>
+                <field name="petar"/>
+                <field name="valor" optional="show"/>
+                <field name="tope" optional="show"/>
+                <field name="inicio"/>
+                <field name="fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- form -->
+    <record id="gestor_codigo_tarifas_hogar_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.codigo.tarifa.hogar.form</field>
+       <field name="model">gestor.codigo.tarifa.hogar</field>
+       <field name="arch" type="xml">
+         <form string="Tarifas">
+                <group col="4">
+                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="red"/>
+                    <field colspan="4" name="convergencia"/>
+                    <field colspan="4" name="megas"/>
+                    <field colspan="4" name="estrato"/>
+                    <field colspan="4" name="servicio"/>
+                    <field colspan="4" name="petar"/>
+                </group>
+                <group>
+                    <field name="valor"/>
+                    <field name="tope"/>
+                </group>
+                <group>
+                    <field name="inicio"/>
+                    <field name="fin"/>
+                </group>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+
+         </form>
+       </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_codigo_tarifas_hogar_team">
+        <field name="name">Código de Tarifa</field>
+        <field name="res_model">gestor.codigo.tarifa.hogar</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Base liquidación HOGAR-->
+    <!-- tree -->
+    <record id="gestor_base_liquidacion_hogar_tree_view" model="ir.ui.view">
+        <field name="name">gestor.base.liquidacion.hogar.tree</field>
+        <field name="model">gestor.base.liquidacion.hogar</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="servicio"/>
+                <field name="estrato"/>
+                <field name="convergencia"/>
+                <field name="comision_claro"/>
+                <field name="comision_team"/>
+                <field name="diferencia"/>
+                <field name="tipo_asesor"/>
+                <field name="tipo_cobro"/>
+                <field name="tipo_red"/>
+                <field name="sucursal"/>
+                <field name="tope"/>
+                <field name="petar"/>
+                <field name="empleados_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                <field name="poblacion_id" options="{'no_create_edit': True}"/>
+                <field name="tipo_referido"/>
+                <field name="serviciointernet_id"/>
+                <field name="inicio"/>
+                <field name="fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_base_liquidacion_hogar_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR BASE LIQUIDACIÓN HOGAR Filtros</field>
+        <field name="model">gestor.base.liquidacion.hogar</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="group_tipo_red" string="Tipo de Red" context="{'group_by': 'tipo_red'}"/>
+                <filter name="group_servicio" string="Servicio" context="{'group_by': 'servicio'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_base_liquidacion_hogar">
+        <field name="name">Base liquidación</field>
+        <field name="res_model">gestor.base.liquidacion.hogar</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Histórico tarifa especial -->
+    <!-- tree -->
+    <record id="gestor_tarifas_especiales_hogar_historico_tree_view" model="ir.ui.view">
+        <field name="name">gestor_tarifas_especiales_hogar_historico_tree</field>
+        <field name="model">gestor.tarifas.especiales.hogar.historico</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name" options="{'no_create_edit': True}"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Liquidación Servicios adicionales -->
+    <!-- tree -->
+    <record id="gestor_liquidacion_servicios_adicionales_tree_view" model="ir.ui.view">
+        <field name="name">gestor_liquidacion_servicios_adicionales_tree</field>
+        <field name="model">gestor.liquidacion.servicios.adicionales</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="cuenta"/>
+                <field name="ot"/>
+                <field name="servicio"/>
+                <field name="comision"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_liquidacion_servicios_adicionales_filter_view" model="ir.ui.view">
+        <field name="name">Liquidación servicios adicionales Filtros</field>
+        <field name="model">gestor.liquidacion.servicios.adicionales</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cuenta" string="Cuenta/OT" filter_domain="['|', ('cuenta','ilike',self), ('ot','ilike',self)]"/>
+                <separator/>
+                <filter name="servicio" string="Servicio" context="{'group_by': 'servicio'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_liquidacion_servicios_adicionales">
+        <field name="name">Liquidación Servicios Adicionales</field>
+        <field name="res_model">gestor.liquidacion.servicios.adicionales</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- Referidos -->
+    <!-- tree -->
+    <record id="gestor_referidos_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor_referidos_team_tree</field>
+        <field name="model">gestor.referidos.team</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="nombre_referido"/>
+                <field name="telefono_referido"/>
+                <field name="correo_referido"/>
+                <field name="banco_referido"/>
+                <field name="tipo_cuenta_referido"/>
+                <field name="cuenta_referido"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_referidos_team">
+        <field name="name">Referidos Hogar</field>
+        <field name="res_model">gestor.referidos.team</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

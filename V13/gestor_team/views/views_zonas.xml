@@ -1,0 +1,47 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="zonas_form_view" model="ir.ui.view">
+       <field name="name">zonas.form.view</field>
+       <field name="model">gestor.zonas</field>
+       <field name="arch" type="xml">
+         <form string="Zonas">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="codigo"/>
+                   <field colspan="4" name="country_id"/>
+                   <field colspan="4" name="state_id"/>
+                   <field colspan="4" name="city_ids" widget="many2many_tags"/>
+               </group>
+               <!-- <div>
+                    <field name="mpld3_chart" widget="mpld3_chart" nolabel="1"/>
+                </div> -->
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="zonas_tree_view" model="ir.ui.view">
+        <field name="name">zonas.tree</field>
+        <field name="model">gestor.zonas</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="codigo"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <!--<field name="city_names_ids"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_zonas_team">
+        <field name="name">Zonas</field>
+        <field name="res_model">gestor.zonas</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

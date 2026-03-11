@@ -1,0 +1,120 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gestor_productos_team_user,gestor.productos.team user,model_gestor_productos_team,base.group_user,1,1,1,1
+access_gestor_tipo_productos_team_user,gestor.tipo.productos.team user,model_gestor_tipo_productos_team,base.group_user,1,1,1,1
+access_gestor_tipo_plan_team_user,gestor.tipo.plan.team user,model_gestor_tipo_plan_team,base.group_user,1,1,1,1
+access_gestor_reconocimiento_logistico_team_user,gestor.reconocimiento.logistico.team user,model_gestor_reconocimiento_logistico_team,base.group_user,1,1,1,1
+access_gestor_estados_ap_team_user,gestor.estados_ap.team user,model_gestor_estados_ap_team,base.group_user,1,1,1,1
+access_gestor_estados_pp_team_user,gestor.estados_pp.team user,model_gestor_estados_pp_team,base.group_user,1,1,1,1
+access_gestor_hogar_team_user,gestor.hogar.team user,model_gestor_hogar_team,base.group_user,1,1,1,1
+access_gestor_nombre_equivalente_plan_team_user,gestor.nombre.equivalente.plan.team user,model_gestor_nombre_equivalente_plan_team,base.group_user,1,1,1,1
+access_gestor_consulta_ventas_tips_user,gestor.consulta.ventas.tips user,model_gestor_consulta_ventas_tips,base.group_user,1,1,1,1
+access_gestor_referidos_team_user,gestor.referidos.team user,model_gestor_referidos_team,base.group_user,1,1,1,1
+access_gestor.tipo.registro.captura.team_user,gestor.tipo.registro.captura.team user,model_gestor_tipo_registro_captura_team,base.group_user,1,1,1,1
+access_gestor.actualizar.proceso.biometria.wizard_user,gestor.actualizar.proceso.biometria.wizard user,model_gestor_actualizar_proceso_biometria_wizard,base.group_user,1,1,1,1
+access_gestor.cargar.archivos.wizard_user,gestor.cargar.archivos.wizard user,model_gestor_cargar_archivos_wizard,base.group_user,1,1,1,1
+access_gestor.distritos.historico_user,gestor.distritos.historico user,model_gestor_distritos_historico,base.group_user,1,1,1,1
+access_gestor.portabilidad.prepago_user,gestor.portabilidad.prepago user,model_gestor_portabilidad_prepago,base.group_user,1,1,1,1
+
+access_gestor.cerrar.mes.wizard_user,gestor.cerrar.mes.wizard user,model_gestor_cerrar_mes_wizard,gestor_team.group_back_office,1,1,1,1
+
+access_gestor_equipos_stock_user,gestor.equipos.stock user,model_gestor_equipos_stock,base.group_user,1,1,1,1
+access_gestor_equipos_tips_user,gestor.equipos.tips user,model_gestor_equipos_tips,base.group_user,1,1,1,1
+access_gestor_actualizacion_log_user,gestor.actualizacion.log user,model_gestor_actualizacion_log,base.group_user,1,1,1,1
+access_gestor_alto_valor_team_log_user,gestor.alto.valor.team_log user,model_gestor_alto_valor_team,base.group_user,1,1,1,1
+access_gestor_codigo_tarifa_hogar_user,gestor.codigo.tarifa.hogar user,model_gestor_codigo_tarifa_hogar,base.group_user,1,1,1,1
+access_gestor_base_liquidacion_hogar_user,gestor.base.liquidacion.hogar user,model_gestor_base_liquidacion_hogar,base.group_user,1,1,1,1
+
+access_gestor_tarifas_especiales_hogar_user,gestor.tarifas.especiales.hogar user,model_gestor_tarifas_especiales_hogar,base.group_user,1,1,1,1
+access_gestor.tarifas.especiales.hogar.historico_user,gestor.tarifas.especiales.hogar.historico user,model_gestor_tarifas_especiales_hogar_historico,base.group_user,1,1,1,1
+access_gestor.hr.categoria.historico_user,gestor.hr.categoria.historico user,model_gestor_hr_categoria_historico,base.group_user,1,1,1,1
+access_gestor.hr.sucursal.historico_user,gestor.hr.sucursal.historico user,model_gestor_hr_sucursal_historico,base.group_user,1,1,1,1
+access_gestor.hr.job.historico_user,hr.job.historico user,model_hr_job_historico,base.group_user,1,1,1,1
+access_gestor.hr.responsable.historico_user,hr.responsable.historico user,model_hr_responsable_historico,base.group_user,1,1,1,1
+access_tipo.descuento_user,tipo.descuento user,model_tipo_descuento,base.group_user,1,1,1,1
+access_descuentos.teams_user,descuentos.teams user,model_descuentos_teams,base.group_user,1,1,1,1
+access_pagos.aplicados_user,pagos.aplicados user,model_pagos_aplicados,base.group_user,1,1,1,1
+access_gestor.liquidacion.servicios.adicionales,gestor.liquidacion.servicios.adicionales user,model_gestor_liquidacion_servicios_adicionales,base.group_user,1,1,1,1
+access_gestor.limites.venta,gestor.limites.venta user,model_gestor_limites_venta,base.group_user,1,1,1,1
+access_gestor.periodos.liquidacion,gestor.periodos.liquidacion user,model_gestor_periodos_liquidacion,base.group_user,1,1,1,1
+access_gestor.distritos_user,gestor.gestor.distritos user,model_gestor_distritos,base.group_user,1,1,1,1
+
+access_gestor.clientes.team_user,gestor.clientes.team user,model_gestor_clientes_team,base.group_user,1,1,1,1
+
+
+
+access_gestor_planes_team_planes,gestor.planes.team user,model_gestor_planes_team,base.group_user,1,0,0,0
+access_gestor_planes_team_user,gestor.planes.team user,model_gestor_planes_team,gestor_team.group_planes_team,1,1,1,1
+access_gestor_tipologia_lineas_planes_team_user,gestor.tipologia.lineas.planes.team user,model_gestor_tipologia_lineas_planes_team,gestor_team.group_planes_team,1,1,1,1
+access_gestor_lineas_planes_team_user,gestor.lineas.planes.team user,model_gestor_lineas_planes_team,gestor_team.group_planes_team,1,1,1,1
+access_gestor_precio_planes_team_user,gestor.precio.planes.team user,model_gestor_precio_planes_team,gestor_team.group_planes_team,1,1,1,1
+access_gestor_detalle_precios_planes_team_user,gestor.detalle.precios.planes.team user,model_gestor_detalle_precios_planes_team,gestor_team.group_planes_team,1,1,1,1
+access_gestor_actualizar_planes_wizard_user,gestor.actualizar.planes.wizard user,model_gestor_actualizar_planes_wizard,gestor_team.group_planes_team,1,1,1,1
+access_gestor_categoria_tipo_planes_team_user,gestor.categoria.tipo.planes.team user,model_gestor_categoria_tipo_planes_team,gestor_team.group_planes_team,1,1,1,1
+access_gestor.tipo.lineas.planes.team_user,gestor.tipo.lineas.planes.team user,model_gestor_tipo_lineas_planes_team,gestor_team.group_planes_team,1,1,1,1
+
+
+access_gestor.captura.hogar.espejo.team_user,gestor.captura.hogar.espejo.team user,model_gestor_captura_hogar_espejo_team,base.group_user,1,1,1,1
+
+access_gestor_captura_hogar_team_user,gestor.captura.hogar.team user,model_gestor_captura_hogar_team,base.group_user,1,1,1,0
+access_gestor_captura_hogar_detalle_team_user,gestor.captura.hogar.detalle.team user,model_gestor_captura_hogar_detalle_team,base.group_user,1,1,1,0
+access_gestor_captura_hogar_detalle_agrupado_team_user,gestor.captura.hogar.detalle.agrupado.team user,model_gestor_captura_hogar_detalle_agrupado_team,base.group_user,1,1,1,0
+access_gestor.referidos.team_user,gestor.referidos.team user,model_gestor_referidos_team,base.group_user,1,1,1,0
+
+access_gestor_captura_hogar_team_admin,gestor.captura.hogar.team admin,model_gestor_captura_hogar_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+access_gestor_captura_hogar_detalle_team_admin,gestor.captura.hogar.detalle.team admin,model_gestor_captura_hogar_detalle_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+access_gestor_captura_hogar_detalle_agrupado_team_admin,gestor.captura.hogar.detalle.agrupado.team admin,model_gestor_captura_hogar_detalle_agrupado_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+access_gestor.referidos.team_user,gestor.referidos.team user,model_gestor_referidos_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+
+access_gestor_captura_pyme_team_user,gestor.captura.pyme.team user,model_gestor_captura_pyme_team,base.group_user,1,1,1,0
+access_gestor_captura_pyme_detalle_team_user,gestor.captura.pyme.detalle.team user,model_gestor_captura_pyme_detalle_team,base.group_user,1,1,1,0
+access_gestor_captura_pyme_detalle_agrupado_team_user,gestor.captura.pyme.detalle.agrupado.team user,model_gestor_captura_pyme_detalle_agrupado_team,base.group_user,1,1,1,0
+access_gestor_pyme_team_user,gestor.pyme.team user,model_gestor_pyme_team,base.group_user,1,1,1,1
+
+access_gestor_captura_pyme_team_admin,gestor.captura.pyme.team admin,model_gestor_captura_pyme_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+access_gestor_captura_pyme_detalle_team_admin,gestor.captura.pyme.detalle.team admin,model_gestor_captura_pyme_detalle_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+access_gestor_captura_pyme_detalle_agrupado_team_admin,gestor.captura.pyme.detalle.agrupado.team admin,model_gestor_captura_pyme_detalle_agrupado_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+
+access_gestor.biometrias.team_user,gestor.biometrias.team user,model_gestor_biometrias_team,gestor_team.group_gestor_captura_biometrias_team,1,1,1,0
+access_gestor.biometrias.team_admin,gestor.biometrias.team admin,model_gestor_biometrias_team,gestor_team.group_gestor_actualizar_team,1,1,1,1
+access_gestor.biometrias.claro_user,gestor.biometrias.claro user,model_gestor_biometrias_claro,gestor_team.group_gestor_captura_biometrias_team,1,1,1,0
+access_gestor.biometrias.claro_admin,gestor.biometrias.claro admin,model_gestor_biometrias_claro,gestor_team.group_gestor_actualizar_team,1,1,1,1
+
+
+access_gestor_presupuestos_team_user,gestor.presupuestos.team user,model_gestor_presupuestos_team,gestor_team.group_gestion_presupuestos,1,1,1,1
+access_gestor_presupuestos_detalle_team_user,gestor.presupuestos.detalle.team user,model_gestor_presupuestos_detalle_team,gestor_team.group_gestion_presupuestos,1,1,1,1
+access_presupuestos_team_report_wizard_user,presupuestos.team.report.wizard user,model_presupuestos_team_report_wizard,gestor_team.group_gestion_presupuestos,1,1,1,1
+access_gestor_cartera_team_user,gestor.cartera.mintic.team user,model_gestor_cartera_team,gestor_team.group_gestion_presupuestos,1,1,1,1
+access_gestor.actualizar.presupuestos.wizard_user,gestor.actualizar.presupuestos.wizard user,model_gestor_actualizar_presupuestos_wizard,gestor_team.group_gestion_presupuestos,1,1,1,1
+access_gestor.cartera.wizard_user,gestor.cartera.wizard user,model_gestor_cartera_wizard,gestor_team.group_gestion_presupuestos,1,1,1,1
+
+access_gestor_rp_team_user,gestor.rp.team user,model_gestor_rp_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_sims_prendidas_user,gestor.sims.prendidas user,model_gestor_sims_prendidas,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_aepas_team_user,gestor.aepas.team user,model_gestor_aepas_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_codigos_aepas_team_user,gestor.codigos.aepas.team user,model_gestor_codigos_aepas_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_codigo_mintic_team_user,gestor.gestor.codigo.mintic.team user,model_gestor_codigo_mintic_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_cruce_ventas_tips_user,gestor.cruce.ventas.tips user,model_gestor_cruce_ventas_tips,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_actualizar_ventas_wizard_user,gestor.actualizar.ventas.wizard user,model_gestor_actualizar_ventas_wizard,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_cargar_archivos_wizard_user,gestor.cargar.archivos.wizard user,model_gestor_cargar_archivos_wizard,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_log_carga_archivos_user,gestor.log.carga.archivos user,model_gestor_log_carga_archivos,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_sucursales_user,gestor.sucursales user,model_gestor_sucursales,gestor_team.group_rp_claro,1,1,1,1
+access_gestor.porcentaje.presupuestales_user,gestor.porcentaje.presupuestales user,model_gestor_porcentaje_presupuestales,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_zonas_user,gestor.zonas user,model_gestor_zonas,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_archivos_team_user,gestor.archivos.team user,model_gestor_archivos_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor_archivos_columnas_team_user,gestor.archivos.columnas.team user,model_gestor_archivos_columnas_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor.cruce.rp.wizard_user,gestor.cruce.rp.wizard user,model_gestor_cruce_rp_wizard,gestor_team.group_rp_claro,1,1,1,1
+access_gestor.codigo.petar.team_user,gestor.codigo.petar.team user,model_gestor_codigo_petar_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor.servicios.internet.team_user,gestor.servicios.internet.team user,model_gestor_servicios_internet_team,gestor_team.group_rp_claro,1,1,1,1
+access_gestor.pago.comision_user,gestor.pago.comision user,model_gestor_pago_comision,gestor_team.group_rp_claro,1,1,1,1
+
+access_gestor_comisiones_team_user,gestor.comisiones.team user,model_gestor_comisiones_team,gestor_team.group_esquema_de_comisiones,1,1,1,1
+access_gestor_comisiones_team_capturadores,gestor.comisiones.team capturadores,model_gestor_comisiones_team,gestor_team.group_gestor_capturadores_team,1,1,0,0
+access_gestor_consulta_comisiones_tips_user,gestor.consulta.comisiones.tips user,model_gestor_consulta_comisiones_tips,gestor_team.group_esquema_de_comisiones,1,1,1,1
+access_gestor_generacion_planillas_wizard_user,gestor.generacion.planillas.wizard user,model_gestor_generacion_planillas_wizard,gestor_team.group_esquema_de_comisiones,1,1,1,1
+access_gestor_repositorio_comisiones_team_user,gestor.repositorio.comisiones.team user,model_gestor_repositorio_comisiones_team,gestor_team.group_esquema_de_comisiones,1,1,1,1
+access_gestor_repositorio_comisiones_team_user,gestor.repositorio.comisiones.team user,model_gestor_repositorio_comisiones_team,gestor_team.group_esquema_de_comisiones,1,1,1,1
+access_gestor.prioridades.comisiones.team_user,gestor.prioridades.comisiones.team user,model_gestor_prioridades_comisiones_team,gestor_team.group_esquema_de_comisiones,1,1,1,1
+access_gestor.prioridades.comisiones.team_capturadores,gestor.prioridades.comisiones.team capturadores,model_gestor_prioridades_comisiones_team,gestor_team.group_gestor_capturadores_team,1,0,0,0
+access_gestor.tipo.condiciones.comisiones.team_user,gestor.tipo.condiciones.comisiones.team user,model_gestor_tipo_condiciones_comisiones_team,gestor_team.group_esquema_de_comisiones,1,1,1,1
+
+access_hr.employee_gestion_empleados,hr.employee user,model_hr_employee,gestor_team.group_edicion_empleados,1,1,1,1
+access_res.users_gestion_empleados,res.users user,model_res_users,gestor_team.group_gestion_usuarios,1,1,1,1

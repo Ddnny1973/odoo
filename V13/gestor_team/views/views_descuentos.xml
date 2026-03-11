@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Descuentos TEAMS -->
+   <record id="view_descuentos_teams_form" model="ir.ui.view">
+      <field name="name">descuentos.teams.form.view</field>
+      <field name="model">descuentos.teams</field>
+      <field name="arch" type="xml">
+        <form string="Descuentos">
+                  <header>
+                    <button name="get_comision_a_pagar" string="Calcular comisión" type="object" class="oe_highlight o_expense_submit" groups="gestor_team.group_gestor_team"/>
+                  </header>
+                  <group col="4">
+                    <field name="name" options="{'no_create_edit': True}"/>
+                    <field name="identificacion" read_only="True"/>
+                    <field name="categoria_vendedor" read_only="True"/>
+                    <field name="tipodeprestamo" domain="[('saldo_stok', '=', False)]" options="{'no_create':1}"/>
+                    <field name="valorprestamo"/>
+                    <field name="fecha_aplicacion"/>
+                    <field name="cuotasaplicadas"/>
+                    <field name="saldo"/>
+                    <field name="num_factura"/>
+                    <field name="estado"/>
+                  </group>
+                  <group string="Información financiera" name="financiera" >
+                    <!-- <field name="interes"/> -->
+                    <field name="cuotas"/>
+                  </group>
+                  <group>
+                      <field name="valorcuota" />
+                      <field name="valoraplicar" />
+                      <field name="total_aplicar_global" />
+                  </group>
+                  <group>
+                      <field name="fecha_inicio"/>
+                      <field name="fecha_fin" />
+                  </group>
+                  <group>
+                      <button name="get_comision_a_pagar" string="Calcular comisión" type="object" help="Cambia el período para el cálculo de las comisiones generadas." class="oe_link oe_read_only pt-0"/>
+                  </group>
+
+                  <group string="Comisiones" name="comisiones" >
+                      <field name="comision" />
+                      <field name="comision_incentivos" />
+                      <field name="comision_responsable" />
+                      <field name="comision_generada" />
+                  </group>
+                  <group string="Impuestos" name="impuestos" >
+                      <field name="valor_iva" />
+                      <field name="valor_retencion" />
+                      <field name="valor_reteiva" />
+                  </group>
+                  <group string="Totales" name="totales">
+                      <!-- <field name="comision_generada_total" /> -->
+                      <!-- <field name="comision_a_pagar_global" /> -->
+                      <field name="comision_a_pagar" />
+                  </group>
+                  <!-- <group string="Información Contable" name="account" col="4">
+                    <field name="account"/>
+                    <field name="tercero" attrs="{'invisible':[('tipodeprestamo','=', 'PRESTAMO')], 'required':[('tipodeprestamo','=','LIBRANZA')]}"/>
+                  </group> -->
+                  <group>
+                      <field name="concepto"/>
+                  </group>
+                  <group>
+                      <field name="create_date"/>
+                  </group>
+
+                  <notebook>
+                      <page name="pagos_aplicados_ids" string="Pagos Aplicados">
+                          <group>
+                              <field name="pagos_aplicados_ids" nolabel="1"/>
+                          </group>
+                      </page>
+                  </notebook>
+                  <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                  </div>
+        </form>
+      </field>
+   </record>
+
+   <record id="view_descuentos_teams_tree" model="ir.ui.view">
+      <field name="name">descuentos.teams.tree</field>
+      <field name="model">descuentos.teams</field>
+      <field name="arch" type="xml">
+            <tree string="Prestamos" decoration-info="saldo != 0 and estado == 'Aplicable'" decoration-bf="saldo != 0 and estado == 'Aplicable'" >
+              <field name="name"/>
+              <field name="identificacion"/>
+              <field name="categoria_vendedor"/>
+              <field name="tipodeprestamo"/>
+              <field name="valorprestamo"/>
+              <field name="valorcuota"/>
+              <field name="fecha_aplicacion"/>
+              <field name="interes" optional='hide'/>
+              <field name="cuotas"/>
+              <field name="cuotasaplicadas"/>
+              <field name="saldo"/>
+              <field name="concepto"  optional='show'/>
+              <field name="num_factura" optional='show'/>
+              <field name="valoraplicar" optional='show'/>
+              <field name="total_aplicar_global" optional='show'/>
+              <!-- <field name="comision_generada_total" optional='show'/> -->
+              <!-- <field name="comision_a_pagar_global" optional='show'/> -->
+              <field name="comision_a_pagar" optional='show'/>
+              <field name="active" optional='hide'/>
+              <field name="create_date" optional='hide'/>
+              <field name="captura_id" optional='hide'/>
+              <field name="aplicaciones" optional='show'/>
+              <field name="estado" optional='hide'/>
+              <field name="id" optional="hide"/>
+            </tree>
+      </field>
+   </record>
+
+   <!-- Filtross -->
+   <record id="gestor_descuentos_filter_view" model="ir.ui.view">
+       <field name="name">GESTOR Descuentos Filtros</field>
+       <field name="model">descuentos.teams</field>
+       <field name="arch" type="xml">
+           <search>
+               <field name="num_factura" string="Factura/Nombre/Identificación" filter_domain="['|', '|', ('num_factura','ilike',self), ('name','ilike',self), ('identificacion','ilike',self)]"/>
+               <field name="name" string="Nombre" context="{'name': self}" filter_domain="['|', ('name','ilike',self), ('identificacion','ilike',self)]"/>
+               <separator/>
+               <filter name="group_name" string="Empleado" context="{'group_by': 'name'}"/>
+               <filter name="num_factura" string="Factura" context="{'group_by': 'num_factura'}"/>
+               <filter name="concepto" string="Concepto" context="{'group_by': 'concepto'}"/>
+               <filter name="tipodeprestamo" string="Tipo Descuento" context="{'group_by': 'tipodeprestamo'}"/>
+               <filter name="categoria_vendedor" string="Categoría Vendedor" context="{'group_by': 'categoria_vendedor'}"/>
+           </search>
+       </field>
+   </record>
+
+   <record model="ir.actions.act_window" id="gestor_team.action_descuentos">
+       <field name="name">Descuentos</field>
+       <field name="res_model">descuentos.teams</field>
+       <field name="view_mode">tree,form</field>
+   </record>
+
+   <!-- Pagos Aplicados -->
+   <record id="view_pagos_aplicados_tree" model="ir.ui.view">
+      <field name="name">pagos.aplicados.tree</field>
+      <field name="model">pagos.aplicados</field>
+      <field name="arch" type="xml">
+            <tree string="Pagos Aplicados" delete="false" editable="bottom">
+                <field name="fecha_aplicacion"/>
+                <field name="valor_aplicado"/>
+                <field name="active"/>
+            </tree>
+      </field>
+   </record>
+
+   <!-- tipo Descuentos TEAMS -->
+   <record id="view_tipo_descuentos_teams_form" model="ir.ui.view">
+     <field name="name">tipo.descuento.form.view</field>
+     <field name="model">tipo.descuento</field>
+     <field name="arch" type="xml">
+       <form string="Tipo Descuentos">
+                 <group col="4">
+                     <field name="name"/>
+                     <field name="cuotas"/>
+                 </group>
+       </form>
+     </field>
+   </record>
+
+   <record id="view_tipo_descuentos_tree" model="ir.ui.view">
+      <field name="name">tipo.descuentos.tree</field>
+      <field name="model">tipo.descuento</field>
+      <field name="arch" type="xml">
+            <tree string="Tipo Descuentos" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="saldo_stok"/>
+                <field name="cuotas"/>
+            </tree>
+      </field>
+   </record>
+
+   <record id="action_tipo_descuentos" model="ir.actions.act_window">
+       <field name="name">Tipo Descuentos</field>
+       <field name="res_model">tipo.descuento</field>
+       <field name="view_mode">tree,form</field>
+   </record>
+
+   <!-- Periodos de liquidación -->
+   <record id="view_gestor_periodos_liquidacion_form" model="ir.ui.view">
+      <field name="name">gestor.periodos.liquidacion.form</field>
+      <field name="model">gestor.periodos.liquidacion</field>
+      <field name="arch" type="xml">
+        <form string="Periodo de liquidación">
+                  <group col="4">
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                  </group>
+        </form>
+      </field>
+   </record>
+
+   <record id="view_gestor_periodos_liquidacion_tree" model="ir.ui.view">
+      <field name="name">gestor.periodos.liquidacion.tree</field>
+      <field name="model">gestor.periodos.liquidacion</field>
+      <field name="arch" type="xml">
+            <tree string="Periodo de liquidación" editable="bottom" create="false">
+              <field name="name"/>
+              <field name="fecha_inicio"/>
+              <field name="fecha_fin"/>
+            </tree>
+      </field>
+   </record>
+
+   <record id="action_periodos_liquidacion" model="ir.actions.act_window">
+       <field name="name">Períodos de liquidación</field>
+       <field name="res_model">gestor.periodos.liquidacion</field>
+       <field name="view_mode">tree,form</field>
+   </record>
+
+</odoo>

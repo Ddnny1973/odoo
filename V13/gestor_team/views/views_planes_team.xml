@@ -1,0 +1,334 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Planes -->
+    <!-- Forms -->
+    <record id="planes_team_form_view" model="ir.ui.view">
+       <field name="name">planes.team.form.view</field>
+       <field name="model">gestor.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="Planes TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="codigo"/>
+                   <field colspan="4" name="codigo_id" optional='hide'/>
+                   <field colspan="4" name="descripcion"/>
+                   <field colspan="4" name="tipo_plan"/>
+                   <field colspan="4" name="clasificacion"/>
+                   <field colspan="4" name="nombre_equivalente_ids" widget="many2many_tags"/>
+                   <field colspan="4" name="activo"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="planes_team_tree_view" model="ir.ui.view">
+        <field name="name">planes.team.tree</field>
+        <field name="model">gestor.planes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="codigo"/>
+                <field name="descripcion"/>
+                <!--<field name="nombre_auxiliar" widget="many2many_tags" />-->
+                <field name="tipo_plan"/>
+                <field name="clasificacion"/>
+                <field name="activo"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_planes_team">
+        <field name="name">Planes TEAM</field>
+        <field name="res_model">gestor.planes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Tipo Plan -->
+    <!-- Forms -->
+    <record id="tipo_plan_team_form_view" model="ir.ui.view">
+       <field name="name">tipo.plan.team.form.view</field>
+       <field name="model">gestor.tipo.plan.team</field>
+       <field name="arch" type="xml">
+         <form string="Tipo Plan TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="linea_ids" widget="many2many_tags"/>
+                   <field colspan="4" name="tipo_producto"/>
+                   <field colspan="4" name="categoria_id"/>
+                   <field colspan="4" name="activo"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="tipo_plan_team_tree_view" model="ir.ui.view">
+        <field name="name">tipo.plan.team.tree</field>
+        <field name="model">gestor.tipo.plan.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="linea_ids"/>
+                <field name="tipo_producto" readonly='True'/>
+                <field name="categoria_id"/>
+                <field name="activo"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_tipo_plan_team">
+        <field name="name">Tipo Plan TEAM</field>
+        <field name="res_model">gestor.tipo.plan.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Tipología líneas planes -->
+    <!-- Forms -->
+    <record id="tipologia_lineas_planes_team_form_view" model="ir.ui.view">
+       <field name="name">tipologia.lineas.planes.team.form.view</field>
+       <field name="model">gestor.tipologia.lineas.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="Tipología Líneas Planes TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="active"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="tipologia_lineas_team_tree_view" model="ir.ui.view">
+        <field name="name">tipologia.lineas.team.tree</field>
+        <field name="model">gestor.tipologia.lineas.planes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_tipologia_lineas_planes_team">
+        <field name="name">Tipología Líneas Planes TEAM</field>
+        <field name="res_model">gestor.tipologia.lineas.planes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Categoría tipo de plan -->
+    <!-- Forms -->
+    <record id="gestor_categoria_tipo_planes_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.categoria.tipo.planes.team.form.view</field>
+       <field name="model">gestor.categoria.tipo.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="Categoría tipo de Plan">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="informe"/>
+                   <field colspan="4" name="active"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_categoria_tipo_planes_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.categoria.tipo.planes.team.tree</field>
+        <field name="model">gestor.categoria.tipo.planes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field colspan="4" name="informe"/>
+                <field colspan="4" name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_categoria_tipo_planes_team">
+        <field name="name">Categoría tipo de Planes TEAM</field>
+        <field name="res_model">gestor.categoria.tipo.planes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Líneas planes -->
+    <!-- Forms -->
+    <record id="lineas_planes_team_form_view" model="ir.ui.view">
+       <field name="name">lineas.planes.team.form.view</field>
+       <field name="model">gestor.lineas.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="Líneas Planes TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="active"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="lineas_team_tree_view" model="ir.ui.view">
+        <field name="name">lineas.team.tree</field>
+        <field name="model">gestor.lineas.planes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_lineas_planes_team">
+        <field name="name">Líneas Planes TEAM</field>
+        <field name="res_model">gestor.lineas.planes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Tipo Líneas planes -->
+    <!-- Forms -->
+    <record id="gestor_tipo_lineas_planes_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.tipo.lineas.planes.team.form.view</field>
+       <field name="model">gestor.tipo.lineas.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="Tipo de Líneas Planes TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="id_tips"/>
+                   <field name="lineas_planes_ids" widget="many2many_tags"/>
+                   <field colspan="4" name="active"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_tipo_lineas_planes_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.tipo.lineas.planes.team.tree</field>
+        <field name="model">gestor.tipo.lineas.planes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="id_tips"/>
+                <field name="lineas_planes_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_tipo_lineas_planes_team">
+        <field name="name">Tipo de Líneas</field>
+        <field name="res_model">gestor.tipo.lineas.planes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Precio planes -->
+    <!-- Forms -->
+    <record id="precio_planes_team_form_view" model="ir.ui.view">
+       <field name="name">precio.planes.team.form.view</field>
+       <field name="model">gestor.precio.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="Planes TEAM">
+            <sheet>
+                <group>
+                    <group col="4">
+                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="tipologia"/>
+                    <field colspan="4" name="active"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page name='detalleprecio' string='CFM'>
+                        <group>
+                            <field name="detalle_precios_planes_ids">
+                                <tree>
+                                    <field name="cfm_con_iva"/>
+                                    <field name="cfm_sin_iva"/>
+                                    <field name="fecha_inicio"/>
+                                    <field name="fecha_fin"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="precio_planes_team_tree_view" model="ir.ui.view">
+        <field name="name">precio.planes.team.tree</field>
+        <field name="model">gestor.precio.planes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="tipologia"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_precio_planes_team">
+        <field name="name">Precio Planes TEAM</field>
+        <field name="res_model">gestor.precio.planes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="detalle_precios_planes_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.detalle.precios.planes.team.form.view</field>
+       <field name="model">gestor.detalle.precios.planes.team</field>
+       <field name="arch" type="xml">
+         <form string="CFM Planes">
+               <group col="4">
+                   <field colspan="4" name="cfm_con_iva"/>
+                   <field colspan="4" name="cfm_sin_iva"/>
+                   <field colspan="4" name="fecha_inicio"/>
+                   <field colspan="4" name="fecha_fin"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- Nombre equivalente del plan -->
+    <!-- Forms -->
+    <record id="nombre_equivalente_plan_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.nombre.equivalente.plan.team.form.view</field>
+       <field name="model">gestor.nombre.equivalente.plan.team</field>
+       <field name="arch" type="xml">
+         <form string="Tipo Plan TEAM">
+               <group col="4">
+                   <field colspan="4" name="name" invisible='True'/>
+                   <field colspan="4" name="plan_id_2"/>
+                   <field colspan="4" name="plan_id" widget="many2many_tags"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="nombre_equivalente_plan_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.nombre.equivalente.plan.team.tree</field>
+        <field name="model">gestor.nombre.equivalente.plan.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="plan_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_nombre_equivalente_plan_team">
+        <field name="name">Nombre del plan Equivalente</field>
+        <field name="res_model">gestor.nombre.equivalente.plan.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

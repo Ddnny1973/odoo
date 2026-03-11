@@ -1,0 +1,116 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Archivos -->
+    <!-- Forms -->
+    <record id="gestor_archivos_form_view" model="ir.ui.view">
+       <field name="name">gestor.archivos.form.view</field>
+       <field name="model">gestor.archivos.team</field>
+       <field name="arch" type="xml">
+         <form string="Estados Antes del Pago TEAM">
+            <sheet>
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field name="modelo_id"/>
+               </group>
+
+               <notebook>
+                   <page string="Columnas" name="columns_lines">
+                       <field name="columnas_ids">
+                           <tree string="Estructura de archivos" editable="bottom" >
+                               <field name="secuencia"/>
+                               <field name="columna_archivo"/>
+                               <field name="columna_modelo"/>
+                               <field name="columna_key"/>
+                           </tree>
+                       </field>
+                   </page>
+                   <page string="Query" name="query">
+                       <group >
+                           <field name="query"/>
+                       </group>
+                   </page>
+               </notebook>
+           </sheet>
+         </form>
+       </field>
+    </record>
+
+    <!-- Tree -->
+    <record id="gestor_archivos_tree_view" model="ir.ui.view">
+        <field name="name">gestor.archivos.tree.view</field>
+        <field name="model">gestor.archivos.team</field>
+        <field name="arch" type="xml">
+            <tree string="Estructura de archivos" >
+                <field colspan="4" name="name"/>
+                <field name="modelo_id"/>
+                <field name="columnas_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Payslip Line -->
+    <record id="gestor_archivos_columnas_tree_view" model="ir.ui.view">
+        <field name="name">gestor.archivos.columnas.tree.view</field>
+        <field name="model">gestor.archivos.columnas.team</field>
+        <field name="arch" type="xml">
+            <tree string="Estructura de archivos" editable="bottom" >
+                <field name="secuencia"/>
+                <field name="columna_archivo"/>
+                <field name="columna_modelo"/>
+                <field name="columna_key"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_archivos_team">
+        <field name="name">Administración de archivos</field>
+        <field name="res_model">gestor.archivos.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!--Log Importación -->
+    <!-- Forms -->
+    <!--<record id="rp_team_form_view" model="ir.ui.view">
+       <field name="name">rp.team.form.view</field>
+       <field name="model">gestor.rp.team</field>
+       <field name="arch" type="xml">
+         <form string="RP TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+               </group>
+         </form>
+       </field>
+    </record>-->
+
+    <!-- tree -->
+    <record id="gestor_log_carga_archivos_tree_view" model="ir.ui.view">
+        <field name="name">gestor.log.carga.archivos.tree</field>
+        <field name="model">gestor.log.carga.archivos</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="registros"/>
+                <field name="estado"/>
+                <field name="fecha"/>
+                <field name="duracion"/>
+                <field name="hash" optional='hide'/>
+                <field name="mecanismo" optional='hide'/>
+                <field name="observaciones" optional='hide'/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtros -->
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_log_carga_archivos">
+        <field name="name">LOG Importaciones</field>
+        <field name="res_model">gestor.log.carga.archivos</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

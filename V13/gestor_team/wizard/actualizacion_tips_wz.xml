@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_actualizar_ventas_tips_wizard" model="ir.ui.view">
+        <field name="name">gestor.actualizar.ventas.wizard.view</field>
+        <field name="model">gestor.actualizar.ventas.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Actualizar Ventas en TIPS">
+                <label
+                    string="Este proceso actualizará distintos campos de ventas en TIPS"
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <div class="oe_title">
+                        <group>
+                            <field name="fechas"/>
+                            <field name="plan"/>
+                            <field name="actualizar_plan_especifico" attrs="{'invisible': [('plan', '=', True)]}"/>
+                            <field name="actualizar_plan_especifico_plan" attrs="{'invisible': [('actualizar_plan_especifico', '=', False)]}"/>
+                        </group>
+                    </div>
+                    <div class="oe_title">
+                        <group>
+                            <field name="imei"/>
+                            <field name="min"/>
+                            <field name="actualizar_equipo"/>
+                            <field name="actualizar_tipo_linea"/>
+                        </group>
+                    </div>
+                </group>
+                <group>
+                    <div class="oe_title">
+                        <group>
+                            <field name="filtro_fecha" string="Filtro revisión fecha"/>
+                            <field name="filtro_plan" string="Filtro revisión Plan" />
+                            <field name="filtro_tipo_plan" string="Filtro revisión Tipo de Plan"/>
+                            <field name="filtro_imei" string="Filtro revisión IMEI"/>
+                            <field name="filtro_min" string="Filtro revisión MIN"/>
+                            <field name="filtro_equipo" string="Filtro revisión Equipo"/>
+                            <field name="filtro_encontrado_rp" string="Filtro encontrada en RP"/>
+                        </group>
+                    </div>
+                    <div class="oe_title">
+                        <group>
+                            <field name="filtro_tipo_plan_rp" invisible="1"/>
+                            <field name="plan_rp" options="{'no_create':1}"/>
+                            <field name="filtro_tipo_plan_rp_indefinido"/>
+                            <field name="filtro_tipo_plan_tips" widget="many2many_tags" domain="[('activo', '=', True)]" options="{'no_create':1}"/>
+                            <field name="filtro_por_nombre_plan_tips" domain="[('activo', '=', True)]" options="{'no_create':1}"/>
+                            <field name="filtro_nombre_plan_tips" widget="many2many_tags" domain="[('activo', '=', True)]" options="{'no_create':1}"/>
+                            <field name="filtro_tipo_linea" options="{'no_create':1}"/>
+                        </group>
+                    </div>
+                </group>
+                <div class="oe_title">
+                    <group>
+                        <field name="aplicar"/>
+                        <field name="registros_count"/>
+                    </group>
+                </div>
+                <group colspan="4" >
+                    <separator string="Ventas" colspan="4"/>
+                    <!--<newline/>-->
+                    <field name="ventas_ids" nolabel="1">
+                        <tree string="Cruce Ventas TIPS">
+                            <field name="fecha_tips" optional="show"/>
+                            <field name="fecha_rp" optional="show"/>
+                            <field name="revision_fecha" optional="show"/>
+                            <field name="nombre_plan_tips" optional="show"/>
+                            <field name="nombre_plan_rp" optional="show"/>
+                            <field name="revision_del_plan" optional="show"/>
+                            <field name="tipo_de_plan_tips" optional="show"/>
+                            <field name="tipo_linea" optional="show"/>
+                            <field name="tipo_de_plan_rp" optional="show"/>
+                            <field name="revision_tipo_de_plan" optional="show"/>
+                            <field name="iccid_tips" optional="hide"/>
+                            <field name="iccid_rp" optional="hide"/>
+                            <field name="imei_tips" optional="hide"/>
+                            <field name="imei_rp" optional="hide"/>
+                            <field name="revision_imei" optional="show"/>
+                            <field name="min_tips" optional="hide"/>
+                            <field name="min_rp" optional="hide"/>
+                            <field name="revision_min" optional="show"/>
+                            <field name="equipo_tips" optional="hide"/>
+                            <field name="equipo_stok" optional="hide"/>
+                            <field name="revision_equipo" optional="show"/>
+                            <field name="costo_rec_log" optional="hide"/>
+                            <field name="pago" optional="hide"/>
+                            <field name="sucursal" optional="hide"/>
+                            <field name="tipo_de_vendedor" optional="hide"/>
+                            <field name="nombre_para_mostrar_del_vendedor" optional="hide"/>
+                            <field name="estado_actual" optional="hide"/>
+                            <field name="cliente_actual" optional="hide"/>
+                            <field name="usuario_creador" optional="hide"/>
+                            <field name="venta_id" optional="hide"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button
+                        name="action_update"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <!-- or
+                    <button
+                        name="actualiza_segundo_plano"
+                        string="Segundo plano"
+                        type="object"
+                        class="oe_highlight"
+                    /> -->
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menú acciones -->
+    <act_window id="action_ventas_tips_update"
+                name="Actualizar Ventas TIPS"
+                res_model="gestor.actualizar.ventas.wizard"
+                binding_model="gestor.cruce.ventas.tips"
+                view_mode="form"
+                target="new"
+                binding_views="list,form"
+                groups="gestor_team.group_gestor_actualizar_team"  />
+
+    <record id="action_ventas_tips_update_wizard" model="ir.actions.act_window">
+        <field name="name">Actualizar Ventas TIPS</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.actualizar.ventas.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

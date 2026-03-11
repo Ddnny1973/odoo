@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="presupuestos_report_view" model="ir.ui.view">
+        <field name="name">Reporte de Presupuestos</field>
+        <field name="model">presupuestos.team.report.wizard</field>
+        <!-- <field name="inherit_id" ref="account.account_common_report_view"/> -->
+        <field name="arch" type="xml">
+            <data>
+                <field name="journal_ids" position="replace"/>
+                <field name="target_move" position="replace"/>
+                <xpath expr="//field[@name='date_from']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_to']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="action_presupuestos_report" model="ir.actions.act_window">
+        <field name="name">Reporte de Presupuestos</field>
+        <field name="res_model">presupuestos.team.report.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="presupuestos_report_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_presupuestos_report"
+              name="Reporte Presupuestos"
+              sequence="8"
+              action="action_presupuestos_report"
+              parent="submenu_presupuesto"/>
+
+</odoo>

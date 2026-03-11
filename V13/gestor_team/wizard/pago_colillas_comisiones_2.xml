@@ -1,0 +1,132 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_generacion_planillas_wizard_2" model="ir.ui.view">
+        <field name="name">gestor.generacion.planillas.wizard_2</field>
+        <field name="model">gestor.generacion.planillas.wizard_2</field>
+        <field name="arch" type="xml">
+            <form string="Cambio masivo de responsables">
+                <label
+                    string="Este proceso liquida y genera las planillas de comisiones por empleado."
+                    colspan="2"
+                    for=""
+                />
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="category_id" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                            <!-- <field name="category_id_ex" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/> -->
+                            <field name="category_id_in" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+
+                            <field name="job_id" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                            <!-- <field name="job_id_ex" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/> -->
+                            <field name="job_id_in" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                        </group>
+                        <group>
+                            <field name="sucursal_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                            <!-- <field name="sucursal_ids_ex" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/> -->
+                            <field name="sucursal_ids_in" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                        </group>
+                        <group>
+                            <field name="tarifa_especial_id_capturas" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                            <field name="tarifa_especial_id_in" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+
+                        </group>
+                    </group>
+                    <group>
+                        <field name="empleados_seleccionados_id" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                        <field name="excluir_empleados" attrs="{'readonly': ['|', ('referidos_ids', '!=', []), ('empleados_seleccionados_id', '=', [])]}"/>
+                        <field name="adicionar_empleados" attrs="{'readonly': ['|', ('referidos_ids', '!=', []), ('empleados_seleccionados_id', '=', [])]}"/>
+                    </group>
+                    <group>
+                        <field name="referidos_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'readonly': ['|', ('empleados_seleccionados_id', '!=', []), '|', ('sucursal_ids', '!=', []), '|', ('job_id', '!=', []), '|', ('category_id', '!=', []), '|']}"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="fecha_incial"/>
+                            <field name="fecha_final"/>
+                        </group>
+                        <group>
+                            <field name="fecha_pago" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="excluir_ventas_propias" attrs="{'readonly': ['|', ('referidos_ids', '!=', [])]}"/>
+                            <field name="traer_pagadas"/>
+                            <field name="marcar_pago" />
+                            <!-- <field name="ventas_propias_employee_ids" widget="many2many_tags" options="{'no_create_edit': True}"/> -->
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="hogar"/>
+                            <field name="biometrias"/>
+                            <field name="pyme" readonly="1"/>
+                            <field name="movil" readonly="1"/>
+                            <field name="equipos" readonly="1"/>
+                            <!--<field name="dependientes_ids"/>-->
+                        </group>
+                        <group>
+                            <field name="tipo_biometrias"/>
+                            <field name="tipo_comision"/>
+                            <field name="tipo_descuento"/>
+                            <field name="tipo_incentivo"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="aplicar"/>
+                    </group>
+                    <div class="oe_title">
+                        <group>
+                            <!-- <field name="aplicar"/> -->
+                            <field name="registros_count" readonly="1"/>
+                            <field name="ventas_detalle_count" readonly="1"/>
+                            <field name="comisiones_count" readonly="1"/>
+                            <field name="biometrias_count" readonly="1"/>
+                        </group>
+                    </div>
+                    <notebook>
+                        <page name="empleados_ids" string="Empleados">
+                            <group>
+                                <field name="empleados_ids" nolabel="1" />
+                            </group>
+                        </page>
+                        <page name="cur_agrupado" string="Detalle Ventas Propias">
+                            <group>
+                                <field name="cur_agrupado" nolabel="1" />
+                            </group>
+                        </page>
+                        <page name="cur_comisiones" string="Detalle Comisiones Responsable/Incentivos">
+                            <group>
+                                <field name="cur_comisiones" nolabel="1" />
+                            </group>
+                        </page>
+                        <page name="biometrias_ids" string="Detalle Biometrías">
+                            <group>
+                                <field name="biometrias_ids" nolabel="1" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button
+                        name="generar_planillas"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_generacion_planillas_wizard_2" model="ir.actions.act_window">
+        <field name="name">Planillas Comisiones (Características de la Venta)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.generacion.planillas.wizard_2</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

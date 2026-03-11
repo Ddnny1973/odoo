@@ -1,0 +1,219 @@
+<odoo>
+    <!-- views -->
+
+    <!-- RP -->
+    <!-- Forms -->
+    <!--<record id="rp_team_form_view" model="ir.ui.view">
+       <field name="name">rp.team.form.view</field>
+       <field name="model">gestor.rp.team</field>
+       <field name="arch" type="xml">
+         <form string="RP TEAM">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+               </group>
+         </form>
+       </field>
+   </record>-->
+
+    <!-- tree -->
+    <record id="rp_team_tree_view" model="ir.ui.view">
+        <field name="name">rp.team.tree</field>
+        <field name="model">gestor.rp.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="fecha_procesamiento"/>
+                <field name="distribuidor"/>
+                <field name="producto"/>
+                <field name="descripcion"/>
+                <field name="co_id"/>
+                <field name="planilla"/>
+                <field name="activacion"/>
+                <field name="imei"/>
+                <field name="min"/>
+                <field name="iccid"/>
+                <field name="custcode"/>
+                <field name="fecharecepcion" optional="hide"/>
+                <field name="fechalegalizacion" optional="hide"/>
+                <field name="fechadevolucion" optional="hide"/>
+                <field name="fechasolucion" optional="hide"/>
+                <field name="causal1" optional="hide"/>
+                <field name="causal2" optional="hide"/>
+                <field name="causal3" optional="hide"/>
+                <field name="causal4" optional="hide"/>
+                <field name="causal5" optional="hide"/>
+                <field name="desc" optional="hide"/>
+                <field name="cfm_mes_1" optional="hide"/>
+                <field name="estado_mes_1" optional="hide"/>
+                <field name="cfm_mes_2" optional="hide"/>
+                <field name="estado_mes_2" optional="hide"/>
+                <field name="cfm_mes_3" optional="hide"/>
+                <field name="estado_mes_3" optional="hide"/>
+                <field name="cfm_mes_4" optional="hide"/>
+                <field name="estado_mes_4" optional="hide"/>
+                <field name="cfm_mes_5" optional="hide"/>
+                <field name="estado_mes_5" optional="hide"/>
+                <field name="cfm_mes_6" optional="hide"/>
+                <field name="estado_mes_6" optional="hide"/>
+                <field name="prim_llamada_activacion" optional="hide"/>
+                <field name="legalizacion" optional="hide"/>
+                <field name="recepcion" optional="hide"/>
+                <field name="devolucion" optional="hide"/>
+                <field name="solucion" optional="hide"/>
+                <field name="vozxmin" optional="hide"/>
+                <field name="smsxmin" optional="hide"/>
+                <field name="gprsxmin" optional="hide"/>
+                <field name="diasxmin" optional="hide"/>
+                <field name="cargas_mes_min_1" optional="hide"/>
+                <field name="cargas_mes_min_2" optional="hide"/>
+                <field name="cargas_mes_min_3" optional="hide"/>
+                <field name="cargas_mes_min_4" optional="hide"/>
+                <field name="cargas_mes_min_5" optional="hide"/>
+                <field name="cargas_mes_min_6" optional="hide"/>
+                <field name="codigo_distribuidor" optional="hide"/>
+                <field name="fecha_reposicion" optional="hide"/>
+                <field name="permanencia_pendiente" optional="hide"/>
+                <field name="fecha_de_recepcion" optional="hide"/>
+                <field name="fecha_de_devolucion" optional="hide"/>
+                <field name="fecha_de_solucion" optional="hide"/>
+                <field name="ivr" optional="hide"/>
+                <field name="mes1" optional="hide"/>
+                <field name="mes2" optional="hide"/>
+                <field name="mes3" optional="hide"/>
+                <field name="mes4" optional="hide"/>
+                <field name="mes5" optional="hide"/>
+                <field name="mes6" optional="hide"/>
+                <field name="valor_microcargas" optional="hide"/>
+                <field name="cantidad_microcargas" optional="hide"/>
+                <field name="source_name" optional="hide"/>
+                <field name="producto1" optional="hide"/>
+                <field name="producto2" optional="hide"/>
+                <field name="tipo_linea" optional="hide"/>
+                <field name="tipo_venta" optional="show"/>
+                <field name="tipo_de_convergencia" optional="show"/>
+            </tree>
+        </field>
+
+
+    </record>
+
+    <!-- Filtross -->
+    <record id="rp_team_filter_view" model="ir.ui.view">
+        <field name="name">RP TEAMS Filtros</field>
+        <field name="model">gestor.rp.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="RP" filter_domain="['|', ('imei','ilike',self), ('min','ilike',self)]"/>
+                <field name="imei" string="IMEI" context="{'imei': self}" filter_domain="[('imei','ilike',self)]"/>
+                <field name="min" string="MIN" context="{'min': self}" filter_domain="[('min','ilike',self)]"/>
+                <separator/>
+                <filter name="group_producto" string="Producto" context="{'group_by': 'producto'}"/>
+                <filter name="group_producto1" string="Producto RONY" context="{'group_by': 'producto1'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_rp_team">
+        <field name="name">RP CLARO</field>
+        <field name="res_model">gestor.rp.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Portabilidad prepago -->
+    <!-- tree -->
+    <record id="gestor_portabilidad_prepago_tree_view" model="ir.ui.view">
+        <field name="name">gestor.portabilidad.prepago.tree</field>
+        <field name="model">gestor.portabilidad.prepago</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="producto"/>
+                <field name="fecha_solicitud"/>
+                <field name="estado_solicitud"/>
+                <field name="min_a_portar"/>
+                <field name="distribuidor"/>
+                <field name="operador_donante"/>
+                <field name="cedula_vendedor"/>
+                <field name="vendedor_tips"/>
+                <field name="tipo_vendedor"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_gestor_portabilidad_prepago_action">
+        <field name="name">Portabilidad prepago</field>
+        <field name="res_model">gestor.portabilidad.prepago</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<!-- Pago Comisiones -->
+    <!-- tree -->
+    <record id="gestor_pago_comision_tree_view" model="ir.ui.view">
+        <field name="name">gestor.pago.comision.tree</field>
+        <field name="model">gestor.pago.comision</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nit" optional="hide"/>
+                <field name="fuerzadeventa" optional="hide"/>
+                <field name="region" optional="hide"/>
+                <field name="canaldeventa" optional="hide"/>
+                <field name="dealerpadre" optional="hide"/>
+                <field name="subfuerzadeventa" optional="hide"/>
+                <field name="dealerhijo" optional="hide"/>
+                <field name="coid" optional="show"/>
+                <field name="numerodetelefono" optional="hide"/>
+                <field name="tipodeplan" optional="hide"/>
+                <field name="codigodelplan" optional="hide"/>
+                <field name="desplanservadicionalpaq" optional="hide"/>
+                <field name="concepto_bonificacion" optional="hide"/>
+                <field name="bonificacion" optional="show"/>
+                <field name="concepto_cesantia" optional="hide"/>
+                <field name="cesantia" optional="show"/>
+                <field name="estatusdecomision" optional="hide"/>
+                <field name="motivodelrechazoga1" optional="hide"/>
+                <field name="motivodelrechazoga2" optional="hide"/>
+                <field name="motivodelrechazoga3" optional="hide"/>
+                <field name="motivodelrechazoga4" optional="hide"/>
+                <field name="motivodelrechazoga5" optional="hide"/>
+                <field name="motivodelrechazoga6" optional="hide"/>
+                <field name="estadodelalinea" optional="show"/>
+                <field name="fechadeactivacion" optional="show"/>
+                <field name="fechaderecepcion" optional="hide"/>
+                <field name="fechadelegalizacion" optional="hide"/>
+                <field name="fechadecorte" optional="hide"/>
+                <field name="fechadedesactivacion" optional="hide"/>
+                <field name="fechadedevolucion" optional="hide"/>
+                <field name="fechadesolucion" optional="hide"/>
+                <field name="llamada1si0no" optional="hide"/>
+                <field name="dupla" optional="hide"/>
+                <field name="nombredelcliente" optional="hide"/>
+                <field name="ceduladeciudadaniacliente" optional="hide"/>
+                <field name="custcode" optional="hide"/>
+                <field name="iccid" optional="show"/>
+                <field name="marca" optional="hide"/>
+                <field name="imei" optional="show"/>
+                <field name="causaldeactivacion" optional="hide"/>
+                <field name="codigodereglaquepagolacom" optional="hide"/>
+                <field name="origen" optional="hide"/>
+                <field name="diasdeconsumo" optional="hide"/>
+                <field name="cantidaddemindeconsumo" optional="hide"/>
+                <field name="valortotcargporperiodo" optional="hide"/>
+                <field name="monto_carga" optional="show"/>
+                <field name="periododelacarga" optional="show"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_pago_comision_action">
+        <field name="name">Pago Comisiones</field>
+        <field name="res_model">gestor.pago.comision</field>
+        <field name="view_mode">tree,form</field>
+    </record>    
+
+
+
+</odoo>

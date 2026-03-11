@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_cargar_eventos_wz">
+        <field name="name">gestor.cargar.archivos.mail.wizard.form</field>
+        <field name="model">gestor.cargar.archivos.mail.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cargar eventos">
+              <footer>
+                    <button name="action_cargar_archivos" type="object" string="Cargar" class="oe_highlight"/>
+                    Or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menú acciones -->
+    <record id="action_cargar_archivos" model="ir.actions.act_window">
+        <field name="name">Cargar Archivos CRM</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.cargar.archivos.mail.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

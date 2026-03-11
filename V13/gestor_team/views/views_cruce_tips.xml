@@ -1,0 +1,246 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="gestor_cruce_ventas_tips_view" model="ir.ui.view">
+           <field name="name">gestor.cruce.ventas.tips.form.view</field>
+           <field name="model">gestor.cruce.ventas.tips</field>
+           <field name="arch" type="xml">
+             <form string="Cruce TIPS - RP">
+                    <header>
+                          <button name="actualizar_venta_tips" type="object" class="oe_highlight" string="Actualizar TIPS" groups="gestor_team.group_gestor_actualizar_team"/>
+                    </header>
+                    <group col="2">
+                        <div class="oe_title">
+                            <group>
+                               <field name="fecha_tips"/>
+                               <field name="fecha_rp" readonly="1"/>
+                               <field name="revision_fecha" readonly="1"/>
+                            </group>
+                        </div>
+                    <!--</group>
+                    <group col="4">-->
+                        <div class="oe_title">
+                            <group>
+                               <field name="nombre_plan_tips"/>
+                               <field name="plan_tips_id" domain="[('activo', '=', True)]" options="{'no_create':1}"/>
+                               <field name="nombre_plan_rp" readonly="1"/>
+                               <field name="revision_del_plan" readonly="1"/>
+                            </group>
+                        </div>
+                    </group>
+                    <group col="2">
+                        <div class="oe_title">
+                            <group>
+                               <field colspan="4" name="tipo_de_plan_tips" readonly="1"/>
+                               <field colspan="4" name="tipo_de_plan_rp" readonly="1"/>
+                               <!--<field colspan="4" name="tipo_plan_tips" readonly="1"/>-->
+                               <field colspan="4" name="revision_tipo_de_plan" readonly="1"/>
+                           </group>
+                       </div>
+                       <div class="oe_title">
+                           <group>
+                               <field colspan="4" name="imei_tips" />
+                               <field colspan="4" name="imei_rp" readonly="1"/>
+                               <field colspan="4" name="revision_imei" readonly="1"/>
+                           </group>
+                       </div>
+                    </group>
+                    <group col="2">
+                        <div class="oe_title">
+                            <group>
+                               <field colspan="4" name="min_tips" />
+                               <field colspan="4" name="min_rp" readonly="1"/>
+                               <field colspan="4" name="revision_min" readonly="1"/>
+                           </group>
+                       </div>
+                       <div class="oe_title">
+                           <group>
+                               <field colspan="4" name="equipo_tips" readonly="1"/>
+                               <field colspan="4" name="equipo" domain="[('active', '=', True), ('nombre_equipo_stock', '!=', False)]" options="{'no_create_edit': True}"/>
+                               <field colspan="4" name="equipo_stok" readonly="1"/>
+                               <field colspan="4" name="revision_equipo" readonly="1"/>
+                           </group>
+                       </div>
+                    </group>
+                    <group col="2">
+                        <div class="oe_title">
+                            <group>
+                               <field colspan="4" name="iccid_tips" readonly="1"/>
+                               <field colspan="4" name="iccid_rp" readonly="1"/>
+                           </group>
+                       </div>
+                       <div class="oe_title">
+                           <group>
+                               <field colspan="4" name="costo_rec_log" readonly="1"/>
+                               <field colspan="4" name="pago" readonly="1"/>
+                           </group>
+                       </div>
+                    </group>
+                    <group col="2">
+                        <div class="oe_title">
+                            <group>
+                               <field colspan="4" name="sucursal" readonly="1"/>
+                               <field colspan="4" name="tipo_de_vendedor" readonly="1"/>
+                           </group>
+                       </div>
+                       <div class="oe_title">
+                           <group>
+                               <field colspan="4" name="estado_actual" readonly="1"/>
+                               <field colspan="4" name="cliente_actual" readonly="1"/>
+                           </group>
+                       </div>
+                    </group>
+                    <group col="2">
+                        <div class="oe_title">
+                            <group>
+                               <field colspan="4" name="usuario_creador" readonly="1"/>
+                               <field colspan="4" name="venta_id_tips" readonly="1"/>
+                               <field colspan="4" name="co_id_rp" readonly="1"/>
+                               <field colspan="4" name="encontrada_rp" readonly="1"/>
+                               <field colspan="4" name="id_tips" readonly="1"/>
+                               <field colspan="4" name="id_rp" readonly="1"/>
+                               <field colspan="4" name="posible_duplicado" readonly="1"/>
+                           </group>
+                       </div>
+                    </group>
+             </form>
+           </field>
+       </record>
+
+    <!-- tree -->
+    <record id="gestor_cruce_ventas_tips_tree_view" model="ir.ui.view">
+        <field name="name">gestor.cruce.ventas.tips.tree</field>
+        <field name="model">gestor.cruce.ventas.tips</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="encontrada_rp" optional="show"/>
+                <field name="co_id_rp" optional="show"/>
+                <field name="estado_tips" optional="hide"/>
+                <field name="fecha_tips" optional="show"/>
+                <field name="fecha_rp" optional="show"/>
+                <field name="revision_fecha" optional="show"/>
+                <field name="nombre_plan_tips" optional="show"/>
+                <field name="nombre_plan_rp" optional="show"/>
+                <field name="revision_del_plan" optional="show"/>
+                <field name="tipo_de_plan_tips" optional="show"/>
+                <field name="tipo_linea" optional="show"/>
+                <field name="tipo_de_plan_rp" optional="show"/>
+                <field name="revision_tipo_de_plan" optional="show"/>
+                <field name="iccid_tips" optional="hide"/>
+                <field name="iccid_rp" optional="hide"/>
+                <field name="imei_tips" optional="show"/>
+                <field name="imei_rp" optional="show"/>
+                <field name="revision_imei" optional="show"/>
+                <field name="min_tips" optional="show"/>
+                <field name="min_rp" optional="show"/>
+                <field name="revision_min" optional="show"/>
+                <field name="equipo_tips" optional="show"/>
+                <field name="equipo_stok" optional="show"/>
+                <field name="revision_equipo" optional="show"/>
+                <field name="costo_rec_log" optional="hide"/>
+                <field name="pago" optional="hide"/>
+                <field name="sucursal" optional="hide"/>
+                <field name="tipo_de_vendedor" optional="hide"/>
+                <field name="nombre_para_mostrar_del_vendedor" optional="hide"/>
+                <field name="estado_actual" optional="hide"/>
+                <field name="cliente_actual" optional="hide"/>
+                <field name="usuario_creador" optional="hide"/>
+                <field name="venta_id" optional="hide"/>
+                <field name="id_tips" optional="show" />
+                <field name="id_rp" optional="hide"/>
+                <field name="posible_duplicado" optional="hide"/>
+
+            </tree>
+        </field>
+
+
+    </record>
+
+    <!-- Filtross -->
+    <record id="ventas_tips_filter_view" model="ir.ui.view">
+        <!--<field name="imei">IMEI</field>-->
+        <field name="model">gestor.cruce.ventas.tips</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="encontrada_rp" string="Encontrada" domain="[('encontrada_rp','=','Encontrada')]"/>
+                <filter name="revision_fecha" string="Fecha no OK" domain="[('revision_fecha','!=','ok')]"/>
+                <filter name="revision_fecha" string="Fecha OK" domain="[('revision_fecha','=','ok')]"/>
+                <filter name="revision_del_plan" string="Plan no OK" domain="[('revision_del_plan','!=','ok')]"/>
+                <filter name="revision_del_plan" string="Plan OK" domain="[('revision_del_plan','=','ok')]"/>
+                <filter name="revision_tipo_de_plan" string="Tipo de Plan no OK" domain="[('revision_tipo_de_plan','!=','ok')]"/>
+                <filter name="revision_tipo_de_plan" string="Tipo de Plan OK" domain="[('revision_tipo_de_plan','=','ok')]"/>
+                <filter name="revision_imei" string="IMEI no OK" domain="[('revision_imei','!=','ok')]"/>
+                <filter name="revision_imei" string="IMEI OK" domain="[('revision_imei','=','ok')]"/>
+                <filter name="revision_min" string="IMEI no OK" domain="[('revision_min','!=','ok')]" />
+                <filter name="revision_min" string="IMEI OK" domain="[('revision_min','=','ok')]"/>
+                <filter name="revision_equipo" string="Equipo no OK" domain="[('revision_equipo','!=','ok')]"/>
+                <filter name="revision_equipo" string="Equipo OK" domain="[('revision_equipo','=','ok')]"/>
+                <field name="imei_tips" string="IMEI TIPS" context="{'imei_tips': self}" filter_domain="['|', ('imei_tips','ilike',self), ('min_tips','ilike',self)]"/>
+                <field name="min_tips" string="MIN TIPS" context="{'min_tips': self}" filter_domain="[('min_tips','ilike',self)]"/>
+                <field name="min_tips" string="CO_ID RP" context="{'co_id_rp': self}" filter_domain="[('co_id_rp','ilike',self)]"/>
+                <field name="nombre_plan_tips" string="Nombre del plan TIPS" context="{'nombre_plan_tips': self}" filter_domain="[('nombre_plan_tips','ilike',self)]"/>
+                <field name="tipo_de_plan_tips" string="Tipo de plan TIPS" context="{'tipo_de_plan_tips': self}" filter_domain="[('tipo_de_plan_tips','ilike',self)]"/>
+                <separator/>
+                <filter name="encontrada_rp" string="Encontrada en RP" context="{'group_by': 'encontrada_rp'}"/>
+                <filter name="tipo_de_plan_tips" string="Tipo de plan TIPS" context="{'group_by': 'tipo_de_plan_tips'}"/>
+                <filter name="tipo_de_plan_rp" string="Tipo de plan RP" context="{'group_by': 'tipo_de_plan_rp'}"/>
+                <filter name="nombre_plan_tips" string="Nombre del plan TIPS" context="{'group_by': 'nombre_plan_tips'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_cruce_ventas_tips">
+        <field name="name">Cruce Ventas TIPS</field>
+        <field name="res_model">gestor.cruce.ventas.tips</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- views Equipos STOK-->
+
+    <!-- Forms -->
+    <record id="gestor_equipos_stock_tree_view" model="ir.ui.view">
+           <field name="name">gestor.equipos.stock.tree.view</field>
+           <field name="model">gestor.equipos.stock</field>
+           <field name="arch" type="xml">
+                   <tree >
+                       <field name="name" readonly="1"/>
+                       <field name="estado" readonly="1"/>
+                       <field name="serializado" readonly="1"/>
+                </tree>
+        </field>
+
+        </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_equipos_stok">
+        <field name="name">Equipos Stok</field>
+        <field name="res_model">gestor.equipos.stock</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- views Equipos TIPS-->
+
+    <!-- Forms -->
+    <record id="gestor_equipos_tips_tree_view" model="ir.ui.view">
+           <field name="name">gestor.equipos.tips.tree.view</field>
+           <field name="model">gestor.equipos.tips</field>
+           <field name="arch" type="xml">
+                   <tree editable="top">
+                       <field name="name" readonly="1"/>
+                       <field name="id_tips" readonly="1"/>
+                       <field name="nombre_equipo_stock" widget="many2many_tags"/>
+                </tree>
+        </field>
+
+        </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_equipos_tips">
+        <field name="name">Equipos TIPS</field>
+        <field name="res_model">gestor.equipos.tips</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+</odoo>

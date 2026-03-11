@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_actualizar_presupuestos_wizard" model="ir.ui.view">
+        <field name="name">gestor.actualizar.presupuestos.wizard</field>
+        <field name="model">gestor.actualizar.presupuestos.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Actualizar Presupuestos">
+                <label
+                    string="Este proceso realizará la actualización manual de los presupuestos."
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                </group>
+                <footer>
+                    <button
+                        name="consulta_tips_comisiones"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_actualizar_comisiones_wizard" model="ir.actions.act_window">
+        <field name="name">Actualizar Comisiones/Presupuestos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.actualizar.presupuestos.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

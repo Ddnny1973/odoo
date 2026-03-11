@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_liquidar_directores_wizard" model="ir.ui.view">
+        <field name="name">gestor.liquidar.directores.wizard</field>
+        <field name="model">gestor.liquidar.directores.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Liquidación de directores">
+                <label
+                    string="Este proceso liquida los directores."
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                </group>
+                <footer>
+                    <button
+                        name="action_liquidar"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_liquidar_directores" model="ir.actions.act_window">
+        <field name="name">Liquidar Directores/Coordinadores/Lideres</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.liquidar.directores.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

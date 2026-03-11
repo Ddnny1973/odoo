@@ -1,0 +1,141 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="presupuestos_form_view" model="ir.ui.view">
+       <field name="name">preuspuestos.form.view</field>
+       <field name="model">gestor.presupuestos.team</field>
+       <field name="arch" type="xml">
+         <form string="Presupuestos">
+             <!--<header>
+                <button name="calculo_ejecutado" type="object" string="Actualizar Ejecuciones" class="oe_highlight" />
+                />
+            </header>-->
+             <group col="4">
+                <field colspan="4" name="cargo_id"/>
+                <field colspan="4" name="responsable_id"/>
+                <field colspan="4" name="identificacion_responsable"/>
+              </group>
+              <group col="4">
+                <field colspan="4" string="Empleado" name="empleado_id" domain="['|', ('job_id', '=', cargo_id), ('parent_id', '=', responsable_id)]" />
+                <field colspan="4" name="identificacion_empleado"/>
+              </group>
+              <group col="4">
+                <field colspan="4" name="year"/>
+                <field colspan="4" name="mes" required="1"/>
+              </group>
+             <group>
+                 <field name="presupuesto_detalle_ids" editable="bottom"/>
+             </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="presupuestos_tree_view" model="ir.ui.view">
+        <field name="name">presupuestos.tree</field>
+        <field name="model">gestor.presupuestos.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cargo_id"/>
+                <field name="empleado_id"/>
+                <field name="responsable_id"/>
+                <field name="mes"/>
+                <field name="year"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Forms Detalle-->
+    <record id="presupuestos_detalle_form_view" model="ir.ui.view">
+       <field name="name">preuspuestos.form.view</field>
+       <field name="model">gestor.presupuestos.detalle.team</field>
+       <field name="arch" type="xml">
+         <form string="Presupuestos">
+               <group col="4">
+                   <field name="categorias_planes_id"/>
+                   <field name="presupuesto"/>
+                   <field name="especial"/>
+                   <field name="por_asignar"/>
+               </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree detalle-->
+    <record id="presupuestos_detalle_tree_view" model="ir.ui.view">
+        <field name="name">presupuestos.detalle.tree</field>
+        <field name="model">gestor.presupuestos.detalle.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="year" optional="hide"/>
+                <field name="mes" optional="hide"/>
+                <field name="employee" optional="hide"/>
+                <field name="responsable" optional="hide"/>
+                <field name="categorias_planes_id"/>
+                <field name="presupuesto"/>
+                <field name="especial"/>
+                <field name="por_asignar"/>
+                <field name="ejecutado"/>
+                <field name="ejecutado_propio"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtros -->
+    <record id="presupuestos_tips_filter_view" model="ir.ui.view">
+        <field name="model">gestor.presupuestos.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cargo_id" string="Cargo" filter_domain="[('cargo_id','ilike',self)]"/>
+                <field name="responsable_id" string="Responsable" filter_domain="['|', ('responsable_id','ilike',self), ('identificacion_responsable','ilike',self)]"/>
+                <!--<field name="empleado_id" string="Empleado" filter_domain="['|', ('empleado_id','ilike',self), ('employee','ilike',self)]"/>-->
+                <field name="year" string="Año" filter_domain="[('year','ilike',self)]"/>
+                <field name="mes" string="Mes" filter_domain="[('mes','ilike',self)]"/>
+                <separator/>
+                <filter name="cargo_id" string="Cargo" context="{'group_by': 'cargo_id'}"/>
+                <filter name="responsable" string="Responsable" context="{'group_by': 'responsable'}"/>
+                <!--<filter name="empleado" string="Empleado" context="{'group_by': 'empleado'}"/>-->
+                <filter name="year" string="Año" context="{'group_by': 'year'}"/>
+                <filter name="mes" string="Mes" context="{'group_by': 'mes'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Filtros -->
+    <record id="presupuestos_detalle_tips_filter_view" model="ir.ui.view">
+        <field name="model">gestor.presupuestos.detalle.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cargo" string="Cargo" filter_domain="[('cargo','ilike',self)]"/>
+                <field name="responsable" string="Responsable" filter_domain="['|', ('responsable','ilike',self)]"/>
+                <!--<field name="employee" string="Empleado" filter_domain="['|', ('employee','ilike',self)]"/>-->
+                <field name="year" string="Año" filter_domain="[('year','ilike',self)]"/>
+                <field name="mes" string="Mes" filter_domain="[('mes','ilike',self)]"/>
+                <separator/>
+                <filter name="cargo" string="Cargo" context="{'group_by': 'cargo'}"/>
+                <filter name="responsable" string="Responsable" context="{'group_by': 'responsable'}"/>
+                <!--<filter name="employee" string="Empleado" context="{'group_by': 'employee'}"/>-->
+                <filter name="year" string="Año" context="{'group_by': 'year'}"/>
+                <filter name="mes" string="Mes" context="{'group_by': 'mes'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_presupuestos_team">
+        <field name="name">Presupuestos</field>
+        <field name="res_model">gestor.presupuestos.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_presupuestos_detalle_team">
+        <field name="name">Presupuestos Detalle</field>
+        <field name="res_model">gestor.presupuestos.detalle.team</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+</odoo>

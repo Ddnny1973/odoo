@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_cambio_responsables_wizard" model="ir.ui.view">
+        <field name="name">gestor.cambio.responsables.wizard</field>
+        <field name="model">gestor.cambio.responsables.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cambio masivo de responsables">
+                <label
+                    string="Este proceso cambia el responsable de un grupo de trabajadores por otro."
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <field name="todos"/>
+                    <field name="responsable_origen"/>
+                    <field name="dependientes_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                </group>
+                <group>
+                    <field name="registros_count"/>
+                </group>
+                <group>
+                    <field name="responsable_destino"/>
+                </group>
+                <group>
+                    <field name="fecha"/>
+                </group>
+                <footer>
+                    <button
+                        name="realizar_cambio"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_cambiar_responsable_wizard" model="ir.actions.act_window">
+        <field name="name">Cambio masivo de responsable</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.cambio.responsables.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

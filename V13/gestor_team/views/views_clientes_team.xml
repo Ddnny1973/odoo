@@ -1,0 +1,23 @@
+<odoo>
+    <!-- tree -->
+    <record id="gestor_clientes_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.clientes.team.tree</field>
+        <field name="model">gestor.clientes.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="tipo_identificacion"/>
+                <field name="identificacion"/>
+                <field name="dv"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_clientes_team">
+        <field name="name">Clientes Team</field>
+        <field name="res_model">gestor.clientes.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

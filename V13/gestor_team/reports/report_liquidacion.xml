@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017 Eficent Business and IT Consulting Services S.L.
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template id="report_liquidacion">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            tbody {
+                                     font-size: 9px;
+                                   }
+
+                            .police {
+                                     font-size: 10px;
+                                   }
+
+                           .tableau {
+                                    page-break-inside: avoid;
+                                }
+
+                        </style>
+                        <br />
+                        <br />
+                        <center>
+                            <h2>Comisiones: <span t-field="o.name" /></h2>
+                        </center>
+                        <br />
+                        <br />
+                        <table>
+                            <tr>
+                                <td>Identificación:</td>
+                                <td><span t-field="o.identification_id" /></td>
+                            </tr>
+                            <tr>
+                                <td>Sucursal:</td>
+                                <td><span t-field="o.sucursal_id.name"/></td>
+                            </tr>
+                        </table>
+
+                        <br />
+                        <div class="page">
+                            <h1>Resumen Comisiones a Pagar</h1>
+                            <table class="table table-condensed table-bordered ">
+                                <tr style="background-color:#A9E2F3;">
+                                    <td class="text-lef" >TOTAL COMISIÓN GENERADA</td>
+                                    <td class="text-lef" >1.000.000</td>
+                                </tr>
+                                <tr style="background-color:#A9E2F3;">
+                                    <td class="text-lef" >Hogar</td>
+                                    <td class="text-lef" >1.000.000</td>
+                                </tr>
+                                <tr style="background-color:#A9E2F3;">
+                                    <td class="text-lef" >Pyme</td>
+                                    <td class="text-lef" >1.000.000</td>
+                                </tr>
+                                <tr style="background-color:#A9E2F3;">
+                                    <td class="text-lef" >Móvil</td>
+                                    <td class="text-lef" >1.000.000</td>
+                                </tr>
+                                <tr style="background-color:#A9E2F3;">
+                                    <td class="text-lef" >Equipos</td>
+                                    <td class="text-lef" >1.000.000</td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <div class="page">
+                            <h1>Detalle HOGAR</h1>
+                            <table class="table table-condensed table-bordered ">
+                              <thead>
+                                    <tr style="background-color:#A9E2F3;">
+                                        <th>Sucursal</th>
+                                        <th class="text-center" >Paquete PDV</th>
+                                        <th class="text-center">Estrato</th>
+                                        <th class="text-center">Coordinador</th>
+                                        <th class="text-center">Cuenta</th>
+                                        <th class="text-center">OT</th>
+                                        <th class="text-center">Valor Comisión</th>
+                                    </tr>
+                                </thead>
+
+                                 <t t-foreach="o.comisiones_hogar_ids" t-as="lineas">
+                                     <tr>
+                                         <td class="text-left"><span t-esc="lineas.captura_hogar_id.sucursal_vendedor.name"/></td>
+                                         <td class="text-left"><span t-esc="lineas.captura_hogar_id.paquete_global"/></td>
+                                         <td class="text-left"><span t-esc="lineas.estrato_claro"/></td>
+                                         <td class="text-left"><span t-esc="lineas.captura_hogar_id.id_responsable.name"/></td>
+                                         <td class="text-left"><span t-esc="lineas.captura_hogar_id.cuenta"/></td>
+                                         <td class="text-left"><span t-esc="lineas.captura_hogar_id.ot"/></td>
+                                         <td class="text-right"><span t-esc="'{0:,.2f}'.format(int(lineas.valor_comision))"/></td>
+                                     </tr>
+
+                                 </t>
+
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="report_liquidacion_action"
+        model="hr.employee"
+        name="gestor_team.report_liquidacion"
+        string="Imprimir Comisiones"
+        report_type="qweb-pdf"
+        multi="False"
+    />
+</odoo>

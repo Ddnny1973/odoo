@@ -1,0 +1,148 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Estados antes del pago -->
+    <!-- Forms -->
+    <record id="gestor_biometrias_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.biometrias.team.form.view</field>
+       <field name="model">gestor.biometrias.team</field>
+       <field name="arch" type="xml">
+         <form string="Captura biometrías">
+             <group col="4">
+                 <field colspan="4" name="tipo_biometria" readonly="True" force_save="True"/>
+             </group>
+             <group col="4">
+                <field colspan="4" name="name" attrs="{'invisible': [('tipo_biometria','=', 'administrativa')], 'required': [('tipo_biometria','=', 'comercial')]}"/>
+                <!-- <field colspan="4" name="captura" options="{'no_create':1}" attrs="{'invisible': [('tipo_biometria','=', 'administrativa')]}"/> -->
+                <field colspan="4" name="captura_2" options="{'no_create':1}" attrs="{'invisible': [('tipo_biometria','=', 'administrativa')]}"/>
+                <field colspan="4" name="existe_claro" readonly="True" force_save="True" attrs="{'invisible': [('tipo_biometria','=', 'administrativa')], 'required': [('tipo_biometria','=', 'comercial')]}"/>
+                <field colspan="4" name="existe_gestor" readonly="True" force_save="True" attrs="{'invisible': [('tipo_biometria','=', 'administrativa')], 'required': [('tipo_biometria','=', 'comercial')]}"/>
+                <!-- <field colspan="4" name="estado_venta" readonly="True" attrs="{'invisible': [('tipo_biometria','=', 'administrativa')], 'required': [('tipo_biometria','=', 'comercial')]}"/> -->
+             </group>
+             <group col="4">
+                 <field colspan="4" name="fecha"/>
+             </group>
+             <group col="4">
+                <field colspan="4" name="id_gestor" options="{'no_create_edit': True}"/>
+                <field colspan="4" name="id_responsable" readonly="True" force_save="True"/>
+                <field colspan="4" name="departamento_vendedor" readonly="True" force_save="True"/>
+                <field colspan="4" name="cargo_vendedor" readonly="True" force_save="True"/>
+                <field colspan="4" name="sucursal_vendedor" readonly="True" force_save="True"/>
+             </group>
+             <group col="4">
+                 <field colspan="4" name="id_vendedor" options="{'no_create_edit': True}" readonly="True" force_save="True"
+                        attrs="{'invisible': [('tipo_biometria','=', 'administrativa')]}"/>
+             </group>
+             <group col="4">
+                 <field colspan="4" name="tipo_identificacion" attrs="{'readonly': [('tipo_biometria','=', 'comercial')]}" force_save="True"/>
+                 <field colspan="4" name="identificacion" attrs="{'readonly': [('tipo_biometria','=', 'comercial')]}" force_save="True"/>
+                 <field colspan="4" name="dv" attrs="{'invisible': [('tipo_identificacion','!=', 'nit')], 'required': [('tipo_identificacion','=', 'nit')], 'readonly': [('tipo_biometria','=', 'comercial')]}"/>
+                 <field colspan="4" name="cliente" attrs="{'readonly': [('tipo_biometria','=', 'comercial')]}" force_save="True"/>
+             </group>
+             <group col="4">
+                 <field colspan="4" name="comision_pagada" readonly="True" />
+                 <field colspan="4" name="valor_comision" readonly="True" attrs="{'invisible': [('comision_pagada','=', False)]}"/>
+                 <field colspan="4" name="fecha_pago_comision" readonly="True"  attrs="{'invisible': [('comision_pagada','=', False)]}"/>
+                 <field colspan="4" name="usuario_pagador" readonly="True"  attrs="{'invisible': [('comision_pagada','=', False)]}"/>
+                 <field colspan="4" name="esquema_id" readonly="True"  attrs="{'invisible': [('comision_pagada','=', False)]}"/>
+             </group>
+             <group col="4">
+                 <field colspan="4" name="create_date" />
+             </group>
+             <div class="oe_chatter">
+                 <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                 <field name="message_ids" widget="mail_thread"/>
+             </div>
+
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_biometrias_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.biometrias.team.tree</field>
+        <field name="model">gestor.biometrias.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="tipo_biometria"/>
+                <field name="name"/>
+                <field name="captura"/>
+                <field name="estado_venta" optional="show"/>
+                <field name="fecha"/>
+                <field name="existe_claro"/>
+                <field name="existe_gestor"/>
+                <field name="id_gestor"/>
+                <field name="id_vendedor"/>
+                <field name="cliente"/>
+                <field name="tipo_identificacion"/>
+                <field name="identificacion"/>
+                <field name="comision_pagada" optional="show"/>
+                <field name="valor_comision" optional="hide"/>
+                <field name="fecha_pago_comision" optional="hide"/>
+                <field name="usuario_pagador" optional="hide"/>
+                <field name="esquema_id" optional="hide"/>
+                <field name="id_responsable"  optional="hide"/>
+                <field name="departamento_vendedor"  optional="hide"/>
+                <field name="cargo_vendedor"  optional="hide"/>
+                <field name="sucursal_vendedor"  optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_biometrias_team">
+        <field name="name">Biometrías</field>
+        <field name="res_model">gestor.biometrias.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Biometrías Claro -->
+    <!-- tree -->
+    <record id="gestor_biometrias_claro_tree_view" model="ir.ui.view">
+        <field name="name">gestor.biometrias.claro.tree</field>
+        <field name="model">gestor.biometrias.claro</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cliente"/>
+                <field name="sucursal"/>
+                <field name="nuip_sucursal"/>
+                <field name="nut"/>
+                <field name="fecha"/>
+                <field name="documento"/>
+                <field name="respuesta"/>
+                <field name="usercod"/>
+                <field name="sucursalid"/>
+                <field name="operationid"/>
+                <field name="userip"/>
+                <field name="usermac"/>
+                <field name="estado"/>
+                <field name="proceso"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_biometrias_claro_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR BIOMETRIAS CLARO Filtros</field>
+        <field name="model">gestor.biometrias.claro</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="nut" string="Cuenta/OT" filter_domain="['|', ('nut','ilike',self), ('documento','ilike',self)]"/>
+                <field name="documento" string="OT" context="{'documento': self}" filter_domain="[('documento','ilike',self)]"/>
+                <field name="cliente" string="OT" context="{'cliente': self}" filter_domain="[('cliente','ilike',self)]"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" context="{'group_by': 'fecha'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_biometrias_claro">
+        <field name="name">Biometrías Claro</field>
+        <field name="res_model">gestor.biometrias.claro</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,125 @@
+<odoo>
+    <!-- views -->
+
+    <!-- Forms -->
+    <record id="sucursales_form_view" model="ir.ui.view">
+       <field name="name">sucursales.form.view</field>
+       <field name="model">gestor.sucursales</field>
+       <field name="arch" type="xml">
+         <form string="Zonas">
+             <sheet>
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="codigo"/>
+                   <field name="tipo"/>
+                   <field colspan="4" name="country_id" options="{'no_create_edit': True}"/>
+                   <field colspan="4" name="state_id" options="{'no_create_edit': True}"/>
+                   <field colspan="4" name="cities" options="{'no_create_edit': True}"/>
+                   <field colspan="4" name="director_id" domain = "[('job_id', '=', 232)]" options="{'no_create_edit': True}"/>
+                   <field colspan="4" name="employees_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+               </group>
+               <notebook>
+                   <page name="porcentajepresupuestales_ids" string="Presupuestos">
+                       <group>
+                           <field name="porcentajepresupuestales_ids" nolabel="1" />
+                       </group>
+                   </page>
+               </notebook>
+           </sheet>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="sucursales_tree_view" model="ir.ui.view">
+        <field name="name">sucursales.tree</field>
+        <field name="model">gestor.sucursales</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="codigo"/>
+                <field name="director_id"/>
+                <field name="tipo"/>
+                <field name="cities"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_sucursales_team">
+        <field name="name">Sucursales</field>
+        <field name="res_model">gestor.sucursales</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="distritos_form_view" model="ir.ui.view">
+       <field name="name">distritos.form.view</field>
+       <field name="model">gestor.distritos</field>
+       <field name="arch" type="xml">
+         <form string="Distritos">
+               <group col="4">
+                   <field colspan="4" name="name"/>
+                   <field colspan="4" name="aplica"/>
+               </group>
+               <group>
+                    <notebook>
+                        <page name="distrito_historico_ids" string="Históricos">
+                            <group>
+                                <field name="distrito_historico_ids" nolabel="1" />
+                            </group>
+                        </page>                        
+                    </notebook>
+                </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="distritos_tree_view" model="ir.ui.view">
+        <field name="name">distritos.tree</field>
+        <field name="model">gestor.distritos</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="aplica"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_distritos_historico_tree_view" model="ir.ui.view">
+        <field name="name">gestor.distritos.historico.tree</field>
+        <field name="model">gestor.distritos.historico</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="aplica"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>    
+
+    <!-- actions -->
+    <record model="ir.actions.act_window"
+        id="gestor_team.gestor_distritos_team">
+        <field name="name">Distritos</field>
+        <field name="res_model">gestor.distritos</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_porcentaje_presupuestales_tree_view" model="ir.ui.view">
+        <field name="name">gestor.porcentaje.presupuestales.tree</field>
+        <field name="model">gestor.porcentaje.presupuestales</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="porcentaje"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

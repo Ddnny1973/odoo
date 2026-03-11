@@ -1,0 +1,421 @@
+<odoo>
+
+    <!-- Captura Pyme -->
+    <!-- Forms -->
+    <record id="captura_pyme_form_view" model="ir.ui.view">
+       <field name="name">gestor.captura.pyme.team.form.view</field>
+       <field name="model">gestor.captura.pyme.team</field>
+       <field name="arch" type="xml">
+         <form string="Captura Pyme TEAM">
+            <h1><font color="blue">PYME</font></h1>
+            <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="id_cliente"/>
+                        <field colspan="4" name="nombre_cliente"/>
+                        <field colspan="4" name="tel_cliente"/>
+                        <!-- <field colspan="4" name="id_asesor" groups="gestor_team.group_gestor_team"/> -->
+                        <!-- <field colspan="4" name="nombre_asesor" groups="gestor_team.group_gestor_team"/> -->
+                        <!-- <field colspan="4" name="id_responsable" readonly="True" groups="gestor_team.group_gestor_team"/> -->
+                    </group>
+                </div>
+            </group>
+            <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="cuenta"/>
+                        <field colspan="4" name="ot"/>
+                    </group>
+                </div>
+            </group>
+            <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="valor" groups="gestor_team.group_gestor_team"/>
+                    </group>
+                    <group col="4">
+                        <!-- <field colspan="4" name="create_uid" groups="gestor_team.group_gestor_team"/> -->
+                        <field colspan="4" name="vendedor" groups="gestor_team.group_gestor_team" options="{'no_create_edit': True}"/>
+                        <field colspan="4" name="identificacion_vendedor" groups="gestor_team.group_gestor_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="categoria_vendedor" groups="gestor_team.group_gestor_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="departamento_vendedor" groups="gestor_team.group_gestor_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="cargo_vendedor" groups="gestor_team.group_gestor_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="sucursal_vendedor" groups="gestor_team.group_gestor_team" readonly="1" force_save="1"/>
+                        <field colspan="4" name="id_responsable" groups="gestor_team.group_gestor_team" readonly="1" force_save="1"/>
+                        <!-- <field colspan="4" name="create_uid" groups="gestor_team.group_gestor_team" /> -->
+                        <!-- <field colspan="4" name="digitador" groups="gestor_team.group_gestor_team" readonly="1"/> -->
+                        <field colspan="4" name="create_date" readonly="1" string="Fecha de creación"/>
+                    </group>
+                    <group col="4">
+                        <field colspan="4" name="estado_venta" groups="gestor_team.group_gestor_team"/>
+                        <field colspan="4" name="estado_contrato" groups="gestor_team.group_gestor_team"/>
+                    </group>
+                </div>
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="detalle_agrupado_captura_pyme_ids" />
+                    </group>
+                </div>
+            </group>
+
+            <group col="2">
+                <div class="oe_title">
+                    <group col="4">
+                        <field colspan="4" name="referido"/>
+                        <field colspan="4" name="cedula_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)]}"/>
+                        <field colspan="4" name="nombre_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)]}"/>
+                        <field colspan="4" name="telefono_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)]}"/>
+                        <field colspan="4" name="correo_referido" attrs="{'invisible': [('referido','!=', True)]}"/>
+                        <field colspan="4" name="banco_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)]}"/>
+                        <field colspan="4" name="tipo_cuenta_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)]}"/>
+                        <field colspan="4" name="cuenta_referido" attrs="{'invisible': [('referido','!=', True)], 'required': [('referido','=', True)]}"/>
+
+                    </group>
+                </div>
+                <div class="oe_title">
+                    <field colspan="4" name="detalle_captura_pyme_ids" />
+                </div>
+            </group>
+
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="captura_pyme_tree_view" model="ir.ui.view">
+        <field name="name">gestor.captura.pyme.team.tree</field>
+        <field name="model">gestor.captura.pyme.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cuenta"/>
+                <field name="ot"/>
+                <field name="id_cliente"/>
+                <field name="nombre_cliente"/>
+                <field name="tel_cliente" optional="hide"/>
+                <field name="valor" groups="gestor_team.group_gestor_team"/>
+                <field name="red"/>
+                <field name="servicio"/>
+                <field name="estado_venta"/>
+                <field name="estado_contrato"/>
+                <field name="fecha"/>
+                <field name="vendedor" />
+                <field name="identificacion_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                <field name="categoria_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                <field name="departamento_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                <field name="cargo_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                <field name="sucursal_vendedor" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                <field name="id_responsable" groups="gestor_team.group_gestor_team" readonly="1" optional="hide"/>
+                <field name="referido" />
+                <field name="nombre_referido" optional="hide" />
+                <field name="cedula_referido" optional="hide" />
+                <field name="telefono_referido" optional="hide" />
+                <field name="correo_referido" optional="hide" />
+                <field name="banco_referido" optional="hide" />
+                <field name="tipo_cuenta_referido" optional="hide" />
+                <field name="cuenta_referido" optional="hide" />
+                <field name="digitador" optional="hide"/>
+                <field name="create_date"  optional="hide" />
+                <field name="create_uid" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- tree detalle -->
+    <record id="captura_pyme_detalle_tree_view" model="ir.ui.view">
+        <field name="name">gestor.captura.pyme.detalle.team.tree</field>
+        <field name="model">gestor.captura.pyme.detalle.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="paquete"/>
+                <field name="tipored"/>
+                <field name="tipo_plan_id"/>
+                <field name="division"/>
+                <field name="renta" optional="show" groups="gestor_team.group_gestor_team"/>
+                <field name="fecha" optional="hide" groups="gestor_team.group_gestor_team"/>
+                <field name="venta" optional="hide" groups="gestor_team.group_gestor_team"/>
+                <field name="paquete_pg" optional="hide" groups="gestor_team.group_gestor_team"/>
+                <field name="paquete_pvd" optional="hide" groups="gestor_team.group_gestor_team"/>
+                <field name="mintic" optional="hide"/>
+                <field name="tipo_de_producto" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- tree detalle -->
+    <record id="captura_pyme_detalle_agrupado_tree_view" model="ir.ui.view">
+        <field name="name">gestor.captura.pyme.detalle.agrupado.team.tree</field>
+        <field name="model">gestor.captura.pyme.detalle.agrupado.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="tipo_plan" />
+                <field name="renta_total" widget='monetary'/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtros -->
+    <record id="gestor_captura_pyme_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR CAPTURA PYME Filtros</field>
+        <field name="model">gestor.captura.pyme.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cuenta" string="Venta/OT" filter_domain="['|', ('cuenta','ilike',self), ('ot','ilike',self)]"/>
+                <field name="ot" string="OT" context="{'ot': self}" filter_domain="[('ot','ilike',self)]"/>
+                <separator/>
+                <filter name="group_estado_venta" string="Estado Venta" context="{'group_by': 'estado_venta'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_captura_menu_pyme_team">
+        <field name="name">PYMES</field>
+        <field name="res_model">gestor.captura.pyme.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_captura_pyme_team">
+        <field name="name">Captura PYME</field>
+        <field name="res_model">gestor.captura.pyme.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Gestor Pyme -->
+    <!-- Forms -->
+    <record id="gestor_pyme_team_form_view" model="ir.ui.view">
+       <field name="name">gestor.pyme.team.form.view</field>
+       <field name="model">gestor.pyme.team</field>
+       <field name="arch" type="xml">
+         <form string="Gestor Hogar TEAM">
+                <group col="4">
+                    <field colspan="4" name="llave" />
+                    <field colspan="4" name="proveedor" />
+                    <field colspan="4" name="act_year" />
+                    <field colspan="4" name="act_mes" />
+                    <field colspan="4" name="act_dia" />
+                    <field colspan="4" name="year_base" />
+                    <field colspan="4" name="mes_base" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="base" />
+                    <field colspan="4" name="tipo" />
+                    <field colspan="4" name="tipo_v" />
+                    <field colspan="4" name="id_venta" />
+                    <field colspan="4" name="ot_venta" />
+                    <field colspan="4" name="servicio" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="estado_contrato" />
+                    <field colspan="4" name="act_fecha_legalizacion" />
+                    <field colspan="4" name="numero_contrato" />
+                    <field colspan="4" name="velocidad_homologada" />
+                    <field colspan="4" name="linea_1_pyme" />
+                    <field colspan="4" name="linea_2_pyme" />
+                    <field colspan="4" name="fecha_periodo" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="tipo_documento_cliente" />
+                    <field colspan="4" name="identificacion_cliente" />
+                    <field colspan="4" name="razon_social_cliente" />
+                    <field colspan="4" name="segmento_comercial" />
+                    <field colspan="4" name="segmento_cliente" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="red" />
+                    <field colspan="4" name="duracion_contrato" />
+                    <field colspan="4" name="tipo_de_linea" />
+                    <field colspan="4" name="numero_de_lineas" />
+                    <field colspan="4" name="numero_de_servicios" />
+                    <field colspan="4" name="valor_de_servicios" />
+                    <field colspan="4" name="alquiler_equipos" />
+                    <field colspan="4" name="cargo_instalacion" />
+                    <field colspan="4" name="soporte_pc" />
+                    <field colspan="4" name="cargo_mensual" />
+                    <field colspan="4" name="valor_mensualidad" />
+                    <field colspan="4" name="valor_contrato" />
+                    <field colspan="4" name="valor_neto" />
+                    <field colspan="4" name="valor_bruto" />
+                    <field colspan="4" name="saldo" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="division" />
+                    <field colspan="4" name="division_residencial" />
+                    <field colspan="4" name="regional" />
+                    <field colspan="4" name="canal_residencial" />
+                    <field colspan="4" name="soho" />
+                    <field colspan="4" name="telemercadeo" />
+                    <field colspan="4" name="area_residencial" />
+                    <field colspan="4" name="tipo_venta" />
+                    <field colspan="4" name="campana_prom" />
+                    <field colspan="4" name="clase_venta" />
+                    <field colspan="4" name="codigo_tarifa" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="departamento" />
+                    <field colspan="4" name="departamento_origen" />
+                    <field colspan="4" name="ciudad_incidente" />
+                    <field colspan="4" name="direccion" />
+                    <field colspan="4" name="estrato" />
+                    <field colspan="4" name="manual_tarifas" />
+                    <field colspan="4" name="nodo" />
+                    <field colspan="4" name="notas_descripcion_servicio" />
+                    <field colspan="4" name="enlace" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="fecha_inicio_facturacion" />
+                    <field colspan="4" name="tipo_solicitud" />
+                    <field colspan="4" name="codigo_sku" />
+                    <field colspan="4" name="servicio_onyx" />
+                    <field colspan="4" name="grupo_onyx" />
+                    <field colspan="4" name="numero_unico_de_activacion" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="fecha_cancelacion" />
+                    <field colspan="4" name="razon_cancelada_1" />
+                    <field colspan="4" name="razon_cancelada_2" />
+                    <field colspan="4" name="razon_cancelada_3" />
+                    <field colspan="4" name="documento" />
+                    <field colspan="4" name="funcionario" />
+                    <field colspan="4" name="cargo" />
+                    <field colspan="4" name="act_cc_consultor" />
+                    <field colspan="4" name="act_consultor" />
+                    <field colspan="4" name="act_coordinador" />
+                    <field colspan="4" name="act_jefe" />
+                    <field colspan="4" name="act_gerente" />
+                    <field colspan="4" name="act_coordinador_tercero" />
+                    <field colspan="4" name="cedula_consultor_it" />
+                    <field colspan="4" name="consultor_it" />
+                    <field colspan="4" name="act_ito_col" />
+                    <field colspan="4" name="canal" />
+                </group>
+                <group col="4">
+                    <field colspan="4" name="estado_ap"/>
+                    <field colspan="4" name="estado_pp"/>
+                </group>
+         </form>
+       </field>
+    </record>
+
+    <!-- tree -->
+    <record id="gestor_pyme_team_tree_view" model="ir.ui.view">
+        <field name="name">gestor.pyme.team.tree</field>
+        <field name="model">gestor.pyme.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="llave" optional="show"/>
+                <field name="proveedor" optional="show"/>
+                <field name="act_year" optional="hide"/>
+                <field name="act_mes" optional="hide"/>
+                <field name="act_dia" optional="hide"/>
+                <field name="year_base" optional="hide"/>
+                <field name="mes_base" optional="hide"/>
+                <field name="base" optional="show"/>
+                <field name="tipo" optional="show"/>
+                <field name="tipo_v" optional="show"/>
+                <field name="id_venta" optional="show"/>
+                <field name="ot_venta" optional="show"/>
+                <field name="servicio" optional="show"/>
+                <field name="estado_contrato" optional="show"/>
+                <field name="act_fecha_legalizacion" optional="show"/>
+                <field name="numero_contrato" optional="show"/>
+                <field name="velocidad_homologada" optional="hide"/>
+                <field name="linea_1_pyme" optional="hide"/>
+                <field name="linea_2_pyme" optional="hide"/>
+                <field name="fecha_periodo" optional="hide"/>
+                <field name="tipo_documento_cliente" optional="hide"/>
+                <field name="identificacion_cliente" optional="hide"/>
+                <field name="razon_social_cliente" optional="show"/>
+                <field name="segmento_comercial" optional="hide"/>
+                <field name="segmento_cliente" optional="hide"/>
+                <field name="red" optional="hide"/>
+                <field name="duracion_contrato" optional="hide"/>
+                <field name="tipo_de_linea" optional="hide"/>
+                <field name="numero_de_lineas" optional="hide"/>
+                <field name="numero_de_servicios" optional="show"/>
+                <field name="valor_de_servicios" optional="show"/>
+                <field name="alquiler_equipos" optional="hide"/>
+                <field name="cargo_instalacion" optional="hide"/>
+                <field name="soporte_pc" optional="hide"/>
+                <field name="cargo_mensual" optional="show"/>
+                <field name="valor_mensualidad" optional="show"/>
+                <field name="valor_contrato" optional="hide"/>
+                <field name="valor_neto" optional="hide"/>
+                <field name="valor_bruto" optional="hide"/>
+                <field name="saldo" optional="hide"/>
+                <field name="division" optional="hide"/>
+                <field name="division_residencial" optional="hide"/>
+                <field name="regional" optional="hide"/>
+                <field name="canal_residencial" optional="hide"/>
+                <field name="soho" optional="show"/>
+                <field name="telemercadeo" optional="hide"/>
+                <field name="area_residencial" optional="show"/>
+                <field name="tipo_venta" optional="show"/>
+                <field name="campana_prom" optional="hide"/>
+                <field name="clase_venta" optional="hide"/>
+                <field name="codigo_tarifa" optional="hide"/>
+                <field name="departamento" optional="hide"/>
+                <field name="departamento_origen" optional="hide"/>
+                <field name="ciudad_incidente" optional="hide"/>
+                <field name="direccion" optional="hide"/>
+                <field name="estrato" optional="hide"/>
+                <field name="manual_tarifas" optional="hide"/>
+                <field name="nodo" optional="hide"/>
+                <field name="notas_descripcion_servicio" optional="hide"/>
+                <field name="enlace" optional="hide"/>
+                <field name="fecha_inicio_facturacion" optional="hide"/>
+                <field name="tipo_solicitud" optional="hide"/>
+                <field name="codigo_sku" optional="hide"/>
+                <field name="servicio_onyx" optional="hide"/>
+                <field name="grupo_onyx" optional="hide"/>
+                <field name="numero_unico_de_activacion" optional="hide"/>
+                <field name="fecha_cancelacion" optional="hide"/>
+                <field name="razon_cancelada_1" optional="hide"/>
+                <field name="razon_cancelada_2" optional="hide"/>
+                <field name="razon_cancelada_3" optional="hide"/>
+                <field name="documento" optional="hide"/>
+                <field name="funcionario" optional="hide"/>
+                <field name="cargo" optional="hide"/>
+                <field name="act_cc_consultor" optional="hide"/>
+                <field name="act_consultor" optional="hide"/>
+                <field name="act_coordinador" optional="hide"/>
+                <field name="act_jefe" optional="hide"/>
+                <field name="act_gerente" optional="hide"/>
+                <field name="act_coordinador_tercero" optional="hide"/>
+                <field name="cedula_consultor_it" optional="hide"/>
+                <field name="consultor_it" optional="hide"/>
+                <field name="act_ito_col" optional="hide"/>
+                <field name="canal" optional="show"/>
+
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Filtross -->
+    <record id="gestor_pyme_filter_view" model="ir.ui.view">
+        <field name="name">GESTOR PYME Filtros</field>
+        <field name="model">gestor.pyme.team</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="id_venta" string="Venta/OT" filter_domain="['|', ('id_venta','ilike',self), ('ot_venta','ilike',self)]"/>
+                <field name="ot_venta" string="OT" context="{'ot': self}" filter_domain="[('ot_venta','ilike',self)]"/>
+                <separator/>
+                <filter name="group_estado_venta" string="Estado Venta" context="{'group_by': 'estado_ap'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="gestor_team.gestor_pyme_team">
+        <field name="name">Pyme Claro</field>
+        <field name="res_model">gestor.pyme.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="property_rule_gestor_cust" model="ir.rule">
+            <field name="name">Gestor Archivos</field>
+            <field name="model_id" ref="model_base_ir_models"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('gestor_team.group_gestor_archivos_team_account'))]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gestor_cargar_archivos_mail_wizard" model="ir.ui.view">
+        <field name="name">gestor.cargar.archivos.wizard</field>
+        <field name="model">gestor.cargar.archivos.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Carga de archivos de ruta específica">
+                <label
+                    string="Este proceso cargará los archivos en la ruta especificada."
+                    colspan="2"
+                    for=""
+                />
+                <group>
+                    <field name="lista_archivos" readonly="1"/>
+                </group>
+                <footer>
+                    <button
+                        name="cargar_archivos"
+                        string="Ok"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_cargar_archivos_wizard" model="ir.actions.act_window">
+        <field name="name">Cargar archivos para cruces TEAM</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gestor.cargar.archivos.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
