@@ -650,6 +650,7 @@ def main():
                 df_sheets, sheet, sheet_df_dict, lista_archivos = cargar_hoja(hoja, servicio_drive, gc, pathgdrive, mes, year)
                 # Mostrar cantidad de registros de df_sheets
                 # print(f"Registros en df_sheets: {df_sheets.count()}")
+                # print(df_sheets.columns)
                 # _logger.info(f"Registros en df_sheets: {df_sheets.count()}")
                 mail_enviado_ids = odoo.env['mb_asesores.correo_enviado'].search([
                     ('mes', 'ilike', mes),
