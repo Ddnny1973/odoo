@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sicone_config_empresa_form" model="ir.ui.view">
+        <field name="name">sicone.config.empresa.form</field>
+        <field name="model">sicone.config.empresa</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Empresarial SICONE">
+                <header>
+                    <button name="action_calcular_sugerido"
+                            string="💡 Calcular Gastos Fijos Sugeridos"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_recalcular_consolidado"
+                            string="🔄 Recalcular Consolidado"
+                            type="object"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Dashboard Empresarial SICONE</h1>
+                    </div>
+
+                    <notebook>
+
+                        <!-- ══════════════════════════════════════════
+                             TAB 1: PREPARACIÓN DE DATOS
+                        ══════════════════════════════════════════ -->
+                        <page string="Preparación" name="preparacion">
+                            <group string="Saldos Bancarios">
+                                <group string="Saldos Iniciales (01/01/2025)">
+                                    <field name="saldo_inicial_fiducuenta" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="saldo_inicial_cuenta" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="saldo_inicial_total" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                </group>
+                                <group string="Saldos Finales (según extracto)">
+                                    <field name="fecha_corte_conciliacion"/>
+                                    <field name="saldo_final_fiducuenta" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="saldo_final_cuenta" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="saldo_final_real_total" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Parámetros de Configuración">
+                                <group string="Gastos Fijos Empresariales">
+                                    <field name="gastos_fijos_sugeridos" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="fecha_ultimo_calculo" readonly="1"/>
+                                    <field name="gastos_fijos_mensuales" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="gastos_fijos_semanales" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <button name="action_aplicar_sugerido"
+                                            string="← Aplicar valor sugerido"
+                                            type="object" class="btn-link"/>
+                                </group>
+                                <group string="Proyección">
+                                    <field name="semanas_margen"/>
+                                    <field name="semanas_proyeccion"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════
+                             TAB 2: CONCILIACIÓN
+                        ══════════════════════════════════════════ -->
+                        <page string="Conciliación" name="conciliacion">
+                            <group string="Resultado de Conciliación">
+                                <group>
+                                    <field name="saldo_final_real_total" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"
+                                           readonly="1" string="Saldo Real (extracto)"/>
+                                    <field name="cf_saldo_actual" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"
+                                           readonly="1" string="Saldo Calculado por Sistema"/>
+                                    <field name="diferencia_conciliacion" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="estado_conciliacion" widget="badge" readonly="1"
+                                           decoration-success="estado_conciliacion == 'cuadrado'"
+                                           decoration-warning="estado_conciliacion == 'desviacion_menor'"
+                                           decoration-danger="estado_conciliacion == 'desviacion_mayor'"
+                                           decoration-info="estado_conciliacion == 'sin_datos'"/>
+                                </group>
+                            </group>
+                            <field name="consolidado_ids" mode="list">
+                                <list create="false" delete="false"
+                                      decoration-success="estado_liquidez == 'excedente'"
+                                      decoration-info="estado_liquidez == 'estable'"
+                                      decoration-warning="estado_liquidez == 'alerta'"
+                                      decoration-danger="estado_liquidez == 'critico'">
+                                    <field name="nombre_mes"         string="Período"/>
+                                    <field name="proyectos_activos"  string="Proyectos"/>
+                                    <field name="ingresos"           widget="monetary" string="Ingresos"/>
+                                    <field name="egresos_proyectos"  widget="monetary" string="Egr. Proyectos"/>
+                                    <field name="gastos_fijos"       widget="monetary" string="Gastos Fijos"/>
+                                    <field name="egresos_total"      widget="monetary" string="Egresos Total"/>
+                                    <field name="flujo_neto"         widget="monetary" string="Flujo Neto"/>
+                                    <field name="saldo_acumulado"    widget="monetary" string="Saldo Acum."/>
+                                    <field name="burn_rate_semanal"  widget="monetary" string="Burn Rate/Sem"/>
+                                    <field name="runway_semanas"     string="Runway (sem)" digits="[6,1]"/>
+                                    <field name="margen_proteccion"  widget="monetary" string="Margen Prot."/>
+                                    <field name="excedente_invertible" widget="monetary" string="Excedente"/>
+                                    <field name="estado_liquidez" widget="badge" string="Estado"
+                                           decoration-success="estado_liquidez == 'excedente'"
+                                           decoration-info="estado_liquidez == 'estable'"
+                                           decoration-warning="estado_liquidez == 'alerta'"
+                                           decoration-danger="estado_liquidez == 'critico'"/>
+                                    <field name="cartera_cobrada" widget="monetary"
+                                           string="Cartera Cobrada" optional="hide"/>
+                                    <field name="proyecto_critico"   optional="hide"/>
+                                    <field name="egresos_materiales" widget="monetary" optional="hide"/>
+                                    <field name="egresos_mano_obra"  widget="monetary" optional="hide"/>
+                                    <field name="egresos_variables"  widget="monetary" optional="hide"/>
+                                    <field name="egresos_admin"      widget="monetary" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════
+                             TAB 3: DASHBOARD
+                        ══════════════════════════════════════════ -->
+                        <page string="Dashboard" name="dashboard">
+
+                            <!-- Gráfico Waterfall — barras apiladas mensual/anual -->
+                            <field name="waterfall_html" widget="html" readonly="1"
+                                   nolabel="1" options="{'sanitize': false, 'collaborative': false}"/>
+
+                            <!-- KPIs ejecutivos -->
+                            <group string="Estado Actual de la Empresa">
+                                <group>
+                                    <field name="cf_saldo_actual" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"
+                                           string="Saldo Actual"/>
+                                    <field name="cf_burn_rate" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="cf_runway" digits="[6,1]"/>
+                                    <field name="cf_proyectos_activos"/>
+                                    <field name="cf_cartera_cobrada" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="cf_proyecto_critico"/>
+                                </group>
+                                <group>
+                                    <field name="cf_margen" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="cf_excedente" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="cf_estado" widget="badge"
+                                           decoration-success="cf_estado == 'excedente'"
+                                           decoration-info="cf_estado == 'estable'"
+                                           decoration-warning="cf_estado == 'alerta'"
+                                           decoration-danger="cf_estado == 'critico'"/>
+                                </group>
+                            </group>
+
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sicone_dashboard_empresa" model="ir.actions.act_window">
+        <field name="name">Dashboard Empresarial</field>
+        <field name="res_model">sicone.config.empresa</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <record id="action_sicone_dashboard_server" model="ir.actions.server">
+        <field name="name">Abrir Dashboard SICONE</field>
+        <field name="model_id" ref="model_sicone_config_empresa"/>
+        <field name="binding_model_id" ref="model_sicone_config_empresa"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_abrir_dashboard()</field>
+    </record>
+
+    <record id="view_sicone_consolidado_mes_list" model="ir.ui.view">
+        <field name="name">sicone.consolidado.mes.list</field>
+        <field name="model">sicone.consolidado.mes</field>
+        <field name="arch" type="xml">
+            <list string="Consolidado Mensual"
+                  decoration-success="estado_liquidez == 'excedente'"
+                  decoration-info="estado_liquidez == 'estable'"
+                  decoration-warning="estado_liquidez == 'alerta'"
+                  decoration-danger="estado_liquidez == 'critico'">
+                <field name="nombre_mes"/>
+                <field name="proyectos_activos"/>
+                <field name="ingresos"           widget="monetary"/>
+                <field name="egresos_total"      widget="monetary"/>
+                <field name="flujo_neto"         widget="monetary"/>
+                <field name="saldo_acumulado"    widget="monetary"/>
+                <field name="burn_rate_semanal"  widget="monetary"/>
+                <field name="runway_semanas"/>
+                <field name="margen_proteccion"  widget="monetary"/>
+                <field name="excedente_invertible" widget="monetary"/>
+                <field name="estado_liquidez" widget="badge"
+                       decoration-success="estado_liquidez == 'excedente'"
+                       decoration-info="estado_liquidez == 'estable'"
+                       decoration-warning="estado_liquidez == 'alerta'"
+                       decoration-danger="estado_liquidez == 'critico'"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

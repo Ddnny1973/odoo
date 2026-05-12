@@ -1,0 +1,403 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api
+from odoo.exceptions import UserError
+from datetime import datetime
+import io
+import base64
+import json
+
+# ReportLab imports
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+
+# Matplotlib
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+
+class SiconeInformes(models.Model):
+    _name = 'sicone.informes'
+    _description = 'Informes Ejecutivos SICONE'
+
+    name = fields.Char(string='Nombre', default='Informes Ejecutivos', readonly=True)
+    company_id = fields.Many2one('res.company', string='Compañía', required=True,
+                                  default=lambda self: self.env.company)
+    
+    # Archivos PDF generados
+    pdf_multiproyecto = fields.Binary(string='PDF Multiproyecto', readonly=True)
+    pdf_multiproyecto_filename = fields.Char(string='Nombre archivo MP', readonly=True)
+    
+    pdf_proyecciones = fields.Binary(string='PDF Proyecciones', readonly=True)
+    pdf_proyecciones_filename = fields.Char(string='Nombre archivo Proy', readonly=True)
+    
+    fecha_generacion_mp = fields.Datetime(string='Fecha Gen. Multiproyecto', readonly=True)
+    fecha_generacion_proy = fields.Datetime(string='Fecha Gen. Proyecciones', readonly=True)
+
+    def formatear_moneda(self, valor):
+        """Formatea valores en millones"""
+        if valor >= 1000000000:
+            return f"${valor/1e9:.1f}B"
+        return f"${valor/1e6:.0f}M"
+
+    def _generar_grafico_proyecciones(self, datos):
+        """Genera gráfico matplotlib con histórico + 3 escenarios + burn rate"""
+        fig, ax = plt.subplots(figsize=(10, 4))
+        
+        labels_h = datos.get('labels_hist', [])
+        labels_p = datos.get('labels_proy', [])
+        
+        # Combinar labels (sin duplicar punto de unión)
+        labels_all = labels_h + [l for l in labels_p if l not in labels_h]
+        n_hist = len(labels_h)
+        
+        # Histórico: valores reales + nulls para proyección
+        hist_full = datos.get('hist', []) + [None] * (len(labels_p) - 1)
+        
+        # Proyecciones: nulls hasta penúltimo histórico + valores
+        def mk_proy(vals):
+            return [None] * (n_hist - 1) + (vals or [])
+        
+        conservador = mk_proy(datos.get('conservador'))
+        moderado = mk_proy(datos.get('moderado'))
+        optimista = mk_proy(datos.get('optimista'))
+        
+        # Burn rate (línea horizontal)
+        burn_promedio = datos.get('burn_promedio', 0)
+        
+        # Dibujar líneas
+        ax.plot(labels_all, hist_full, 'o-', color='#6C757D', linewidth=2.5,
+                label='Histórico', markersize=3)
+        ax.plot(labels_all, conservador, '--', color='#2980B9', linewidth=2,
+                label='Conservador', markersize=4, marker='o')
+        ax.plot(labels_all, moderado, '--', color='#E67E22', linewidth=2,
+                label='Moderado', markersize=4, marker='o')
+        ax.plot(labels_all, optimista, '--', color='#27AE60', linewidth=2,
+                label='Optimista', markersize=4, marker='o')
+        ax.axhline(y=burn_promedio, color='#E74C3C', linewidth=3,
+                   linestyle='--', label='Burn Rate Promedio')
+        
+        # Formato
+        ax.set_ylabel('Saldo (Millones COP)', fontsize=10)
+        ax.set_ylim(bottom=0)
+        ax.grid(True, alpha=0.3)
+        ax.legend(loc='upper left', fontsize=8)
+        ax.tick_params(axis='x', rotation=45, labelsize=8)
+        ax.tick_params(axis='y', labelsize=8)
+        
+        plt.title('Saldo de Caja — Histórico + Proyecciones', fontsize=12, 
+                 fontweight='bold', pad=10)
+        plt.tight_layout()
+        
+        # Guardar a bytes
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+        buf.seek(0)
+        plt.close()
+        
+        return buf
+
+    def _generar_gantt_inversiones(self, inversiones):
+        """Genera timeline Gantt de inversiones temporales"""
+        if not inversiones:
+            return None
+        
+        fig, ax = plt.subplots(figsize=(10, 2))
+        
+        # Preparar datos
+        from datetime import datetime as dt
+        
+        inv_data = []
+        for inv in inversiones:
+            inicio = inv.fecha_inicio
+            fin = inv.fecha_vencimiento
+            inv_data.append({
+                'nombre': inv.instrumento,
+                'inicio': inicio,
+                'fin': fin,
+                'monto': inv.monto,
+                'duracion': (fin - inicio).days
+            })
+        
+        # Ordenar por fecha de inicio
+        inv_data.sort(key=lambda x: x['inicio'])
+        
+        # Colores por instrumento
+        colores = {
+            'fondo_liquidez': '#E67E22',
+            'cuenta_remunerada': '#27AE60',
+            'cdt': '#2980B9',
+        }
+        
+        # Dibujar barras
+        for i, inv in enumerate(inv_data):
+            color = colores.get(inv['nombre'], '#95A5A6')
+            inicio = matplotlib.dates.date2num(inv['inicio'])
+            duracion = inv['duracion']
+            
+            ax.barh(i, duracion, left=inicio, height=0.6, 
+                   color=color, edgecolor='black', linewidth=1)
+            
+            # Etiqueta con monto
+            monto_str = self.formatear_moneda(inv['monto'])
+            ax.text(inicio + duracion/2, i, monto_str,
+                   ha='center', va='center', fontsize=9, fontweight='bold',
+                   color='white')
+        
+        # Configurar ejes
+        ax.set_yticks(range(len(inv_data)))
+        ax.set_yticklabels([inv['nombre'].replace('_', ' ').title() 
+                           for inv in inv_data])
+        ax.xaxis_date()
+        ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter('%b %Y'))
+        
+        plt.xlabel('Fecha de Vencimiento', fontsize=10)
+        plt.title('Timeline de Inversiones Temporales', fontsize=11, fontweight='bold')
+        plt.tight_layout()
+        
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+        buf.seek(0)
+        plt.close()
+        
+        return buf
+
+    def action_generar_multiproyecto(self):
+        """Genera el reporte PDF multiproyecto histórico"""
+        self.ensure_one()
+        
+        # TODO: Implementar generación con datos reales del dashboard
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Reporte Multiproyecto',
+                'message': 'Generación en desarrollo',
+                'type': 'info',
+                'sticky': False,
+            }
+        }
+
+    def action_generar_proyecciones(self):
+        """Genera el reporte PDF de proyecciones e inversiones"""
+        self.ensure_one()
+        
+        # Obtener datos
+        ultimo_mes = self.env['sicone.consolidado.mes'].search(
+            [], order='anio desc, mes desc', limit=1
+        )
+        
+        if not ultimo_mes:
+            raise UserError('No hay datos consolidados. Calcula el dashboard primero.')
+        
+        proyeccion = self.env['sicone.proyeccion.gerencial'].search(
+            [], order='ultimo_calculo desc', limit=1
+        )
+        
+        if not proyeccion or not proyeccion.datos_grafico:
+            raise UserError('No hay proyecciones disponibles. Genera una proyección primero.')
+        
+        # Parsear datos del gráfico
+        datos_grafico = json.loads(proyeccion.datos_grafico)
+        
+        inversiones = self.env['sicone.inversion.temporal'].search([
+            ('estado', '=', 'activa')
+        ], order='fecha_vencimiento')
+        
+        # Generar PDF
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter,
+                               leftMargin=0.5*inch, rightMargin=0.5*inch,
+                               topMargin=0.4*inch, bottomMargin=0.4*inch)
+        
+        story = []
+        styles = getSampleStyleSheet()
+        
+        # ========================================================================
+        # TÍTULO
+        # ========================================================================
+        titulo_style = ParagraphStyle('CustomTitle', parent=styles['Heading1'],
+                                    fontSize=16, textColor=colors.HexColor('#5D4E99'),
+                                    alignment=TA_CENTER, spaceAfter=6)
+        story.append(Paragraph("PROYECCIONES DE CASH FLOW", titulo_style))
+        
+        subtitulo_style = ParagraphStyle('Subtitle', parent=styles['Normal'],
+                                        fontSize=11, textColor=colors.HexColor('#6c757d'),
+                                        alignment=TA_CENTER, spaceAfter=12)
+        fecha_gen = datetime.now().strftime('%d/%m/%Y %H:%M')
+        story.append(Paragraph(f"{proyeccion.nombre} | Generado: {fecha_gen}", subtitulo_style))
+        story.append(Spacer(1, 12))
+        
+        # ========================================================================
+        # KPIs (2 FILAS)
+        # ========================================================================
+        total_inversiones = sum(inv.monto for inv in inversiones)
+        
+        kpi_data = [
+            ['SALDO ACTUAL', 'BURN RATE PROM.', 'ALERTA', 'INVERSIONES ACT.'],
+            [
+                self.formatear_moneda(ultimo_mes.saldo_acumulado),
+                self.formatear_moneda(ultimo_mes.burn_rate_semanal * 4.33) + '/mes',
+                'Crítico',  # TODO: Calcular estado real
+                self.formatear_moneda(total_inversiones)
+            ],
+            ['', '', '', ''],
+            ['EGRESOS PROY (PROM)', 'GF CALCULADO/MES', 'GF ESTIMADO/MES', 'MESES PROY.'],
+            [
+                self.formatear_moneda(proyeccion.gastos_fijos_estimados * 5.5),
+                self.formatear_moneda(ultimo_mes.gastos_fijos * 4.33),
+                self.formatear_moneda(proyeccion.gastos_fijos_estimados),
+                str(proyeccion.meses_proyeccion)
+            ]
+        ]
+        
+        kpi_table = Table(kpi_data, colWidths=[1.8*inch]*4)
+        kpi_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4a90e2')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 9),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            
+            ('FONTNAME', (0, 1), (-1, 1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 1), (-1, 1), 11),
+            ('ALIGN', (0, 1), (-1, 1), 'CENTER'),
+            ('BACKGROUND', (0, 1), (-1, 1), colors.HexColor('#f8f9fa')),
+            ('BACKGROUND', (2, 1), (2, 1), colors.HexColor('#dc3545')),  # Alerta roja
+            ('TEXTCOLOR', (2, 1), (2, 1), colors.white),
+            
+            ('BACKGROUND', (0, 3), (-1, 3), colors.HexColor('#4a90e2')),
+            ('TEXTCOLOR', (0, 3), (-1, 3), colors.white),
+            ('FONTNAME', (0, 3), (-1, 3), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 3), (-1, 3), 9),
+            
+            ('FONTSIZE', (0, 4), (-1, 4), 10),
+            ('ALIGN', (0, 4), (-1, 4), 'CENTER'),
+            ('BACKGROUND', (0, 4), (-1, 4), colors.HexColor('#f8f9fa')),
+            
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ]))
+        
+        story.append(kpi_table)
+        story.append(Spacer(1, 12))
+        
+        # ========================================================================
+        # GRÁFICO PROYECCIONES
+        # ========================================================================
+        grafico_buf = self._generar_grafico_proyecciones(datos_grafico)
+        img = Image(grafico_buf, width=7*inch, height=2.8*inch)
+        story.append(img)
+        story.append(Spacer(1, 12))
+        
+        # ========================================================================
+        # GANTT INVERSIONES
+        # ========================================================================
+        if inversiones:
+            gantt_buf = self._generar_gantt_inversiones(inversiones)
+            if gantt_buf:
+                img_gantt = Image(gantt_buf, width=7*inch, height=1.5*inch)
+                story.append(img_gantt)
+                story.append(Spacer(1, 12))
+        
+        # ========================================================================
+        # TABLA MENSUAL
+        # ========================================================================
+        lineas = self.env['sicone.proyeccion.linea'].search([
+            ('proyeccion_id', '=', proyeccion.id)
+        ], order='fecha, escenario')
+        
+        # Agrupar por fecha
+        lineas_por_fecha = {}
+        for linea in lineas:
+            fecha_key = linea.label
+            if fecha_key not in lineas_por_fecha:
+                lineas_por_fecha[fecha_key] = {}
+            lineas_por_fecha[fecha_key][linea.escenario] = linea
+        
+        tabla_data = [['Período', 'Conservador', 'Moderado', 'Optimista', 'Ing. Inv.', 'Estado']]
+        
+        for label in sorted(lineas_por_fecha.keys(), 
+                           key=lambda x: lineas_por_fecha[x].get('conservador', 
+                           lineas_por_fecha[x].get('moderado', 
+                           lineas_por_fecha[x].get('optimista'))).fecha):
+            grupo = lineas_por_fecha[label]
+            
+            # Saldo proyectado = saldo_acumulado previo + flujo_neto
+            cons = grupo.get('conservador')
+            mode = grupo.get('moderado')
+            opti = grupo.get('optimista')
+            
+            # TODO: Calcular saldos correctamente desde líneas
+            ing_inv = cons.ingresos_inversiones if cons and cons.ingresos_inversiones else 0
+            
+            tabla_data.append([
+                label,
+                '-' if not cons else self.formatear_moneda(ultimo_mes.saldo_acumulado),
+                '-' if not mode else self.formatear_moneda(ultimo_mes.saldo_acumulado),
+                '-' if not opti else self.formatear_moneda(ultimo_mes.saldo_acumulado),
+                '-' if ing_inv == 0 else self.formatear_moneda(ing_inv),
+                'Histórico' if not cons else 'OK'
+            ])
+        
+        tabla = Table(tabla_data, colWidths=[1.2*inch, 1.1*inch, 1.1*inch, 1.1*inch, 1*inch, 1*inch])
+        tabla.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1B4332')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 9),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTSIZE', (0, 1), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ]))
+        
+        story.append(tabla)
+        
+        # Generar PDF
+        doc.build(story)
+        pdf_data = buffer.getvalue()
+        buffer.close()
+        
+        filename = f"proyecciones_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        
+        self.write({
+            'pdf_proyecciones': base64.b64encode(pdf_data),
+            'pdf_proyecciones_filename': filename,
+            'fecha_generacion_proy': fields.Datetime.now()
+        })
+        
+        # Descargar automáticamente
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/sicone.informes/{self.id}/pdf_proyecciones/{filename}?download=true',
+            'target': 'new',
+        }
+
+    def action_download_multiproyecto(self):
+        """Descarga el PDF multiproyecto"""
+        self.ensure_one()
+        if not self.pdf_multiproyecto:
+            raise UserError('No hay PDF generado. Genera el reporte primero.')
+        
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/sicone.informes/{self.id}/pdf_multiproyecto/{self.pdf_multiproyecto_filename}?download=true',
+            'target': 'self',
+        }
+
+    def action_download_proyecciones(self):
+        """Descarga el PDF de proyecciones"""
+        self.ensure_one()
+        if not self.pdf_proyecciones:
+            raise UserError('No hay PDF generado. Genera el reporte primero.')
+        
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/sicone.informes/{self.id}/pdf_proyecciones/{self.pdf_proyecciones_filename}?download=true',
+            'target': 'self',
+        }

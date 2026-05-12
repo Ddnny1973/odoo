@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================== LISTA COTIZACIONES ===================== -->
+    <record id="view_sicone_cotizacion_list" model="ir.ui.view">
+        <field name="name">sicone.cotizacion.list</field>
+        <field name="model">sicone.cotizacion</field>
+        <field name="arch" type="xml">
+            <list string="Cotizaciones">
+                <field name="name"/>
+                <field name="proyecto_id"/>
+                <field name="cliente"/>
+                <field name="fecha_cotizacion"/>
+                <field name="version_activa_numero"/>
+                <field name="estado" widget="badge"
+                    decoration-info="estado == 'borrador'"
+                    decoration-warning="estado == 'enviada'"
+                    decoration-success="estado == 'aceptada'"
+                    decoration-danger="estado == 'rechazada'"/>
+                <field name="total_general" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===================== FORMULARIO COTIZACIÓN ===================== -->
+    <record id="view_sicone_cotizacion_form" model="ir.ui.view">
+        <field name="name">sicone.cotizacion.form</field>
+        <field name="model">sicone.cotizacion</field>
+        <field name="arch" type="xml">
+            <form string="Cotización SICONE">
+                <header>
+                    <button name="action_aprobar" string="Aprobar" type="object"
+                        class="oe_highlight"
+                        invisible="estado != 'borrador'"/>
+                    <button name="action_enviar_cliente" string="Enviar a Cliente" type="object"
+                        class="oe_highlight"
+                        invisible="estado != 'aprobada'"/>
+                    <button name="action_aceptar" string="Aceptada" type="object"
+                        class="oe_highlight"
+                        invisible="estado != 'enviada'"/>
+                    <button name="action_rechazar" string="Rechazar" type="object"
+                        invisible="estado not in ['borrador','aprobada','enviada']"/>
+                    <button name="action_cancelar" string="Cancelar" type="object"
+                        invisible="estado in ['aceptada','cancelada']"/>
+                    <button name="action_cargar_excel"
+                        string="📂 Cargar Excel" type="object"
+                        class="oe_highlight"
+                        invisible="estado != 'borrador'"/>
+                    <button name="action_volver_borrador" string="Volver a Borrador" type="object"
+                        groups="sicone.group_sicone_manager"
+                        invisible="estado == 'borrador'"/>
+                    <field name="estado" widget="statusbar"
+                        statusbar_visible="borrador,aprobada,enviada,aceptada"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Información del Cliente">
+                            <field name="cliente"/>
+                            <field name="direccion"/>
+                            <field name="proyecto_id"
+                                invisible="not proyecto_id"
+                                options="{'no_create': True}"/>
+                        </group>
+                        <group string="Fechas y Control">
+                            <field name="fecha_cotizacion"/>
+                            <field name="fecha_vencimiento"/>
+                            <field name="version_activa_numero"/>
+                            <field name="generar_contrato_separado"/>
+                        </group>
+                    </group>
+
+                    <!-- TOTALES CONSOLIDADOS -->
+                    <group string="Totales">
+                        <group>
+                            <field name="total_capitulo1" widget="monetary"/>
+                            <field name="total_capitulo2" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="total_general" widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <!-- VERSIONES -->
+                    <notebook>
+                        <page string="Versiones" name="versiones">
+                            <button name="action_crear_nueva_version"
+                                string="+ Nueva Versión" type="object"
+                                class="btn-secondary mb-2"/>
+                            <field name="version_ids" mode="list"
+                                context="{'default_cotizacion_id': id}">
+                                <list>
+                                    <field name="numero_version"/>
+                                    <field name="activa" widget="boolean_toggle"/>
+                                    <field name="area_base"/>
+                                    <field name="total_capitulo1" widget="monetary"/>
+                                    <field name="total_capitulo2" widget="monetary"/>
+                                    <field name="total_general" widget="monetary"/>
+                                    <field name="fecha_creacion"/>
+                                    <field name="usuario_id"/>
+                                    <button name="action_activar_version"
+                                        string="Activar" type="object"
+                                        icon="fa-check-circle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="notas" placeholder="Notas internas..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===================== BÚSQUEDA ===================== -->
+    <record id="view_sicone_cotizacion_search" model="ir.ui.view">
+        <field name="name">sicone.cotizacion.search</field>
+        <field name="model">sicone.cotizacion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Cotización">
+                <field name="name"/>
+                <field name="proyecto_id"/>
+                <field name="cliente"/>
+                <filter name="borrador" string="Borradores"
+                    domain="[('estado','=','borrador')]"/>
+                <filter name="enviadas" string="Enviadas"
+                    domain="[('estado','=','enviada')]"/>
+                <filter name="aceptadas" string="Aceptadas"
+                    domain="[('estado','=','aceptada')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="by_proyecto" string="Proyecto"
+                        context="{'group_by': 'proyecto_id'}"/>
+                    <filter name="by_estado" string="Estado"
+                        context="{'group_by': 'estado'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===================== ACCIÓN ===================== -->
+    <record id="action_sicone_cotizacion" model="ir.actions.act_window">
+        <field name="name">Cotizaciones</field>
+        <field name="res_model">sicone.cotizacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('estado', '!=', 'cancelada')]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Botón Nueva Cotización abre wizard -->
+    <record id="action_nueva_cotizacion_wizard" model="ir.actions.act_window">
+        <field name="name">Nueva Cotización</field>
+        <field name="res_model">sicone.wizard.nueva.cotizacion</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

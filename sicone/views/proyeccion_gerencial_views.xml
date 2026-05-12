@@ -1,0 +1,148 @@
+<odoo>
+
+  <!-- ── LISTA ────────────────────────────────────────────────── -->
+  <record id="view_proyeccion_gerencial_list" model="ir.ui.view">
+    <field name="name">sicone.proyeccion.gerencial.list</field>
+    <field name="model">sicone.proyeccion.gerencial</field>
+    <field name="arch" type="xml">
+      <list string="Proyecciones Gerenciales">
+        <field name="nombre"/>
+        <field name="meses_proyeccion"/>
+        <field name="ultimo_calculo"/>
+        <field name="alerta" widget="badge"
+               decoration-success="alerta == 'ok'"
+               decoration-warning="alerta == 'atencion'"
+               decoration-danger="alerta == 'critico'"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- ── FORMULARIO ───────────────────────────────────────────── -->
+  <record id="view_proyeccion_gerencial_form" model="ir.ui.view">
+    <field name="name">sicone.proyeccion.gerencial.form</field>
+    <field name="model">sicone.proyeccion.gerencial</field>
+    <field name="arch" type="xml">
+      <form string="Proyeccion Gerencial">
+        <sheet>
+
+          <!-- KPIs superiores -->
+          <div style="background:#f8f9fa;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;gap:32px;flex-wrap:wrap;align-items:center;">
+            <div>
+              <div style="font-size:11px;color:#6c757d;font-weight:600;">SALDO ACTUAL</div>
+              <field name="saldo_actual" widget="monetary"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:#6c757d;font-weight:600;">EGRESOS PROY (PROM)</div>
+              <field name="egr_proy_moderado" widget="monetary"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:#6c757d;font-weight:600;">GF CALCULADO/MES</div>
+              <field name="gastos_fijos_calculados" widget="monetary"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:#6c757d;font-weight:600;">GF ESTIMADO/MES</div>
+              <field name="gastos_fijos_estimados" widget="monetary"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:#6c757d;font-weight:600;">ALERTA</div>
+              <field name="alerta" widget="badge"
+                     decoration-success="alerta == 'ok'"
+                     decoration-warning="alerta == 'atencion'"
+                     decoration-danger="alerta == 'critico'"/>
+            </div>
+          </div>
+
+          <div class="oe_title">
+            <h1><field name="nombre" placeholder="Nombre de la proyeccion..."/></h1>
+          </div>
+
+          <notebook>
+
+            <!-- PESTANA 1: PARAMETROS -->
+            <page string="Parametros" name="parametros">
+              <group>
+                <group string="General">
+                  <field name="meses_proyeccion"/>
+                  <field name="semanas_burn_rate"/>
+                </group>
+                <group string="Gastos Fijos">
+                  <field name="gastos_fijos_calculados" readonly="1"/>
+                  <field name="gastos_fijos_estimados"/>
+                  <field name="pct_optimizacion"/>
+                </group>
+              </group>
+              <group>
+                <group string="Ingresos por escenario">
+                  <field name="pct_hitos_sin_fecha_moderado"/>
+                  <field name="pct_hitos_sin_fecha_optimista"/>
+                </group>
+              </group>
+              <group string="Resumen de parametros por escenario">
+                <group string="Egresos Proyectos / mes">
+                  <field name="egr_proy_conservador" string="Conservador (Q3)" readonly="1"/>
+                  <field name="egr_proy_moderado" string="Moderado (mediana)" readonly="1"/>
+                  <field name="egr_proy_optimista" string="Optimista (minimo)" readonly="1"/>
+                </group>
+                <group string="Gastos Fijos / mes">
+                  <field name="gf_conservador" string="Conservador (Q3)" readonly="1"/>
+                  <field name="gf_moderado" string="Moderado (mediana)" readonly="1"/>
+                  <field name="gf_optimista" string="Optimista (minimo)" readonly="1"/>
+                </group>
+              </group>
+              <div style="text-align:center;margin-top:20px;">
+                <button name="action_calcular" type="object"
+                        string="Calcular Proyecciones"
+                        class="btn-primary btn-lg"
+                        confirm="Se recalcularan las 3 proyecciones. Continuar?"/>
+                <div style="margin-top:6px;font-size:11px;color:#6c757d;">
+                  Ultimo calculo: <field name="ultimo_calculo" readonly="1"/>
+                </div>
+              </div>
+            </page>
+
+            <!-- PESTANA 2: GRAFICO -->
+            <page string="Grafico" name="grafico">
+              <field name="grafico_html" widget="html" readonly="1" nolabel="1"
+                     style="min-height:380px;"/>
+            </page>
+
+            <!-- PESTANA 3: TABLA -->
+            <page string="Tabla de Datos" name="tabla">
+              <field name="linea_ids" nolabel="1">
+                <list string="Proyecciones por mes"
+                      decoration-info="escenario == 'conservador'"
+                      decoration-warning="escenario == 'moderado'"
+                      decoration-success="escenario == 'optimista'">
+                  <field name="escenario" widget="badge"
+                         decoration-info="escenario == 'conservador'"
+                         decoration-warning="escenario == 'moderado'"
+                         decoration-success="escenario == 'optimista'"/>
+                  <field name="label" string="Periodo"/>
+                  <field name="ingresos_hitos"       string="Ing. Hitos"   widget="monetary"/>
+                  <field name="ingresos_inversiones" string="Ing. Inv."    widget="monetary" optional="show"/>
+                  <field name="ingresos_total"       string="Ingresos"     widget="monetary"/>
+                  <field name="egresos_operativos"   string="Egr. Op."     widget="monetary" optional="show"/>
+                  <field name="gastos_fijos"         string="Gastos Fijos" widget="monetary" optional="show"/>
+                  <field name="egresos_total"        string="Egresos"      widget="monetary"/>
+                  <field name="flujo_neto"           string="Flujo Neto"   widget="monetary"
+                         decoration-success="flujo_neto &gt; 0"
+                         decoration-danger="flujo_neto &lt; 0"/>
+                  <field name="burn_rate_aplicado"   string="Burn/Sem"     widget="monetary" optional="hide"/>
+                </list>
+              </field>
+            </page>
+
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- ACCION -->
+  <record id="action_proyeccion_gerencial" model="ir.actions.act_window">
+    <field name="name">Proyecciones Gerenciales</field>
+    <field name="res_model">sicone.proyeccion.gerencial</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+</odoo>

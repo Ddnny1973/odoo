@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_proyecto" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.proyecto</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="after">
+                <group string="Proyecto Asociado">
+                    <field name="proyecto_id" domain="[('partner_id', '=', partner_id)]"/>
+                    <field name="cotizacion_template_id" invisible="not proyecto_id"/>
+                    <button name="action_load_template_lines" type="object" string="Cargar capítulos e ítems"
+                        invisible="1"
+                        class="oe_highlight"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom'][last()]" position="after">
+                <field name="materiales" optional="show"/>
+                <field name="equipos" optional="show"/>
+                <field name="mano_obra" optional="show"/>
+                <field name="capitulo" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']" position="after">
+                    <div class="d-flex justify-content-end">
+                        <div style="min-width:350px; max-width:600px; width:100%;">
+                            <table class="table table-sm mb-0" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" style="border-bottom:1px solid #ccc; font-weight:bold;">RESUMEN COSTOS DIRECTOS DEL PROYECTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Estructura (Resumen)</td>
+                                        <td><field name="resumen_estructura" readonly="1"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Otros (Resumen)</td>
+                                        <td><field name="resumen_otros" readonly="1"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Diseños (Resumen)</td>
+                                        <td><field name="resumen_disenos" readonly="1"/></td>
+                                    </tr>
+                                    <tr style="border-top:2px solid #000;">
+                                        <td style="font-weight:bold;">TOTAL COSTO DIRECTO</td>
+                                        <td style="font-weight:bold;">
+                                            <field name="resumen_total_costo_directo" readonly="1"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm mt-3 mb-0" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" style="border-bottom:1px solid #ccc; font-weight:bold;">ADMINISTRACIÓN DEL PROYECTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Comisión Ventas</td><td><field name="comision_ventas" readonly="1"/></td></tr>
+                                    <tr><td>Imprevistos</td><td><field name="imprevistos" readonly="1"/></td></tr>
+                                    <tr><td>% Sugerido Admon / Costo</td><td><field name="porcentaje_sugerido_admon" readonly="1" widget="percentage"/></td></tr>
+                                    <tr><td>Vlr Sugerido Admon</td><td><field name="vlr_sugerido_admon" readonly="1"/></td></tr>
+                                    <tr><td>Cálculo Admon</td><td><field name="calculo_admon" readonly="1"/></td></tr>
+                                    <tr><td>Administración</td><td><field name="administracion" readonly="1"/></td></tr>
+                                    <tr><td>Logística</td><td><field name="logistica" readonly="1"/></td></tr>
+                                    <tr><td>% Sugerido Utilidad / Costo</td><td><field name="porcentaje_sugerido_utilidad" readonly="1" widget="percentage"/></td></tr>
+                                    <tr><td>Vlr Sugerido Utilidad</td><td><field name="vlr_sugerido_utilidad" readonly="1"/></td></tr>
+                                    <tr><td>Cálculo Utilidad</td><td><field name="calculo_utilidad" readonly="1"/></td></tr>
+                                    <tr><td>Utilidad</td><td><field name="utilidad" readonly="1"/></td></tr>
+                                    <tr style="border-top:2px solid #000;"><td style="font-weight:bold;">TOTAL AIU</td><td style="font-weight:bold;"><field name="total_aiu" readonly="1"/></td></tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm mt-3 mb-0" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" style="border-bottom:1px solid #ccc; font-weight:bold;">VALOR TOTAL DEL PROYECTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Directos</td><td><field name="valor_total_directos" readonly="1"/></td></tr>
+                                    <tr><td>AIU</td><td><field name="valor_total_aiu" readonly="1"/></td></tr>
+                                    <tr><td>Subtotal Costo Directo</td><td><field name="valor_total_subtotal_costo_directo" readonly="1"/></td></tr>
+                                    <tr><td>Descuento</td><td><field name="valor_total_descuento" readonly="1"/></td></tr>
+                                    <tr><td>Total Costo Directo</td><td><field name="valor_total_total_costo_directo" readonly="1"/></td></tr>
+                                    <tr style="border-top:2px solid #000;"><td style="font-weight:bold;">Valor m²</td><td style="font-weight:bold;"><field name="valor_total_m2" readonly="1"/></td></tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm mt-3 mb-0" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" style="border-bottom:1px solid #ccc; font-weight:bold;">VALOR TOTAL DEL PROYECTO CON CIMENTACIONES Y COMPLEMENTARIOS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Costo Directo</td><td><field name="costo_directo_cim_comp" readonly="1"/></td></tr>
+                                    <tr><td>Cimentaciones</td><td><field name="cimentaciones" readonly="1"/></td></tr>
+                                    <tr><td>Complementarios</td><td><field name="complementarios" readonly="1"/></td></tr>
+                                    <tr><td>Total Costo Proyecto</td><td><field name="total_costo_proyecto_cim_comp" readonly="1"/></td></tr>
+                                    <tr style="border-top:2px solid #000;"><td style="font-weight:bold;">Valor m²</td><td style="font-weight:bold;"><field name="valor_m2_cim_comp" readonly="1"/></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </xpath>
+            <!-- Añadir la pestaña Cotización Ponderada dentro del notebook del record principal -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Cotización Ponderada">
+                    <field name="cotizacion_ponderada_ids" mode="list,form"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

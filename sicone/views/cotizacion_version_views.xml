@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================== FORMULARIO VERSIÓN ===================== -->
+    <record id="view_sicone_cotizacion_version_form" model="ir.ui.view">
+        <field name="name">sicone.cotizacion.version.form</field>
+        <field name="model">sicone.cotizacion.version</field>
+        <field name="arch" type="xml">
+            <form string="Versión de Cotización">
+                <header>
+                    <button name="action_activar_version" string="Activar esta Versión"
+                        type="object" class="oe_highlight"
+                        invisible="activa"/>
+                    <button name="action_copiar_desde_sugeridos"
+                        string="Aplicar AIU Sugerido" type="object"
+                        invisible="activa == False"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Control">
+                            <field name="cotizacion_id"/>
+                            <field name="numero_version"/>
+                            <field name="activa" widget="boolean_toggle"/>
+                            <field name="fecha_creacion"/>
+                            <field name="usuario_id"/>
+                        </group>
+                        <group string="Áreas del Proyecto">
+                            <field name="area_base"/>
+                            <field name="area_cubierta"/>
+                            <field name="area_entrepiso"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notas_cambios" placeholder="Descripción de cambios en esta versión..."/>
+                    </group>
+
+                    <notebook>
+                        <!-- ========== CAP 1: DISEÑOS ========== -->
+                        <page string="Diseños" name="disenos">
+                            <field name="diseno_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="nombre"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="area_base" optional="hide"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_disenos" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== CAP 1: ESTRUCTURA ========== -->
+                        <page string="Estructura" name="estructura">
+                            <field name="estructura_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="nombre"/>
+                                    <field name="unidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_materiales"/>
+                                    <field name="precio_equipos"/>
+                                    <field name="precio_mano_obra"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_estructura" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== CAP 1: MAMPOSTERÍA ========== -->
+                        <page string="Mampostería" name="mamposteria">
+                            <field name="mamposteria_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="nombre"/>
+                                    <field name="unidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_materiales"/>
+                                    <field name="precio_equipos"/>
+                                    <field name="precio_mano_obra"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_mamposteria" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== CAP 1: TECHOS ========== -->
+                        <page string="Techos y Elementos" name="techos">
+                            <field name="techo_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="nombre"/>
+                                    <field name="unidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_materiales"/>
+                                    <field name="precio_equipos"/>
+                                    <field name="precio_mano_obra"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_techos" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== CAP 1: AIU ========== -->
+                        <page string="AIU Capítulo 1" name="aiu_cap1">
+                            <group string="Costos Directos Cap. 1">
+                                <field name="subtotal_costos_directos_cap1" widget="monetary"/>
+                            </group>
+                            <group string="AIU">
+                                <group>
+                                    <field name="cap1_comision_ventas" widget="monetary"/>
+                                    <field name="cap1_imprevistos" widget="monetary"/>
+                                    <field name="cap1_pct_administracion"/>
+                                    <field name="cap1_administracion_sugerido" widget="monetary"/>
+                                    <field name="cap1_administracion" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="cap1_logistica" widget="monetary"/>
+                                    <field name="cap1_pct_utilidad"/>
+                                    <field name="cap1_utilidad_sugerido" widget="monetary"/>
+                                    <field name="cap1_utilidad" widget="monetary"/>
+                                    <field name="total_aiu_cap1" widget="monetary"/>
+                                </group>
+                            </group>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_capitulo1" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== CAP 2: CIMENTACIONES ========== -->
+                        <page string="Cimentaciones" name="cimentaciones">
+                            <field name="cimentacion_opcion_activa" widget="radio"/>
+                            <separator string="Opción 1 — Zapatas y Vigas de Concreto"/>
+                            <field name="cim_op1_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="nombre"/>
+                                    <field name="unidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="subtotal_cim_op1" widget="monetary"/>
+                                    <field name="cim_op1_pct_comision"/>
+                                    <field name="cim_op1_pct_aiu"/>
+                                    <field name="cim_op1_logistica" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_cim_op1" widget="monetary"/>
+                                </group>
+                            </group>
+
+                            <separator string="Opción 2 — Pilotes de Apoyo"/>
+                            <field name="cim_op2_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="nombre"/>
+                                    <field name="unidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="subtotal_cim_op2" widget="monetary"/>
+                                    <field name="cim_op2_pct_comision"/>
+                                    <field name="cim_op2_pct_aiu"/>
+                                    <field name="cim_op2_logistica" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_cim_op2" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ========== CAP 2: COMPLEMENTARIOS ========== -->
+                        <page string="Complementarios" name="complementarios">
+                            <field name="complementario_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="nombre"/>
+                                    <field name="calibre" optional="show"/>
+                                    <field name="unidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="subtotal_complementarios" widget="monetary"/>
+                                    <field name="comp_pct_comision"/>
+                                    <field name="comp_pct_aiu"/>
+                                    <field name="comp_logistica" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_complementarios" widget="monetary"/>
+                                </group>
+                            </group>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_capitulo2" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== ADMINISTRACIÓN ========== -->
+                        <page string="Personal Prof." name="personal_prof">
+                            <field name="personal_prof_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="nombre"/>
+                                    <field name="cantidad"/>
+                                    <field name="valor_mes" widget="monetary"/>
+                                    <field name="pct_prestaciones"/>
+                                    <field name="dedicacion"/>
+                                    <field name="meses"/>
+                                    <field name="total" widget="monetary"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Personal Admin." name="personal_admin">
+                            <field name="personal_admin_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="nombre"/>
+                                    <field name="cantidad"/>
+                                    <field name="valor_mes" widget="monetary"/>
+                                    <field name="pct_prestaciones"/>
+                                    <field name="dedicacion"/>
+                                    <field name="meses"/>
+                                    <field name="total" widget="monetary"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Otros Conceptos Admin." name="otros_admin">
+                            <field name="otros_admin_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="categoria"/>
+                                    <field name="subtotal" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_administracion" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ========== TOTALES GENERALES ========== -->
+                        <page string="Resumen" name="resumen">
+                            <group string="Capítulo 1">
+                                <field name="subtotal_costos_directos_cap1" widget="monetary"/>
+                                <field name="total_aiu_cap1" widget="monetary"/>
+                                <field name="total_capitulo1" widget="monetary"/>
+                            </group>
+                            <group string="Capítulo 2">
+                                <field name="cimentacion_opcion_activa"/>
+                                <field name="total_capitulo2" widget="monetary"/>
+                            </group>
+                            <group string="Administración">
+                                <field name="total_personal" widget="monetary"/>
+                                <field name="total_otros_admin" widget="monetary"/>
+                                <field name="total_administracion" widget="monetary"/>
+                            </group>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_general" widget="monetary"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===================== LISTA VERSIONES ===================== -->
+    <record id="view_sicone_cotizacion_version_list" model="ir.ui.view">
+        <field name="name">sicone.cotizacion.version.list</field>
+        <field name="model">sicone.cotizacion.version</field>
+        <field name="arch" type="xml">
+            <list string="Versiones">
+                <field name="numero_version"/>
+                <field name="activa" widget="boolean_toggle"/>
+                <field name="area_base"/>
+                <field name="total_capitulo1" widget="monetary"/>
+                <field name="total_capitulo2" widget="monetary"/>
+                <field name="total_general" widget="monetary"/>
+                <field name="fecha_creacion"/>
+                <field name="usuario_id"/>
+                <button name="action_activar_version" string="Activar"
+                    type="object" icon="fa-check-circle"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

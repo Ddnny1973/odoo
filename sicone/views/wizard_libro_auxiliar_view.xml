@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_libro_auxiliar_form" model="ir.ui.view">
+        <field name="name">sicone.wizard.libro.auxiliar.form</field>
+        <field name="model">sicone.wizard.libro.auxiliar</field>
+        <field name="arch" type="xml">
+            <form string="Importar Libro Auxiliar Contable">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>📋 Libro Auxiliar Contable</strong> — Para importar movimientos
+                        contables del período. El sistema detecta automáticamente datos nuevos
+                        y actualiza la zona de solapamiento del último mes.
+                        <br/>Para datos históricos de migración use:
+                        <strong>⚠️ Carga Histórica Inicial</strong>.
+                    </div>
+
+                    <group string="1. Seleccione el archivo Excel">
+                        <field name="archivo_excel"
+                            filename="archivo_nombre"
+                            widget="binary"
+                            string="Archivo Excel (.xlsx)"/>
+                        <field name="archivo_nombre" invisible="1"/>
+                    </group>
+
+                    <group string="2. Resumen del archivo"
+                        invisible="not fecha_min_archivo">
+                        <group>
+                            <field name="fecha_min_archivo" readonly="1"/>
+                            <field name="fecha_max_archivo" readonly="1"/>
+                            <field name="fecha_max_cargado" readonly="1"/>
+                            <field name="total_filas" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="filas_nuevas" readonly="1"/>
+                            <field name="filas_solapamiento" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="⚠️ Centros de costo sin mapeo"
+                        invisible="not cc_sin_mapeo">
+                        <field name="cc_sin_mapeo" readonly="1" nolabel="1"
+                            help="Configure estos centros de costo en Configuración → Centros de Costo"/>
+                    </group>
+
+                    <group string="⚠️ Cuentas sin clasificar"
+                        invisible="not cuentas_sin_clasificar">
+                        <field name="cuentas_sin_clasificar" readonly="1" nolabel="1"
+                            help="Configure estas cuentas en Configuración → Clasificación de Cuentas"/>
+                    </group>
+
+                    <group string="⚠️ Advertencia" invisible="not advertencia">
+                        <field name="advertencia" readonly="1" nolabel="1"/>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button name="action_importar"
+                        string="Importar Movimientos"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not fecha_min_archivo"/>
+                    <button string="Cancelar"
+                        class="btn-secondary"
+                        special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_libro_auxiliar" model="ir.actions.act_window">
+        <field name="name">Importar Libro Auxiliar Contable</field>
+        <field name="res_model">sicone.wizard.libro.auxiliar</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

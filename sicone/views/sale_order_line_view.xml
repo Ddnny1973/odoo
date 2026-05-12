@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista tree (lista) -->
+    <record id="view_order_line_tree_inherit_materiales" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.inherit.materiales</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom']" position="after">
+                <field name="materiales" attrs="{'invisible': [('display_type','!=',False)]}"/>
+                <field name="equipos" attrs="{'invisible': [('display_type','!=',False)]}"/>
+                <field name="mano_obra" attrs="{'invisible': [('display_type','!=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vista form (formulario de línea) -->
+    <record id="view_order_line_form_inherit_materiales" model="ir.ui.view">
+        <field name="name">sale.order.line.form.inherit.materiales</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_qty']" position="after">
+                <field name="materiales" attrs="{'invisible': [('display_type','!=',False)]}"/>
+                <field name="equipos" attrs="{'invisible': [('display_type','!=',False)]}"/>
+                <field name="mano_obra" attrs="{'invisible': [('display_type','!=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- ── MODELO: sicone.tercero ─────────────────────────────────── -->
+  <record id="view_sicone_tercero_list" model="ir.ui.view">
+    <field name="name">sicone.tercero.list</field>
+    <field name="model">sicone.tercero</field>
+    <field name="arch" type="xml">
+      <list string="Terceros Unificados" decoration-muted="not activo">
+        <field name="nombre_canonico"/>
+        <field name="identificacion"/>
+        <field name="categoria"/>
+        <field name="aliases" optional="show"/>
+        <field name="total_movimientos" string="Movimientos"/>
+        <field name="activo" widget="boolean_toggle"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_sicone_tercero_form" model="ir.ui.view">
+    <field name="name">sicone.tercero.form</field>
+    <field name="model">sicone.tercero</field>
+    <field name="arch" type="xml">
+      <form string="Tercero Unificado">
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="nombre_canonico" placeholder="Nombre canónico oficial..."/>
+            </h1>
+          </div>
+          <group>
+            <group string="Identificación">
+              <field name="identificacion"/>
+              <field name="categoria"/>
+              <field name="activo"/>
+            </group>
+            <group string="Estadísticas">
+              <field name="total_movimientos"/>
+              <field name="company_id" groups="base.group_multi_company"/>
+            </group>
+          </group>
+          <group string="Aliases (variaciones de nombre)">
+            <field name="aliases" nolabel="1"
+                   placeholder="ELKIN YOVANNY VALLEJO, E. VALLEJO TORO, YOVANNY VALLEJO..."/>
+            <div class="alert alert-info" role="alert">
+              <i class="fa fa-info-circle"/> Ingrese los nombres alternativos separados por coma.
+              El sistema normalizará automáticamente al importar el libro auxiliar.
+            </div>
+          </group>
+          <group string="Notas">
+            <field name="notas" nolabel="1" placeholder="Observaciones adicionales..."/>
+          </group>
+        </sheet>
+        <div class="o_form_buttons">
+          <button name="action_agregar_alias" type="object"
+                  string="+ Agregar Alias" class="btn-secondary"/>
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_sicone_tercero_search" model="ir.ui.view">
+    <field name="name">sicone.tercero.search</field>
+    <field name="model">sicone.tercero</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="nombre_canonico" string="Nombre"/>
+        <field name="identificacion"/>
+        <filter name="activos" string="Activos" domain="[('activo','=',True)]"/>
+        <filter name="proveedores" string="Proveedores"
+                domain="[('categoria','=','proveedor')]"/>
+        <filter name="contratistas" string="Contratistas"
+                domain="[('categoria','=','contratista')]"/>
+        <filter name="empleados" string="Empleados"
+                domain="[('categoria','=','empleado')]"/>
+        <group expand="0" string="Agrupar por">
+          <filter name="by_categoria" string="Categoría"
+                  context="{'group_by': 'categoria'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_sicone_terceros" model="ir.actions.act_window">
+    <field name="name">Terceros Unificados</field>
+    <field name="res_model">sicone.tercero</field>
+    <field name="view_mode">list,form</field>
+    <field name="search_view_id" ref="view_sicone_tercero_search"/>
+    <field name="context">{'search_default_activos': 1}</field>
+  </record>
+
+  <!-- ── WIZARD: Detección de Terceros ─────────────────────────── -->
+  <record id="view_wizard_deteccion_terceros_form" model="ir.ui.view">
+    <field name="name">sicone.wizard.deteccion.terceros.form</field>
+    <field name="model">sicone.wizard.deteccion.terceros</field>
+    <field name="arch" type="xml">
+      <form string="Detectar y Unificar Terceros Similares">
+        <sheet>
+          <!-- Estado borrador -->
+          <group invisible="estado != 'borrador'">
+            <div class="alert alert-info" role="alert">
+              <h4><i class="fa fa-search"/> Detectar Nombres Similares</h4>
+              <p>
+                Este wizard analiza todos los terceros en los movimientos contables
+                y detecta nombres que podrían ser la misma persona o empresa.
+                Ejemplo: <em>ELKIN YOVANY VALLEJO TORO</em> vs <em>ELKIN YOVANNY VALLEJO</em>.
+              </p>
+            </div>
+            <group string="Configuración de umbrales">
+              <group>
+                <field name="umbral_auto"/>
+                <field name="umbral_manual"/>
+              </group>
+              <group>
+                <field name="solo_sin_canonico"/>
+              </group>
+            </group>
+            <div class="text-center mt-3">
+              <button name="action_escanear" type="object"
+                      string="🔍 Escanear Terceros"
+                      class="btn-primary btn-lg"/>
+            </div>
+          </group>
+
+          <!-- Resultados -->
+          <group invisible="estado == 'borrador'">
+            <group string="Resumen del escaneo">
+              <field name="total_terceros"/>
+              <field name="total_grupos"/>
+              <field name="resumen" nolabel="1" readonly="1"/>
+            </group>
+
+            <div class="d-flex gap-2 mb-2" invisible="estado == 'aplicado'">
+              <button name="action_marcar_todos_auto" type="object"
+                      string="✅ Marcar todos los automáticos"
+                      class="btn-secondary btn-sm"/>
+              <button name="action_desmarcar_todos" type="object"
+                      string="☐ Desmarcar todos"
+                      class="btn-secondary btn-sm"/>
+            </div>
+
+            <field name="linea_ids" nolabel="1">
+              <list editable="bottom"
+                    decoration-success="nivel == 'auto' and confirmar"
+                    decoration-warning="nivel == 'manual'"
+                    decoration-muted="estado == 'aplicado'">
+                <field name="similitud" string="%"/>
+                <field name="nivel" widget="badge"
+                       decoration-success="nivel == 'auto'"
+                       decoration-warning="nivel == 'manual'"/>
+                <field name="nombre_canonico_sugerido" string="Nombre Canónico"/>
+                <field name="nombre_alias" string="Alias (variante)"/>
+                <field name="frecuencia_canonico" string="Frec. C" optional="show"/>
+                <field name="frecuencia_alias" string="Frec. A" optional="show"/>
+                <field name="monto_canonico" string="Monto C"
+                       widget="monetary" optional="hide"/>
+                <field name="monto_alias" string="Monto A"
+                       widget="monetary" optional="hide"/>
+                <field name="confirmar" string="Unificar" widget="boolean_toggle"/>
+                <field name="estado" widget="badge"
+                       decoration-success="estado == 'aplicado'"
+                       decoration-info="estado == 'pendiente'"/>
+              </list>
+            </field>
+          </group>
+        </sheet>
+        <footer invisible="estado != 'resultados'">
+          <button name="action_aplicar" type="object"
+                  string="✅ Aplicar Unificaciones Confirmadas"
+                  class="btn-primary"
+                  confirm="Se actualizarán los movimientos contables. ¿Continuar?"/>
+          <button special="cancel" string="Cerrar" class="btn-secondary"/>
+        </footer>
+        <footer invisible="estado != 'borrador'">
+          <button special="cancel" string="Cancelar" class="btn-secondary"/>
+        </footer>
+        <footer invisible="estado != 'aplicado'">
+          <button special="cancel" string="Cerrar" class="btn-primary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_wizard_deteccion_terceros" model="ir.actions.act_window">
+    <field name="name">Detectar Terceros Similares</field>
+    <field name="res_model">sicone.wizard.deteccion.terceros</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  <!-- ── WIZARD: Agregar Alias ──────────────────────────────────── -->
+  <record id="view_wizard_alias_form" model="ir.ui.view">
+    <field name="name">sicone.wizard.alias.form</field>
+    <field name="model">sicone.wizard.alias</field>
+    <field name="arch" type="xml">
+      <form string="Agregar Alias">
+        <sheet>
+          <group>
+            <field name="tercero_id"/>
+            <field name="nuevo_alias" placeholder="Nombre alternativo a agregar..."/>
+          </group>
+        </sheet>
+        <footer>
+          <button name="action_agregar" type="object"
+                  string="Agregar" class="btn-primary"/>
+          <button special="cancel" string="Cancelar" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- ── MENÚS ──────────────────────────────────────────────────── -->
+  <menuitem id="menu_sicone_terceros"
+            name="Terceros"
+            parent="menu_sicone_configuracion"
+            sequence="25"/>
+
+  <menuitem id="menu_sicone_terceros_lista"
+            name="Terceros Unificados"
+            parent="menu_sicone_terceros"
+            action="action_sicone_terceros"
+            sequence="1"/>
+
+  <menuitem id="menu_sicone_detectar_terceros"
+            name="Detectar Similares"
+            parent="menu_sicone_terceros"
+            action="action_wizard_deteccion_terceros"
+            sequence="2"/>
+
+</odoo>

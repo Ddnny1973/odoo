@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         VISTAS PROYECTO
+    ============================================================ -->
+
+    <record id="view_sicone_proyecto_form" model="ir.ui.view">
+        <field name="name">sicone.proyecto.form</field>
+        <field name="model">sicone.proyecto</field>
+        <field name="arch" type="xml">
+            <form string="Proyecto">
+                <header>
+                    <!-- ── Transiciones de estado controladas ── -->
+                    <button name="action_finalizar_proyecto"
+                            string="✓ Finalizar Proyecto"
+                            type="object"
+                            class="btn-primary"
+                            invisible="estado != 'ejecucion'"
+                            confirm="¿Confirmas que el proyecto ha sido finalizado?"/>
+                    <button name="action_reactivar_proyecto"
+                            string="↺ Reactivar Proyecto"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="estado != 'finalizado'"
+                            confirm="¿Confirmas que deseas reactivar este proyecto a En Ejecución?"/>
+                    <button name="action_cancelar_proyecto"
+                            string="Cancelar Proyecto"
+                            type="object"
+                            class="btn-danger"
+                            invisible="estado not in ('contratado', 'ejecucion')"
+                            confirm="¿Confirmas la cancelación del proyecto? Esta acción puede revertirse reactivándolo."/>
+                    <!-- ── Recalcular Cash Flow — uso técnico, secundario ── -->
+                    <button name="action_recalcular_cashflow"
+                            string="Recalcular Cash Flow"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-refresh"
+                            invisible="estado not in ('ejecucion', 'finalizado')"/>
+                    <field name="estado" widget="statusbar" clickable="0"
+                        statusbar_visible="prospecto,cotizacion,negociacion,contratado,ejecucion,finalizado"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nombre del Proyecto"/></h1>
+                        <h2><field name="codigo" readonly="1"/></h2>
+                    </div>
+
+                    <group>
+                        <group string="Información General">
+                            <field name="partner_id"/>
+                            <field name="fecha_inicio_estimada"/>
+                            <field name="fecha_fin_estimada"/>
+                        </group>
+                        <group string="Características Técnicas">
+                            <field name="area_base"/>
+                            <field name="area_cubierta"/>
+                            <field name="area_entrepiso"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Hitos de Pago" name="hitos">
+                            <group string="Duración de Fases (semanas)">
+                                <group>
+                                    <field name="semanas_admin"/>
+                                    <field name="semanas_cimentacion"/>
+                                    <field name="semanas_obra_gris"/>
+                                </group>
+                                <group>
+                                    <field name="semanas_cubierta"/>
+                                    <field name="semanas_entrega"/>
+                                </group>
+                            </group>
+                            <group string="Resumen Financiero">
+                                <group>
+                                    <field name="monto_contrato1" widget="monetary"/>
+                                    <field name="monto_contrato2" widget="monetary"/>
+                                    <field name="monto_total_proyecto" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_cobrado_proyecto" widget="monetary"/>
+                                    <field name="saldo_pendiente_proyecto" widget="monetary"/>
+                                </group>
+                            </group>
+                            <field name="hito_ids" mode="list">
+                                <list editable="bottom"
+                                      decoration-success="estado == 'pagado'"
+                                      decoration-warning="estado == 'parcial'">
+                                    <field name="secuencia" widget="handle"/>
+                                    <field name="nombre"/>
+                                    <field name="contrato_ref"/>
+                                    <field name="pct_c1" string="% C1"/>
+                                    <field name="pct_c2" string="% C2"/>
+                                    <field name="monto" widget="monetary"/>
+                                    <field name="fecha_estimada"/>
+                                    <field name="cobrado" widget="monetary"/>
+                                    <field name="saldo" widget="monetary"/>
+                                    <field name="estado" widget="badge"
+                                        decoration-success="estado == 'pagado'"
+                                        decoration-warning="estado == 'parcial'"
+                                        decoration-muted="estado == 'pendiente'"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- ════════════════════════════════════════════
+                             PESTAÑA: CASH FLOW
+                        ════════════════════════════════════════════ -->
+                        <page string="Cash Flow" name="cashflow">
+                            <group string="Indicadores Actuales">
+                                <group>
+                                    <field name="cf_saldo_actual" widget="monetary"/>
+                                    <field name="cf_burn_rate_semanal" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="cf_runway_semanas"/>
+                                    <field name="cf_margen_proteccion" widget="monetary"/>
+                                    <field name="cf_excedente_invertible" widget="monetary"/>
+                                </group>
+                            </group>
+                            <field name="cashflow_ids" mode="list">
+                                <list create="false" delete="false"
+                                      decoration-success="flujo_neto &gt; 0"
+                                      decoration-danger="saldo_acumulado &lt; margen_proteccion and saldo_acumulado &gt; 0"
+                                      decoration-muted="egresos == 0 and ingresos == 0">
+                                    <field name="nombre_mes" string="Período"/>
+                                    <field name="fase" string="Fase"/>
+                                    <field name="ingresos" widget="monetary" string="Ingresos"/>
+                                    <field name="egresos" widget="monetary" string="Egresos"/>
+                                    <field name="flujo_neto" widget="monetary" string="Flujo Neto"/>
+                                    <field name="saldo_acumulado" widget="monetary" string="Saldo Acum."/>
+                                    <field name="burn_rate_semanal" widget="monetary" string="Burn Rate/Sem"/>
+                                    <field name="runway_semanas" string="Runway (sem)" digits="[6,1]"/>
+                                    <field name="margen_proteccion" widget="monetary" string="Margen Prot."/>
+                                    <field name="excedente_invertible" widget="monetary" string="Excedente"/>
+                                    <field name="egresos_materiales" widget="monetary" optional="hide"/>
+                                    <field name="egresos_mano_obra" widget="monetary" optional="hide"/>
+                                    <field name="egresos_variables" widget="monetary" optional="hide"/>
+                                    <field name="egresos_admin" widget="monetary" optional="hide"/>
+                                    <field name="egresos_fijos" widget="monetary" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Contratos" name="contratos">
+                            <field name="contrato_ids" mode="list">
+                                <list>
+                                    <field name="numero"/>
+                                    <field name="name"/>
+                                    <field name="monto" widget="monetary"/>
+                                    <field name="estado"/>
+                                    <field name="fecha_inicio"/>
+                                    <field name="fecha_fin_estimada"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Notas" name="notas">
+                            <field name="notas" placeholder="Notas internas del proyecto..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sicone_proyecto_list" model="ir.ui.view">
+        <field name="name">sicone.proyecto.list</field>
+        <field name="model">sicone.proyecto</field>
+        <field name="arch" type="xml">
+            <list string="Proyectos"
+                  decoration-success="estado == 'finalizado'"
+                  decoration-info="estado == 'ejecucion'">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="area_base"/>
+                <field name="estado" widget="badge"
+                    decoration-success="estado == 'finalizado'"
+                    decoration-info="estado in ('contratado','ejecucion')"
+                    decoration-muted="estado == 'prospecto'"/>
+                <field name="fecha_inicio_estimada"/>
+                <field name="cf_runway_semanas" string="Runway (sem)" optional="show"/>
+                <field name="cf_saldo_actual" widget="monetary" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_sicone_proyecto" model="ir.actions.act_window">
+        <field name="name">Proyectos</field>
+        <field name="res_model">sicone.proyecto</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_estado': 'contratado'}</field>
+    </record>
+
+    <!-- ============================================================
+         VISTAS HITO
+    ============================================================ -->
+
+    <record id="view_sicone_hito_form" model="ir.ui.view">
+        <field name="name">sicone.hito.form</field>
+        <field name="model">sicone.hito</field>
+        <field name="arch" type="xml">
+            <form string="Hito de Pago">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="proyecto_id"/>
+                            <field name="nombre"/>
+                            <field name="contrato_ref"/>
+                            <field name="secuencia"/>
+                        </group>
+                        <group>
+                            <field name="pct_c1"/>
+                            <field name="pct_c2"/>
+                            <field name="monto" widget="monetary"/>
+                            <field name="fecha_estimada"/>
+                            <field name="estado"/>
+                        </group>
+                    </group>
+                    <group string="Resumen de Cobro">
+                        <field name="cobrado" widget="monetary"/>
+                        <field name="saldo" widget="monetary"/>
+                    </group>
+                    <field name="pago_ids" mode="list">
+                        <list editable="bottom">
+                            <field name="fecha"/>
+                            <field name="monto" widget="monetary"/>
+                            <field name="referencia"/>
+                            <field name="notas"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

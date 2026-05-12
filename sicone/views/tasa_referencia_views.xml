@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         SERVER ACTION — abre el singleton de tasas
+    ================================================================ -->
+    <record id="action_sicone_tasas_server" model="ir.actions.server">
+        <field name="name">Abrir Tasas de Referencia</field>
+        <field name="model_id" ref="model_sicone_tasa_referencia"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_abrir_tasas()</field>
+    </record>
+
+    <!-- ================================================================
+         FORM VIEW
+    ================================================================ -->
+    <record id="view_sicone_tasa_referencia_form" model="ir.ui.view">
+        <field name="name">sicone.tasa.referencia.form</field>
+        <field name="model">sicone.tasa.referencia</field>
+        <field name="arch" type="xml">
+            <form string="Tasas de Referencia — Inversiones">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Tasas de Referencia del Mercado</h1>
+                        <p class="text-muted">
+                            Actualizar cuando el Banco de la República modifique
+                            su tasa de política monetaria o cuando cambien
+                            significativamente las condiciones del mercado.
+                            Fuente: suameca.banrep.gov.co
+                        </p>
+                    </div>
+
+                    <!-- ── Tasas Banrep ──────────────────────────────── -->
+                    <group string="Tasas Banco de la República">
+                        <group>
+                            <field name="tasa_politica_monetaria"
+                                   string="Tasa de Política Monetaria (%)"/>
+                            <field name="ibr_overnight_ea"
+                                   string="IBR Overnight EA (%)"/>
+                            <field name="dtf_ea"
+                                   string="DTF EA (%)"/>
+                        </group>
+                        <group>
+                            <field name="fecha_actualizacion"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <!-- ── Rangos por instrumento ────────────────────── -->
+                    <group string="Rangos Orientativos por Instrumento (EA%)">
+                        <group string="CDT">
+                            <field name="cdt_tasa_min" string="Tasa Mínima (%)"/>
+                            <field name="cdt_tasa_max" string="Tasa Máxima (%)"/>
+                        </group>
+                        <group string="Fondo de Liquidez">
+                            <field name="fondo_liq_tasa_min" string="Tasa Mínima (%)"/>
+                            <field name="fondo_liq_tasa_max" string="Tasa Máxima (%)"/>
+                        </group>
+                        <group string="Fondo Corto Plazo">
+                            <field name="fondo_cp_tasa_min" string="Tasa Mínima (%)"/>
+                            <field name="fondo_cp_tasa_max" string="Tasa Máxima (%)"/>
+                        </group>
+                        <group string="Cuenta Remunerada">
+                            <field name="cuenta_rem_tasa_min" string="Tasa Mínima (%)"/>
+                            <field name="cuenta_rem_tasa_max" string="Tasa Máxima (%)"/>
+                        </group>
+                    </group>
+
+                    <!-- ── Notas ─────────────────────────────────────── -->
+                    <group string="Notas de Actualización">
+                        <field name="notas" nolabel="1"
+                               placeholder="Contexto: decisión Banrep, fuente consultada, expectativas del mercado..."/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

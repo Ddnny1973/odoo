@@ -1,0 +1,213 @@
+/* AI-MindNovation — Identidad corporativa SICONE v1.0 */
+
+body, .o_web_client {
+    font-family: "Century Gothic", "Trebuchet MS", Arial, sans-serif !important;
+}
+
+.o_main_navbar {
+    background: linear-gradient(90deg, #1F4A90 0%, #1E5A73 100%) !important;
+    border-bottom: none !important;
+}
+
+.o_main_navbar .o_menu_sections,
+.o_main_navbar .o_menu_sections > *,
+.o_main_navbar .o_menu_systray,
+.o_main_navbar .o_menu_systray > *,
+a.o-dropdown-item.dropdown-item.o_navigable.o_nav_entry,
+a.o-dropdown-item.o_nav_entry,
+.o_main_navbar a.o_nav_entry,
+.o_main_navbar .o_nav_entry,
+button.o-dropdown.dropdown-toggle.dropdown,
+button.o-dropdown.dropdown,
+.o_main_navbar button.o-dropdown {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.o_main_navbar .o_menu_brand,
+.o_main_navbar .o_nav_entry,
+.o_main_navbar .o_menu_sections a,
+.o_main_navbar .o_menu_sections span,
+.o_main_navbar .o_menu_sections i,
+.o_main_navbar .o_menu_systray a,
+.o_main_navbar .o_menu_systray i,
+.o_main_navbar button.o-dropdown,
+.o_main_navbar i,
+.o_main_navbar a {
+    color: #FFFFFF !important;
+}
+
+.o_menu_brand {
+    background-image: url('/web/image/res.company/1/logo') !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    background-position: center left !important;
+    width: auto !important;
+    padding-left: 130px !important;
+    height: 38px !important;
+    display: inline-block !important;
+}
+
+.o_main_navbar .o_nav_entry:hover,
+.o_main_navbar button.o-dropdown:hover,
+.o_main_navbar a.o_nav_entry:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px;
+}
+
+/* ── Botones primarios ── */
+.btn-primary {
+    background-color: #1F4A90 !important;
+    border-color: #1F4A90 !important;
+    font-weight: 500 !important;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #1E5A73 !important;
+    border-color: #1E5A73 !important;
+}
+.btn-secondary {
+    border-color: #1F4A90 !important;
+    color: #1F4A90 !important;
+}
+.btn-secondary:hover {
+    background-color: #F2F5FA !important;
+    border-color: #1E5A73 !important;
+    color: #1E5A73 !important;
+}
+
+a { color: #1F4A90 !important; }
+a:hover { color: #1E5A73 !important; }
+
+.o_breadcrumb .active {
+    color: #1F4A90 !important;
+    font-weight: 500;
+}
+.nav-tabs .nav-link.active {
+    color: #1F4A90 !important;
+    border-bottom: 2px solid #1F4A90 !important;
+    font-weight: 500;
+}
+.o_field_widget input:focus,
+.o_field_widget textarea:focus {
+    border-color: #1E5A73 !important;
+    box-shadow: 0 0 0 2px rgba(31, 74, 144, 0.15) !important;
+}
+
+/* ── Barra de acciones — fondo blanco ── */
+.o_control_panel {
+    background-color: #FFFFFF !important;
+    border-bottom: 1px solid #D0D9E8 !important;
+}
+.o_control_panel .breadcrumb-item,
+.o_control_panel .breadcrumb-item a,
+.o_control_panel .o_breadcrumb .active {
+    color: #1F4A90 !important;
+}
+
+/* ── Botón Medidas en gráficos ── */
+.o_graph_measures_list,
+.o_pivot_measures_list,
+.o_control_panel .o_graph_buttons button,
+.o_control_panel button.o-dropdown,
+.o_control_panel .o_control_panel_actions button {
+    color: #1F4A90 !important;
+    border-color: #1F4A90 !important;
+}
+
+/* ── Scrollbar corporativa ── */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #F2F5FA;
+}
+::-webkit-scrollbar-thumb {
+    background: #1F4A90;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #1E5A73;
+}
+
+/* ── Marca de agua ── */
+.o_content {
+    position: relative;
+}
+.o_content::after {
+    content: "";
+    background-image: url('/sicone/static/src/img/logo_navbar_B_degradado_transparente.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 800px auto;
+    opacity: 0.20;
+    position: fixed;
+    top: 46px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ── Botón Medidas — fondo blanco texto azul ── */
+.o_graph_buttons button.btn-primary,
+.o_pivot_buttons button.btn-primary,
+.o_control_panel button.btn-primary.o-dropdown {
+    background-color: #FFFFFF !important;
+    border-color: #1F4A90 !important;
+    color: #1F4A90 !important;
+}
+.o_graph_buttons button.btn-primary:hover,
+.o_pivot_buttons button.btn-primary:hover,
+.o_control_panel button.btn-primary.o-dropdown:hover {
+    background-color: #F2F5FA !important;
+    color: #1E5A73 !important;
+}
+
+/* ── Scrollbar ── */
+div.o_content::-webkit-scrollbar {
+    width: 8px;
+}
+div.o_content::-webkit-scrollbar-track {
+    background: #F2F5FA;
+}
+div.o_content::-webkit-scrollbar-thumb {
+    background: #1F4A90;
+    border-radius: 4px;
+}
+div.o_content::-webkit-scrollbar-thumb:hover {
+    background: #1E5A73;
+}
+
+/* ── Botón Medidas — excepción al transparent del navbar ── */
+.o_graph_buttons button.btn-primary,
+.o_pivot_buttons button.btn-primary,
+.o_control_panel .o_graph_buttons button,
+div.btn-group > button.btn.btn-primary.o-dropdown {
+    background-color: #1F4A90 !important;
+    background: #1F4A90 !important;
+    color: #FFFFFF !important;
+    border-color: #1F4A90 !important;
+}
+
+/* ── Scrollbar Chrome ── */
+* {
+    scrollbar-color: #1F4A90 #F2F5FA;
+    scrollbar-width: thin;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #F2F5FA;
+}
+::-webkit-scrollbar-thumb {
+    background: #1F4A90;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #1E5A73;
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de lista de proyectos SICONE -->
+    <record id="view_sicone_project_tree" model="ir.ui.view">
+        <field name="name">sicone.project.tree</field>
+        <field name="model">sicone.project</field>
+        <field name="arch" type="xml">
+            <tree string="Proyectos SICONE">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="estado"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de formulario de proyectos SICONE -->
+    <record id="view_sicone_project_form" model="ir.ui.view">
+        <field name="name">sicone.project.form</field>
+        <field name="model">sicone.project</field>
+        <field name="arch" type="xml">
+            <form string="Proyecto de Construcción SICONE">
+                <sheet>
+                    <group>
+                        <field name="codigo" readonly="1"/>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="estado"/>
+                        <field name="active"/>
+                        <field name="cotizacion_template_id"/>
+                    </group>
+                    <group string="Características Técnicas">
+                        <field name="area_base"/>
+                        <field name="area_cubierta"/>
+                        <field name="area_entrepiso"/>
+                        <field name="description"/>
+                    </group>
+                    <group string="Fechas">
+                        <field name="fecha_creacion" readonly="1"/>
+                        <field name="fecha_inicio_estimada"/>
+                        <field name="fecha_fin_estimada"/>
+                    </group>
+                    <group string="Control">
+                        <field name="usuario_creacion_id" readonly="1"/>
+                        <field name="company_id"/>
+                        <field name="notas"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda de proyectos SICONE -->
+    <record id="view_sicone_project_search" model="ir.ui.view">
+        <field name="name">sicone.project.search</field>
+        <field name="model">sicone.project</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Proyecto SICONE">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="estado"/>
+                <filter name="active" string="Activos" domain="[('active','=',True)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_nueva_cotizacion_form" model="ir.ui.view">
+        <field name="name">sicone.wizard.nueva.cotizacion.form</field>
+        <field name="model">sicone.wizard.nueva.cotizacion</field>
+        <field name="arch" type="xml">
+            <form string="Nueva Cotización">
+                <group>
+                    <field name="modo" widget="radio"/>
+                </group>
+                <group string="Datos del Cliente" invisible="modo == 'excel'">
+                    <field name="cliente"/>
+                    <field name="direccion"/>
+                    <field name="area_base"/>
+                </group>
+                <group string="Cargar Excel" invisible="modo == 'manual'">
+                    <field name="archivo_excel" filename="archivo_nombre" widget="binary"/>
+                    <field name="archivo_nombre" invisible="1"/>
+                    <p class="text-muted" style="font-size:12px">
+                        El sistema extraerá cliente, dirección y área base del archivo.
+                        Los campos opcionales pueden completarse si el Excel no los tiene.
+                    </p>
+                    <field name="cliente" string="Cliente (opcional)"/>
+                    <field name="direccion" string="Dirección (opcional)"/>
+                    <field name="area_base" string="Área Base (opcional)"/>
+                </group>
+                <footer>
+                    <button name="action_crear_cotizacion"
+                        string="Crear Cotización" type="object"
+                        class="btn-primary"/>
+                    <button name="action_test_lectura"
+                        string="🧪 Test Lectura" type="object"
+                        class="btn-secondary"/>
+                    <button string="Cancelar" class="btn-secondary"
+                        special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_nueva_cotizacion" model="ir.actions.act_window">
+        <field name="name">Nueva Cotización</field>
+        <field name="res_model">sicone.wizard.nueva.cotizacion</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

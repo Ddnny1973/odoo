@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         VISTA FORM — solo el timeline (se abre sobre el singleton empresa)
+    ================================================================ -->
+    <record id="view_sicone_timeline_inversiones_form" model="ir.ui.view">
+        <field name="name">sicone.config.empresa.timeline.form</field>
+        <field name="model">sicone.config.empresa</field>
+        <field name="arch" type="xml">
+            <form string="Timeline de Vencimientos">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Timeline de Vencimientos</h1>
+                        <p class="text-muted">
+                            Visualización de inversiones activas en el tiempo.
+                            El ancho de cada barra indica el monto relativo invertido.
+                        </p>
+                    </div>
+                    <field name="timeline_inversiones_html"
+                           widget="html" readonly="1" nolabel="1"
+                           options="{'sanitize': false, 'collaborative': false}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         SERVER ACTION — abre el singleton con la vista de timeline
+    ================================================================ -->
+    <record id="action_sicone_timeline_inversiones_server" model="ir.actions.server">
+        <field name="name">Abrir Timeline Inversiones</field>
+        <field name="model_id" ref="model_sicone_config_empresa"/>
+        <field name="state">code</field>
+        <field name="code">
+config = env['sicone.config.empresa'].search([('active','=',True)], order='id asc', limit=1)
+if not config:
+    config = env['sicone.config.empresa'].create({'name': 'Configuración Principal'})
+action = {
+    'type': 'ir.actions.act_window',
+    'res_model': 'sicone.config.empresa',
+    'res_id': config.id,
+    'view_mode': 'form',
+    'view_id': env.ref('sicone.view_sicone_timeline_inversiones_form').id,
+    'target': 'current',
+}
+        </field>
+    </record>
+
+</odoo>

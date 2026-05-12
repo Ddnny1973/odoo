@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ================================================================
+         CLASIFICACIÓN DE CUENTAS CONTABLES
+         Fuente: TABLA_CLASIFICACION_CUENTAS de ejecucion_fcl.py
+         noupdate="1" = no sobreescribir si el usuario modifica
+    ================================================================ -->
+
+    <record id="cc_aporte_pension" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Aporte a fondos de pensión y/o cesantías</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_arl" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Aportes a administradora de riesgos laborales</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_caja_compensacion" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Aportes cajas de compensación familiar</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_aux_transporte" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Auxilio de transporte</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_bonificaciones" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Bonificaciones no constitutivas</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_casino" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Casino y Restaurante</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_cesantias" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Cesantías</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_combustibles" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Combustibles (Acpm - Gasolina)</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_comisiones_ventas" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Comisiones por ventas</field>
+        <field name="categoria">administracion</field>
+    </record>
+    <record id="cc_costos_indirectos" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Costos indirectos</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_costos_no_deducibles" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Costos no deducibles sin seguridad social</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_costos_sin_factura" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Costos sin factura electrónica</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_dotacion" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Dotación y suministro a trabajadores</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_aseo" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Elementos de Aseo en General</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_garantia" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Garantía de Cumplimiento</field>
+        <field name="categoria">administracion</field>
+    </record>
+    <record id="cc_herramientas" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Herramientas</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_honorarios_topografo" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Honorarios de Topografo</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_honorarios_suelos" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Honorarios Estudio de Suelos, Pavimentos, Concreto</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_horas_extras" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Horas extras y recargos</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_ingeniero_residente" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Ingeniero Residente de Obra</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_intereses_cesantias" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Intereses sobre cesantías</field>
+        <field name="categoria">administracion</field>
+    </record>
+    <record id="cc_materiales_op" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Materiales de Operación</field>
+        <field name="categoria">materiales</field>
+    </record>
+    <record id="cc_prima" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Prima de servicios</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_servicios_construccion" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Servicios de Construcción</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_sueldos" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Sueldos</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_transporte_taxi" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Transporte en bus o taxi</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_transporte_materiales" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Transportes de Materiales</field>
+        <field name="categoria">materiales</field>
+    </record>
+    <record id="cc_papeleria" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Útiles, papelería y Fotocopias</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_vacaciones" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Vacaciones</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_materia_prima" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Materia prima</field>
+        <field name="categoria">materiales</field>
+    </record>
+    <record id="cc_incapacidades" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Incapacidades</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+    <record id="cc_metalmecanica" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Servicio de Metalmecanica</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_herramientas_otros" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Herramientas y otros</field>
+        <field name="categoria">variables</field>
+    </record>
+    <record id="cc_parqueaderos" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Parqueaderos</field>
+        <field name="categoria">administracion</field>
+    </record>
+    <record id="cc_costos_no_ded_factura" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Costos No deducibles no cumple requisitos Factura</field>
+        <field name="categoria">administracion</field>
+    </record>
+    <record id="cc_bonificaciones_2" model="sicone.cuenta.clasificacion">
+        <field name="nombre_cuenta">Bonificaciones</field>
+        <field name="categoria">mano_obra</field>
+    </record>
+
+    <!-- ================================================================
+         CENTROS DE COSTO - PROYECTOS ACTIVOS 2025
+         El usuario debe verificar y ajustar según sea necesario
+    ================================================================ -->
+
+    <!-- Nota: Los centros de costo se crean vacíos porque requieren
+         que los proyectos estén creados primero en el sistema.
+         El usuario los configura desde Configuración > Centros de Costo -->
+
+</odoo>

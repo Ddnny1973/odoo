@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_wizard_carga_historica_form" model="ir.ui.view">
+        <field name="name">sicone.wizard.carga.historica.form</field>
+        <field name="model">sicone.wizard.carga.historica</field>
+        <field name="arch" type="xml">
+            <form string="Carga Histórica de Cartera">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Carga Histórica de Cartera desde JSON</h1>
+                        <p class="text-muted">
+                            Cargue hasta 15 archivos JSON simultáneamente.
+                            El sistema detecta el proyecto de cada archivo automáticamente
+                            y reemplaza los movimientos históricos previos por proyecto.
+                        </p>
+                    </div>
+
+                    <!-- ── 1. Archivos ── -->
+                    <group string="1. Seleccione los archivos JSON">
+                        <group string="Archivos 1 — 5">
+                            <field name="archivo_json_1"  widget="binary" string="Archivo 1"/>
+                            <field name="archivo_json_2"  widget="binary" string="Archivo 2"/>
+                            <field name="archivo_json_3"  widget="binary" string="Archivo 3"/>
+                            <field name="archivo_json_4"  widget="binary" string="Archivo 4"/>
+                            <field name="archivo_json_5"  widget="binary" string="Archivo 5"/>
+                        </group>
+                        <group string="Archivos 6 — 10">
+                            <field name="archivo_json_6"  widget="binary" string="Archivo 6"/>
+                            <field name="archivo_json_7"  widget="binary" string="Archivo 7"/>
+                            <field name="archivo_json_8"  widget="binary" string="Archivo 8"/>
+                            <field name="archivo_json_9"  widget="binary" string="Archivo 9"/>
+                            <field name="archivo_json_10" widget="binary" string="Archivo 10"/>
+                        </group>
+                        <group string="Archivos 11 — 15">
+                            <field name="archivo_json_11" widget="binary" string="Archivo 11"/>
+                            <field name="archivo_json_12" widget="binary" string="Archivo 12"/>
+                            <field name="archivo_json_13" widget="binary" string="Archivo 13"/>
+                            <field name="archivo_json_14" widget="binary" string="Archivo 14"/>
+                            <field name="archivo_json_15" widget="binary" string="Archivo 15"/>
+                        </group>
+                    </group>
+
+                    <!-- ── 2. Preview consolidado ── -->
+                    <group string="2. Verifique los datos detectados"
+                           invisible="archivos_detectados == 0">
+                        <group>
+                            <field name="archivos_detectados" readonly="1"/>
+                            <field name="total_pagos"         readonly="1"/>
+                            <field name="total_monto"         readonly="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group>
+                            <field name="proyectos_detectados" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <!-- ── 3. Detalle por archivo ── -->
+                    <group string="3. Detalle por archivo"
+                           invisible="not detalle_preview">
+                        <field name="detalle_preview" readonly="1" nolabel="1"
+                               widget="text"/>
+                    </group>
+
+                    <!-- ── 4. Advertencia ── -->
+                    <group string="⚠️ Advertencia"
+                           invisible="not advertencia">
+                        <field name="advertencia" readonly="1" nolabel="1"
+                               widget="text"/>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button name="action_cargar"
+                            string="Cargar Archivos"
+                            type="object"
+                            class="btn-primary"
+                            invisible="archivos_detectados == 0"/>
+                    <button string="Cancelar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_carga_historica" model="ir.actions.act_window">
+        <field name="name">Carga Histórica de Cartera</field>
+        <field name="res_model">sicone.wizard.carga.historica</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

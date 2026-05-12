@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="navbar_brand_logo" inherit_id="web.navbar" priority="50">
+    <xpath expr="//a[hasclass('o_menu_brand')]" position="replace">
+      <a class="o_menu_brand" href="/odoo">
+        <img src="/web/image/res.company/1/logo"
+             alt="AI-MindNovation"
+             style="height:32px; width:auto; max-width:130px; object-fit:contain;"/>
+      </a>
+    </xpath>
+  </template>
+</odoo>

@@ -1,0 +1,46 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sicone_proyecto_user,sicone.proyecto user,model_sicone_proyecto,sicone.group_sicone_user,1,1,1,0
+access_sicone_proyecto_manager,sicone.proyecto manager,model_sicone_proyecto,sicone.group_sicone_manager,1,1,1,1
+access_sicone_cotizacion_user,sicone.cotizacion user,model_sicone_cotizacion,sicone.group_sicone_user,1,1,1,0
+access_sicone_cotizacion_manager,sicone.cotizacion manager,model_sicone_cotizacion,sicone.group_sicone_manager,1,1,1,1
+access_sicone_cotizacion_version_user,sicone.cotizacion.version user,model_sicone_cotizacion_version,sicone.group_sicone_user,1,1,1,0
+access_sicone_cotizacion_version_manager,sicone.cotizacion.version manager,model_sicone_cotizacion_version,sicone.group_sicone_manager,1,1,1,1
+access_sicone_cotizacion_diseno,sicone.cotizacion.diseno,model_sicone_cotizacion_diseno,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_estructura,sicone.cotizacion.estructura,model_sicone_cotizacion_estructura,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_mamposteria,sicone.cotizacion.mamposteria,model_sicone_cotizacion_mamposteria,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_techo,sicone.cotizacion.techo,model_sicone_cotizacion_techo,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_cimentacion,sicone.cotizacion.cimentacion,model_sicone_cotizacion_cimentacion,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_complementario,sicone.cotizacion.complementario,model_sicone_cotizacion_complementario,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_personal,sicone.cotizacion.personal,model_sicone_cotizacion_personal,sicone.group_sicone_user,1,1,1,1
+access_sicone_cotizacion_concepto_admin,sicone.cotizacion.concepto.admin,model_sicone_cotizacion_concepto_admin,sicone.group_sicone_user,1,1,1,1
+access_sicone_wizard_nueva_cotizacion,sicone.wizard.nueva.cotizacion,model_sicone_wizard_nueva_cotizacion,sicone.group_sicone_user,1,1,1,1
+access_sicone_contrato_user,sicone.contrato user,model_sicone_contrato,sicone.group_sicone_user,1,1,1,0
+access_sicone_contrato_manager,sicone.contrato manager,model_sicone_contrato,sicone.group_sicone_manager,1,1,1,1
+access_sicone_hito_user,sicone.hito user,model_sicone_hito,sicone.group_sicone_user,1,1,1,0
+access_sicone_hito_manager,sicone.hito manager,model_sicone_hito,sicone.group_sicone_manager,1,1,1,1
+access_sicone_pago_user,sicone.pago user,model_sicone_pago,sicone.group_sicone_user,1,1,1,0
+access_sicone_pago_manager,sicone.pago manager,model_sicone_pago,sicone.group_sicone_manager,1,1,1,1
+access_sicone_centro_costo_user,sicone.centro.costo user,model_sicone_centro_costo,sicone.group_sicone_user,1,0,0,0
+access_sicone_centro_costo_manager,sicone.centro.costo manager,model_sicone_centro_costo,sicone.group_sicone_manager,1,1,1,1
+access_sicone_cuenta_clasificacion_user,sicone.cuenta.clasificacion user,model_sicone_cuenta_clasificacion,sicone.group_sicone_user,1,0,0,0
+access_sicone_cuenta_clasificacion_manager,sicone.cuenta.clasificacion manager,model_sicone_cuenta_clasificacion,sicone.group_sicone_manager,1,1,1,1
+access_sicone_movimiento_contable_user,sicone.movimiento.contable user,model_sicone_movimiento_contable,sicone.group_sicone_user,1,0,0,0
+access_sicone_movimiento_contable_manager,sicone.movimiento.contable manager,model_sicone_movimiento_contable,sicone.group_sicone_manager,1,1,1,1
+access_sicone_wizard_carga_historica,sicone.wizard.carga.historica,model_sicone_wizard_carga_historica,sicone.group_sicone_manager,1,1,1,1
+access_sicone_wizard_libro_auxiliar,sicone.wizard.libro.auxiliar,model_sicone_wizard_libro_auxiliar,sicone.group_sicone_manager,1,1,1,1
+access_sicone_proyecto_cashflow,sicone.proyecto.cashflow,model_sicone_proyecto_cashflow,base.group_user,1,1,1,1
+access_sicone_config_empresa,sicone.config.empresa,model_sicone_config_empresa,sicone.group_sicone_manager,1,1,1,1
+access_sicone_consolidado_mes,sicone.consolidado.mes,model_sicone_consolidado_mes,sicone.group_sicone_manager,1,1,1,1
+access_sicone_ajuste_conciliacion,sicone.ajuste.conciliacion,model_sicone_ajuste_conciliacion,sicone.group_sicone_manager,1,1,1,1
+access_sicone_wizard_carga_ajustes,sicone.wizard.carga.ajustes,model_sicone_wizard_carga_ajustes,sicone.group_sicone_manager,1,1,1,1
+access_sicone_inversion_temporal_manager,sicone.inversion.temporal manager,model_sicone_inversion_temporal,sicone.group_sicone_manager,1,1,1,1
+access_sicone_inversion_temporal_user,sicone.inversion.temporal user,model_sicone_inversion_temporal,sicone.group_sicone_user,1,0,0,0
+access_sicone_tasa_referencia_manager,sicone.tasa.referencia manager,model_sicone_tasa_referencia,sicone.group_sicone_manager,1,1,1,1
+access_sicone_tasa_referencia_user,sicone.tasa.referencia user,model_sicone_tasa_referencia,sicone.group_sicone_user,1,0,0,0
+access_sicone_tercero,sicone.tercero,model_sicone_tercero,base.group_user,1,1,1,1
+access_wizard_deteccion_terceros,sicone.wizard.deteccion.terceros,model_sicone_wizard_deteccion_terceros,base.group_user,1,1,1,1
+access_wizard_deteccion_terceros_linea,sicone.wizard.deteccion.terceros.linea,model_sicone_wizard_deteccion_terceros_linea,base.group_user,1,1,1,1
+access_wizard_alias,sicone.wizard.alias,model_sicone_wizard_alias,base.group_user,1,1,1,1
+access_proyeccion_gerencial,sicone.proyeccion.gerencial,model_sicone_proyeccion_gerencial,base.group_user,1,1,1,1
+access_proyeccion_linea,sicone.proyeccion.linea,model_sicone_proyeccion_linea,base.group_user,1,1,1,1
+access_sicone_informes_manager,sicone.informes manager,model_sicone_informes,sicone.group_sicone_manager,1,1,1,1

@@ -1,0 +1,31 @@
+    <!-- ── Vista lista de Ajustes de Conciliación ── -->
+    <record id="view_sicone_ajuste_conciliacion_list" model="ir.ui.view">
+        <field name="name">sicone.ajuste.conciliacion.list</field>
+        <field name="model">sicone.ajuste.conciliacion</field>
+        <field name="arch" type="xml">
+            <list string="Ajustes de Conciliación"
+                  decoration-success="tipo == 'ingreso'"
+                  decoration-danger="tipo == 'egreso'">
+                <field name="fecha"/>
+                <field name="tipo" widget="badge"
+                       decoration-success="tipo == 'ingreso'"
+                       decoration-danger="tipo == 'egreso'"/>
+                <field name="tipo_registro"/>
+                <field name="concepto"/>
+                <field name="categoria"/>
+                <field name="cuenta"/>
+                <field name="monto" widget="monetary"/>
+                <field name="monto_mensual" widget="monetary" optional="hide"/>
+                <field name="fecha_inicio" optional="hide"/>
+                <field name="fecha_fin" optional="hide"/>
+                <field name="observaciones" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_sicone_ajuste_conciliacion" model="ir.actions.act_window">
+        <field name="name">Ajustes de Conciliación</field>
+        <field name="res_model">sicone.ajuste.conciliacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_by_tipo': 1}</field>
+    </record>

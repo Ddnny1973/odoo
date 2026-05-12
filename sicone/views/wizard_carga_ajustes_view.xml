@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_carga_ajustes_form" model="ir.ui.view">
+        <field name="name">sicone.wizard.carga.ajustes.form</field>
+        <field name="model">sicone.wizard.carga.ajustes</field>
+        <field name="arch" type="xml">
+            <form string="Carga de Ajustes de Conciliación">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Carga de Ajustes de Conciliación</h1>
+                        <p class="text-muted">
+                            Carga los ajustes de conciliación desde un archivo JSON.
+                            Los registros existentes serán eliminados y reemplazados
+                            por los del archivo nuevo.
+                        </p>
+                    </div>
+
+                    <!-- ── 1. Archivo ── -->
+                    <group string="1. Seleccione el archivo JSON">
+                        <field name="archivo_json"
+                               filename="archivo_nombre"
+                               widget="binary"
+                               string="Archivo JSON (ajustes_conciliacion_inicial_XXXX.json)"/>
+                        <field name="archivo_nombre" invisible="1"/>
+                    </group>
+
+                    <!-- ── Botón previsualizar — paso obligatorio ── -->
+                    <div class="text-center mt-2 mb-3">
+                        <button name="action_preview"
+                                string="🔍 Previsualizar archivo"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="not archivo_json"/>
+                    </div>
+
+                    <!-- ── 2. Preview — visible solo después de previsualizar ── -->
+                    <group string="2. Verifique los datos detectados"
+                           invisible="not total_registros">
+                        <group>
+                            <field name="total_registros"        readonly="1"/>
+                            <field name="periodo"                readonly="1"/>
+                            <field name="existentes"             readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="total_ingresos_preview" readonly="1"
+                                   widget="monetary"
+                                   string="Total ingresos"/>
+                            <field name="total_egresos_preview"  readonly="1"
+                                   widget="monetary"
+                                   string="Total egresos"/>
+                        </group>
+                    </group>
+
+                    <!-- ── 3. Detalle ── -->
+                    <group string="3. Detalle de ajustes"
+                           invisible="not detalle_preview">
+                        <field name="detalle_preview" readonly="1" nolabel="1"
+                               widget="text"/>
+                    </group>
+
+                    <!-- ── 4. Advertencia ── -->
+                    <group string="⚠️ Advertencia"
+                           invisible="not advertencia">
+                        <field name="advertencia" readonly="1" nolabel="1"
+                               widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <!-- Cargar solo aparece después de previsualizar -->
+                    <button name="action_cargar"
+                            string="✅ Cargar Ajustes de Conciliación"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not total_registros"/>
+                    <button string="Cancelar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_carga_ajustes" model="ir.actions.act_window">
+        <field name="name">Carga de Ajustes de Conciliación</field>
+        <field name="res_model">sicone.wizard.carga.ajustes</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         GRÁFICOS DE sicone.consolidado.mes
+         Nota: se usa 'mes' (Integer) para garantizar orden cronológico.
+         'nombre_mes' (Char) causa orden alfabético incorrecto.
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 1. Flujo Mensual — barras agrupadas -->
+    <record id="view_consolidado_graph_flujo" model="ir.ui.view">
+        <field name="name">sicone.consolidado.mes.graph.flujo</field>
+        <field name="model">sicone.consolidado.mes</field>
+        <field name="arch" type="xml">
+            <graph string="Flujo Mensual" type="bar" sample="0">
+                <field name="mes" type="row"/>
+                <field name="ingresos" type="measure"/>
+                <field name="egresos_total" type="measure"/>
+                <field name="flujo_neto" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- 2. Evolución del Saldo — línea -->
+    <record id="view_consolidado_graph_saldo" model="ir.ui.view">
+        <field name="name">sicone.consolidado.mes.graph.saldo</field>
+        <field name="model">sicone.consolidado.mes</field>
+        <field name="arch" type="xml">
+            <graph string="Evolución del Saldo" type="line" sample="0">
+                <field name="mes" type="row"/>
+                <field name="saldo_acumulado" type="measure"/>
+                <field name="margen_proteccion" type="measure"/>
+                <field name="excedente_invertible" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- 3. Burn Rate y Runway — línea -->
+    <record id="view_consolidado_graph_burnrate" model="ir.ui.view">
+        <field name="name">sicone.consolidado.mes.graph.burnrate</field>
+        <field name="model">sicone.consolidado.mes</field>
+        <field name="arch" type="xml">
+            <graph string="Burn Rate Mensual" type="line" sample="0">
+                <field name="mes" type="row"/>
+                <field name="burn_rate_semanal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- 4. Composición de Egresos — barras apiladas -->
+    <record id="view_consolidado_graph_egresos" model="ir.ui.view">
+        <field name="name">sicone.consolidado.mes.graph.egresos</field>
+        <field name="model">sicone.consolidado.mes</field>
+        <field name="arch" type="xml">
+            <graph string="Composición de Egresos" type="bar"
+                   sample="0" stacked="True">
+                <field name="mes" type="row"/>
+                <field name="egresos_materiales" type="measure"/>
+                <field name="egresos_mano_obra" type="measure"/>
+                <field name="egresos_variables" type="measure"/>
+                <field name="gastos_fijos" type="measure"/>
+                <field name="egresos_admin" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action único que agrupa los 4 gráficos — el usuario cambia entre
+         ellos con el selector de tipo (barra/línea) y el menú Medidas -->
+    <record id="action_consolidado_graficos" model="ir.actions.act_window">
+        <field name="name">Gráficos de Cash Flow</field>
+        <field name="res_model">sicone.consolidado.mes</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id" ref="view_consolidado_graph_flujo"/>
+        <field name="domain">[('anio', '=', 2025)]</field>
+        <field name="context">{'graph_measure': 'ingresos'}</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         GRÁFICO DE COBERTURA — sicone.proyecto.cashflow
+         Usa el último mes disponible por proyecto para runway y burn rate.
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <record id="view_cashflow_graph_cobertura" model="ir.ui.view">
+        <field name="name">sicone.proyecto.cashflow.graph.cobertura</field>
+        <field name="model">sicone.proyecto.cashflow</field>
+        <field name="arch" type="xml">
+            <graph string="Cobertura por Proyecto (semanas runway)" type="bar"
+                   sample="0">
+                <field name="proyecto_id" type="row"/>
+                <field name="runway_semanas" type="measure"/>
+                <field name="burn_rate_semanal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_cashflow_graph_cobertura" model="ir.actions.act_window">
+        <field name="name">Cobertura por Proyecto</field>
+        <field name="res_model">sicone.proyecto.cashflow</field>
+        <field name="view_mode">graph,list</field>
+        <field name="view_id" ref="view_cashflow_graph_cobertura"/>
+        <field name="domain">[('anio', '=', 2025), ('mes', '=', 12)]</field>
+        <field name="context">{'graph_measure': 'runway_semanas'}</field>
+    </record>
+
+</odoo>

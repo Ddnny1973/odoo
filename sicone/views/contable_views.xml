@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         CENTROS DE COSTO
+    ================================================================ -->
+
+    <record id="view_sicone_centro_costo_list" model="ir.ui.view">
+        <field name="name">sicone.centro.costo.list</field>
+        <field name="model">sicone.centro.costo</field>
+        <field name="arch" type="xml">
+            <list string="Centros de Costo">
+                <field name="nombre_cc"/>
+                <field name="proyecto_id"/>
+                <field name="notas"/>
+                <field name="activo" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sicone_centro_costo_form" model="ir.ui.view">
+        <field name="name">sicone.centro.costo.form</field>
+        <field name="model">sicone.centro.costo</field>
+        <field name="arch" type="xml">
+            <form string="Centro de Costo">
+                <sheet>
+                    <group>
+                        <field name="nombre_cc"
+                            placeholder="Ej: OBRA JORGE CALLE -"/>
+                        <field name="proyecto_id"/>
+                        <field name="activo" widget="boolean_toggle"/>
+                        <field name="notas"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sicone_centro_costo" model="ir.actions.act_window">
+        <field name="name">Centros de Costo</field>
+        <field name="res_model">sicone.centro.costo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ================================================================
+         CLASIFICACIÓN DE CUENTAS
+    ================================================================ -->
+
+    <record id="view_sicone_cuenta_clasificacion_list" model="ir.ui.view">
+        <field name="name">sicone.cuenta.clasificacion.list</field>
+        <field name="model">sicone.cuenta.clasificacion</field>
+        <field name="arch" type="xml">
+            <list string="Clasificación de Cuentas" editable="top">
+                <field name="nombre_cuenta"/>
+                <field name="categoria"/>
+                <field name="activo" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_sicone_cuenta_clasificacion" model="ir.actions.act_window">
+        <field name="name">Clasificación de Cuentas</field>
+        <field name="res_model">sicone.cuenta.clasificacion</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ================================================================
+         MOVIMIENTOS CONTABLES
+    ================================================================ -->
+
+    <record id="view_sicone_movimiento_contable_list" model="ir.ui.view">
+        <field name="name">sicone.movimiento.contable.list</field>
+        <field name="model">sicone.movimiento.contable</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos Contables"
+                decoration-success="tipo == 'ingreso'"
+                decoration-muted="categoria == 'sin_clasificar'">
+                <field name="fecha"/>
+                <field name="proyecto_id"/>
+                <field name="nombre_cc"/>
+                <field name="nombre_cuenta"/>
+                <field name="descripcion"/>
+                <field name="tipo" widget="badge"
+                    decoration-success="tipo == 'ingreso'"
+                    decoration-danger="tipo == 'egreso'"/>
+                <field name="categoria"/>
+                <field name="monto" widget="monetary"/>
+                <field name="hito_id"/>
+                <field name="fuente"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sicone_movimiento_contable_search" model="ir.ui.view">
+        <field name="name">sicone.movimiento.contable.search</field>
+        <field name="model">sicone.movimiento.contable</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Movimientos">
+                <field name="proyecto_id"/>
+                <field name="nombre_cuenta"/>
+                <field name="nombre_cc"/>
+                <field name="fecha"/>
+                <filter name="ingresos" string="Ingresos"
+                    domain="[('tipo','=','ingreso')]"/>
+                <filter name="egresos" string="Egresos"
+                    domain="[('tipo','=','egreso')]"/>
+                <filter name="sin_clasificar" string="Sin Clasificar"
+                    domain="[('categoria','=','sin_clasificar')]"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="by_proyecto" string="Proyecto"
+                        context="{'group_by': 'proyecto_id'}"/>
+                    <filter name="by_categoria" string="Categoría"
+                        context="{'group_by': 'categoria'}"/>
+                    <filter name="by_mes" string="Mes"
+                        context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sicone_movimiento_contable" model="ir.actions.act_window">
+        <field name="name">Movimientos Contables</field>
+        <field name="res_model">sicone.movimiento.contable</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_by_proyecto': 1}</field>
+    </record>
+
+</odoo>

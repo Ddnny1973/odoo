@@ -1,0 +1,121 @@
+<odoo>
+    <menuitem id="menu_sicone_root" name="SICONE" sequence="10"
+        groups="sicone.group_sicone_user"/>
+    <!-- ── Menú principal ── -->
+    <menuitem id="menu_sicone" name="Cotizaciones"
+        parent="menu_sicone_root"
+        action="action_sicone_cotizacion" sequence="10"/>
+    <menuitem id="menu_sicone_proyectos" name="Proyectos"
+        parent="menu_sicone_root"
+        action="action_sicone_proyecto" sequence="20"/>
+    <menuitem id="menu_sicone_libro_auxiliar"
+        name="Importar Libro Auxiliar"
+        parent="menu_sicone_root"
+        action="action_wizard_libro_auxiliar" sequence="25"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_movimientos" name="Movimientos Contables"
+        parent="menu_sicone_root"
+        action="action_sicone_movimiento_contable" sequence="40"
+        groups="sicone.group_sicone_manager"/>
+
+    <!-- ── Empresa ── -->
+    <menuitem id="menu_sicone_empresa" name="Empresa"
+        parent="menu_sicone_root" sequence="60"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_carga_historica"
+        name="Carga Histórica de Cartera"
+        parent="menu_sicone_empresa"
+        action="action_wizard_carga_historica" sequence="10"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_carga_ajustes"
+        name="Carga de Ajustes de Conciliación"
+        parent="menu_sicone_empresa"
+        action="action_wizard_carga_ajustes" sequence="20"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_ajustes_conciliacion"
+        name="Ajustes de Conciliación"
+        parent="menu_sicone_empresa"
+        action="action_sicone_ajuste_conciliacion" sequence="30"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_dashboard_empresa"
+        name="Dashboard Consolidado"
+        parent="menu_sicone_empresa"
+        action="action_sicone_dashboard_server" sequence="40"
+        groups="sicone.group_sicone_manager"/>
+
+    <!-- ── Gráficos ── -->
+    <menuitem id="menu_sicone_graficos" name="Gráficos"
+        parent="menu_sicone_empresa" sequence="50"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_graph_cashflow"
+        name="Cash Flow 2025"
+        parent="menu_sicone_graficos"
+        action="action_consolidado_graficos" sequence="10"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_graph_cobertura"
+        name="Cobertura por Proyecto"
+        parent="menu_sicone_graficos"
+        action="action_cashflow_graph_cobertura" sequence="20"
+        groups="sicone.group_sicone_manager"/>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         INVERSIONES TEMPORALES — separado de Empresa
+         Separado para facilitar control de acceso por rol
+         (Gerencia / Gerencia Financiera vs. operativo)
+    ══════════════════════════════════════════════════════════════ -->
+    <menuitem id="menu_sicone_inversiones_root"
+        name="Inversiones"
+        parent="menu_sicone_root"
+        sequence="70"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_tasas_referencia"
+        name="Tasas de Referencia"
+        parent="menu_sicone_inversiones_root"
+        action="action_sicone_tasas_server" sequence="10"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_inversiones"
+        name="Inversiones Activas"
+        parent="menu_sicone_inversiones_root"
+        action="action_sicone_inversion_temporal" sequence="20"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_timeline_inversiones"
+        name="Timeline de Vencimientos"
+        parent="menu_sicone_inversiones_root"
+        action="action_sicone_timeline_inversiones_server" sequence="30"
+        groups="sicone.group_sicone_manager"/>
+
+    <!-- ── Configuración ── -->
+    <menuitem id="menu_sicone_configuracion" name="Configuración"
+        parent="menu_sicone_root" sequence="90"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_centros_costo" name="Centros de Costo"
+        parent="menu_sicone_configuracion"
+        action="action_sicone_centro_costo" sequence="10"
+        groups="sicone.group_sicone_manager"/>
+    <menuitem id="menu_sicone_cuentas_clasificacion" name="Clasificación de Cuentas"
+        parent="menu_sicone_configuracion"
+        action="action_sicone_cuenta_clasificacion" sequence="20"
+        groups="sicone.group_sicone_manager"/>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         ANÁLISIS GERENCIAL
+         Informes ejecutivos y proyecciones
+    ══════════════════════════════════════════════════════════════ -->
+    <menuitem id="menu_sicone_analisis_gerencial"
+        name="Análisis Gerencial"
+        parent="menu_sicone_root"
+        sequence="75"
+        groups="sicone.group_sicone_manager"/>
+    
+    <menuitem id="menu_sicone_proyecciones"
+        name="Proyecciones"
+        parent="menu_sicone_analisis_gerencial"
+        action="action_proyeccion_gerencial" sequence="10"
+        groups="sicone.group_sicone_manager"/>
+    
+    <menuitem id="menu_sicone_informes"
+        name="Informes"
+        parent="menu_sicone_analisis_gerencial"
+        action="action_sicone_informes" sequence="20"
+        groups="sicone.group_sicone_manager"/>
+</odoo>
