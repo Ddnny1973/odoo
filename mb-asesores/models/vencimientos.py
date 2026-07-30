@@ -1975,7 +1975,9 @@ class Vencimientos(models.Model):
         
         webhook_url_test = "https://n8n.gestorconsultoria.com.co/webhook-test/61a30243-1a64-4ae9-9987-fc213ac251ed"
         webhook_url_publica = "https://n8n.gestorconsultoria.com.co/webhook/61a30243-1a64-4ae9-9987-fc213ac251ed"
-        webhook_url_local = "http://172.17.0.1:8032/webhook/61a30243-1a64-4ae9-9987-fc213ac251ed"
+        # webhook_url_local = "http://10.0.0.5:8032/webhook/61a30243-1a64-4ae9-9987-fc213ac251ed"
+        webhook_url_local = "https://n8n.gestorconsultoria.com.co/webhook/61a30243-1a64-4ae9-9987-fc213ac251ed"
+
 
         # Forzar mensaje como string plano (HTML/texto)
         mensaje_str = mensaje
