@@ -50,7 +50,7 @@ class WhatsappQR(models.Model):
             current_block = []
             
             for line in lines:
-                qr_char_count = line.count('█') + line.count('▀') + line.count('▁') + line.count('▂') + line.count('▓')
+                qr_char_count = line.count('█') + line.count('▀') + line.count('▄') + line.count('▁') + line.count('▂') + line.count('▓')
                 
                 # Si la línea tiene muchos caracteres de QR, es parte de un bloque QR
                 if qr_char_count > 10:
@@ -88,8 +88,8 @@ class WhatsappQR(models.Model):
             skip_count = 0
             
             for i, line in enumerate(lines):
-                # Si la línea tiene muchos █, es parte del QR - saltar esta línea y las siguientes similares
-                if line.count('█') > 10:
+                # Detectar inicio de bloque QR (incluye ▄ que encode la primera fila del finder pattern)
+                if line.count('█') + line.count('▀') + line.count('▄') + line.count('▓') > 10:
                     skip_count = 30  # Saltar las siguientes 30 líneas (típicamente el tamaño del QR)
                     continue
                 

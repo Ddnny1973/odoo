@@ -52,7 +52,10 @@
                     <div class="card-body text-center" style="background-color: #f8f8f8; padding: 20px;">
                         <div id="qr_error_msg" style="display:none; color:red; margin-bottom:10px; font-weight:bold;"></div>
                         <div style="display: inline-block; border: 3px solid #333; padding: 15px; background: white;">
-                            <pre id="qr_code_block" style="font-size:8px; background:#ffffff; line-height: 1; font-family: 'Courier New', monospace; white-space: pre; letter-spacing: 0; margin: 0; padding: 0; overflow: auto;"><t t-esc="qr.qr_code or 'Cargando QR...'"/></pre>
+                            <!-- pre oculto almacena el dato crudo; canvas/img lo renderizan -->
+                            <pre id="qr_code_block" style="display:none;"><t t-esc="qr.qr_code or ''"/></pre>
+                            <img  id="qr_img"    style="display:none; max-width:400px;"/>
+                            <canvas id="qr_canvas" style="display:block; image-rendering:pixelated;"></canvas>
                         </div>
                         <div class="mt-3">
                             <button class="btn btn-primary" id="update_qr_btn" type="button">
@@ -79,8 +82,13 @@
                 </div>
             </div>
             <script type="text/javascript">
-                $(function(){
-                    var qr_id = parseInt(document.getElementById('whatsapp_qr_app').dataset.qrId);
+                //<![CDATA[
+                function initWhatsappQR() {
+                    var app = document.getElementById('whatsapp_qr_app');
+                    if (!app) { console.error('[WA QR] elemento whatsapp_qr_app no encontrado'); return; }
+
+                    var qr_id = parseInt(app.dataset.qrId);
+                    console.log('[WA QR] init OK, qr_id=' + qr_id);
 
                     function now() {
                         var d = new Date();
@@ -89,71 +97,134 @@
                                String(d.getSeconds()).padStart(2,'0');
                     }
 
+                    function setEl(id, text) {
+                        var el = document.getElementById(id);
+                        if (el) el.textContent = text;
+                    }
+
+                    // Convierte ASCII art QR (█ ▀ ▄) a canvas pixel-perfect
+                    function displayQR(text) {
+                        var canvas = document.getElementById('qr_canvas');
+                        var img    = document.getElementById('qr_img');
+                        var pre    = document.getElementById('qr_code_block');
+                        if (pre) pre.textContent = text;
+
+                        if (!text || text.indexOf('QR no encontrado') !== -1 || text.indexOf('Error') === 0) {
+                            canvas.style.display = 'none'; img.style.display = 'none';
+                            return;
+                        }
+                        if (text.indexOf('data:image/') === 0) {
+                            img.src = text; img.style.display = 'block'; canvas.style.display = 'none';
+                            return;
+                        }
+
+                        // Parsear ASCII art: cada carácter = 1 col, 2 filas (half-block encoding)
+                        var lines = text.split('\n');
+                        while (lines.length && !lines[0].trim()) lines.shift();
+                        while (lines.length && !lines[lines.length-1].trim()) lines.pop();
+                        if (!lines.length) return;
+
+                        var rows = [];
+                        for (var i = 0; i < lines.length; i++) {
+                            var line = lines[i], top = [], bot = [];
+                            for (var j = 0; j < line.length; j++) {
+                                var c = line[j];
+                                if (c === '\u2588' || c === '\u2593') { top.push(1); bot.push(1); } // █ ▓
+                                else if (c === '\u2580')              { top.push(1); bot.push(0); } // ▀
+                                else if (c === '\u2584')              { top.push(0); bot.push(1); } // ▄
+                                else                                   { top.push(0); bot.push(0); } // espacio
+                            }
+                            rows.push(top); rows.push(bot);
+                        }
+
+                        var numCols = 0;
+                        for (var r = 0; r < rows.length; r++) if (rows[r].length > numCols) numCols = rows[r].length;
+
+                        var margin = 4; // quiet zone: 4 módulos blancos en todos los bordes
+                        var scale = Math.max(1, Math.floor(400 / Math.max(rows.length + 2*margin, numCols + 2*margin)));
+                        canvas.width  = (numCols + 2*margin) * scale;
+                        canvas.height = (rows.length + 2*margin) * scale;
+                        var ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#000';
+                        for (var row = 0; row < rows.length; row++) {
+                            for (var col = 0; col < rows[row].length; col++) {
+                                if (rows[row][col]) ctx.fillRect((col + margin) * scale, (row + margin) * scale, scale, scale);
+                            }
+                        }
+                        canvas.style.display = 'block'; img.style.display = 'none';
+                    }
+
                     function jsonRpc(url) {
-                        return $.ajax({
-                            url: url,
-                            type: 'POST',
-                            contentType: 'application/json',
-                            dataType: 'json',
-                            data: JSON.stringify({jsonrpc: '2.0', method: 'call', id: 1, params: {}})
-                        }).then(function(resp) {
-                            if (resp.error) { return $.Deferred().reject(resp.error.message || resp.error); }
-                            return resp.result;
-                        });
+                        return fetch(url, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({jsonrpc: '2.0', method: 'call', id: 1, params: {}})
+                        }).then(function(r) { return r.json(); })
+                          .then(function(resp) {
+                              if (resp.error) {
+                                  throw new Error((resp.error.data && resp.error.data.message) || resp.error.message || JSON.stringify(resp.error));
+                              }
+                              return resp.result;
+                          });
                     }
 
                     function showError(msg) {
-                        var el = $('#qr_error_msg');
-                        el.text('Error: ' + msg).show();
-                        setTimeout(function(){ el.hide(); }, 8000);
+                        var el = document.getElementById('qr_error_msg');
+                        if (el) { el.textContent = 'Error: ' + msg; el.style.display = 'block'; }
+                        setTimeout(function(){ if (el) el.style.display = 'none'; }, 8000);
+                        console.error('[WA QR] ' + msg);
                     }
 
                     function updateLogs() {
-                        $('#update_logs_btn').prop('disabled', true).text('Actualizando...');
+                        var btn = document.getElementById('update_logs_btn');
+                        btn.disabled = true; btn.textContent = 'Actualizando...';
+                        function reset() { btn.disabled = false; btn.innerHTML = '<i class="fa fa-refresh"></i> Actualizar Logs'; }
                         jsonRpc('/my/whatsapp_qr/' + qr_id + '/update_logs')
-                            .done(function(data) {
-                                if (data && data.logs) { $('#logs_block').text(data.logs); }
-                                $('#logs_last_update').text(now());
+                            .then(function(data) {
+                                if (data && data.logs) { setEl('logs_block', data.logs); }
+                                setEl('logs_last_update', now());
+                                reset();
                             })
-                            .fail(function(err) {
-                                showError(typeof err === 'string' ? err : JSON.stringify(err));
-                                console.error('Error logs:', err);
-                            })
-                            .always(function() {
-                                $('#update_logs_btn').prop('disabled', false)
-                                    .html('<i class="fa fa-refresh"></i> Actualizar Logs');
-                            });
+                            .catch(function(err) { showError(err.message || String(err)); reset(); });
                     }
 
                     function updateQR() {
-                        $('#update_qr_btn').prop('disabled', true).text('Actualizando...');
+                        var btn = document.getElementById('update_qr_btn');
+                        btn.disabled = true; btn.textContent = 'Actualizando...';
+                        function reset() { btn.disabled = false; btn.innerHTML = '<i class="fa fa-refresh"></i> Actualizar QR'; }
                         jsonRpc('/my/whatsapp_qr/' + qr_id + '/update_qr')
-                            .done(function(data) {
-                                if (data && data.qr_code) { $('#qr_code_block').text(data.qr_code); }
-                                if (data && data.logs)    { $('#logs_block').text(data.logs); }
+                            .then(function(data) {
+                                if (data && data.qr_code) { displayQR(data.qr_code); }
+                                if (data && data.logs)    { setEl('logs_block', data.logs); }
                                 var t = now();
-                                $('#qr_last_update').text(t);
-                                $('#logs_last_update').text(t);
+                                setEl('qr_last_update', t);
+                                setEl('logs_last_update', t);
+                                reset();
                             })
-                            .fail(function(err) {
-                                showError(typeof err === 'string' ? err : JSON.stringify(err));
-                                console.error('Error QR:', err);
-                            })
-                            .always(function() {
-                                $('#update_qr_btn').prop('disabled', false)
-                                    .html('<i class="fa fa-refresh"></i> Actualizar QR');
-                            });
+                            .catch(function(err) { showError(err.message || String(err)); reset(); });
                     }
 
-                    var t0 = now();
-                    $('#qr_last_update').text(t0);
-                    $('#logs_last_update').text(t0);
+                    // Timestamps iniciales — confirma que el script ejecutó
+                    setEl('qr_last_update', now());
+                    setEl('logs_last_update', now());
 
-                    $('#update_logs_btn').on('click', updateLogs);
-                    $('#update_qr_btn').on('click', updateQR);
+                    // Renderizar QR inicial desde el pre oculto
+                    var initialQR = document.getElementById('qr_code_block');
+                    if (initialQR) displayQR(initialQR.textContent);
+
+                    document.getElementById('update_logs_btn').addEventListener('click', updateLogs);
+                    document.getElementById('update_qr_btn').addEventListener('click', updateQR);
 
                     setInterval(function(){ updateQR(); updateLogs(); }, 15000);
-                });
+                }
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initWhatsappQR);
+                } else {
+                    initWhatsappQR();
+                }
+                //]]>
             </script>
         </t>
     </template>
