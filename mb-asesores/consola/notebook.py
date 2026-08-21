@@ -557,7 +557,7 @@ def crear_url_de_acceso(servicio_drive, archivo, tiempo_expiracion_horas=24):
 
 # Conexión a Odoo
 def odoo_conect():
-    odoo = ODOO('37.27.218.117', port=8029)
+    odoo = ODOO('localhost', port=8069)
     odoo.login('aserprem', 'api@gestorconsultoria.com.co', 'Api_2024')
     return odoo
 
