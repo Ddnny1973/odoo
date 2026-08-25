@@ -297,12 +297,16 @@ class Vencimientos(models.Model):
                 if hoja in ['PRUEBAS-PROVISION', 'PROVISION']:
                     _logger.info(f"[WPP-DEBUG] Hoja: {hoja} | Param 'enviar': '{enviar}' | ESTADO únicos: {df_sheets['ESTADO'].unique() if 'ESTADO' in df_sheets.columns else 'N/A'} | CONTROL únicos: {df_sheets['CONTROL'].unique() if 'CONTROL' in df_sheets.columns else 'N/A'}")
                     estado_col = df_sheets['ESTADO'].apply(self.normalize_text)
-                    control_col = df_sheets['CONTROL'] if 'CONTROL' in df_sheets.columns else pd.Series(['']*len(df_sheets))
+                    control_col = df_sheets['CONTROL'].fillna('') if 'CONTROL' in df_sheets.columns else pd.Series(['']*len(df_sheets))
                     if enviar and enviar.lower() in ['condiciones de renovación', 'condiciones de renovacion']:
                         df_filtrado = df_sheets[
                             (df_sheets['MES'].str.upper() == mes_FILTRO)
                             & (estado_col == 'condiciones de renovacion')
-                            & (control_col.isna() | (control_col == '') | (control_col == 'pendiente'))
+                            & (
+                                control_col == ''
+                                | (control_col == 'pendiente')
+                                | control_col.str.startswith('celular no disponible', na=False)
+                            )
                         ].copy()
                         _logger.info(f"📊 HOJA {hoja}: {len(df_filtrado)} registros filtrados para WhatsApp (condiciones de renovacion)")
                     elif enviar and enviar.lower() in ['renovación', 'renovacion']:
@@ -317,17 +321,18 @@ class Vencimientos(models.Model):
                         _logger.info(f"📊 HOJA {hoja}: parámetro 'enviar' no válido, no se filtran registros para WhatsApp")
                 else:
                     # Para otras hojas, agregar filtro: URL debe tener información
+                    control_col = df_sheets['CONTROL'].fillna('')
                     df_filtrado = df_sheets[
                         (df_sheets['MES'].str.upper() == mes_FILTRO)
                         & (
-                            df_sheets['CONTROL'].isna()
-                            | (df_sheets['CONTROL'] == '')
-                            | (df_sheets['CONTROL'] == 'pendiente')
-                            | (df_sheets['CONTROL'] == 'pendiente enviar whatsapp')
+                            control_col == ''
+                            | (control_col == 'pendiente')
+                            | (control_col == 'pendiente enviar whatsapp')
+                            | control_col.str.startswith('celular no disponible', na=False)
                         )
                         & (df_sheets['URL'].notna() & (df_sheets['URL'] != ''))
                     ].copy()
-                    _logger.info(f"📊 HOJA {hoja}: {len(df_filtrado)} registros filtrados para envío (mes={mes_FILTRO}, estado=pendiente/vacío, url con info)")
+                    _logger.info(f"📊 HOJA {hoja}: {len(df_filtrado)} registros filtrados para envío (mes={mes_FILTRO}, estado=pendiente/vacío/celular_no_disponible, url con info)")
 
                 # 📋 LOG: Mostrar lista de pólizas que cumplen filtros iniciales
                 if len(df_filtrado) > 0:
@@ -351,13 +356,17 @@ class Vencimientos(models.Model):
                     url = row.get('URL', '')
                     id_cliente = row.get('ID', '')
                     estado_wsp = str(row.get('ESTADO WHATSAPP', '')).strip().lower()
-                    # Normalizar número
-                    phone_number = celular.replace('+', '').replace(' ', '').replace('-', '')
-                    if len(phone_number) == 10 and phone_number.startswith('3'):
-                        phone_number = '57' + phone_number
-                    elif len(phone_number) == 12 and phone_number.startswith('57') and phone_number[2] == '3':
-                        pass
-                    else:
+                    # Normalizar número (puede tener múltiples separados por ';')
+                    phone_number = None
+                    for num_candidate in celular.replace(';', ',').split(','):
+                        num_candidate = num_candidate.strip().replace('+', '').replace(' ', '').replace('-', '')
+                        if len(num_candidate) == 10 and num_candidate.startswith('3'):
+                            phone_number = '57' + num_candidate
+                            break
+                        elif len(num_candidate) == 12 and num_candidate.startswith('57') and num_candidate[2] == '3':
+                            phone_number = num_candidate
+                            break
+                    if not phone_number:
                         _logger.warning(f"[WPP] Número inválido: {celular} (póliza {poliza})")
                         fallidos += 1
                         detalles.append({'poliza': poliza, 'celular': celular, 'motivo': 'número inválido'})

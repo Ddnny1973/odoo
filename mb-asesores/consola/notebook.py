@@ -360,9 +360,18 @@ def validar_correos(correo):
 #     else:
 #         return celular, 'celular no disponible'
 
+def _validar_numero_colombiano(numero):
+    """Valida si un número es un teléfono colombiano válido para WhatsApp.
+    Acepta: 10 dígitos empezando por 3, o 12 dígitos empezando por 57 con 3er dígito 3."""
+    numero = numero.strip().replace('+', '').replace(' ', '').replace('-', '')
+    if len(numero) == 10 and numero.startswith('3'):
+        return True, numero
+    elif len(numero) == 12 and numero.startswith('57') and numero[2] == '3':
+        return True, numero
+    return False, numero
+
+
 def validar_cell(celular, control):
-    # Expresión regular para validar un número de teléfono móvil
-    patron = r'^\+?\d{1,3}?\d{8,14}$'  # Hace el signo más y el código de país opcionales
     celular = str(celular)
     
     # Separar los números de celular por ';' o ','
@@ -372,21 +381,23 @@ def validar_cell(celular, control):
     numeros_validos = []
     numeros_no_validos = []
     
-    # Verificar cada número de celular
+    # Verificar cada número de celular con lógica colombiana (misma que enviar_whatsapp_pendientes)
     for numero in numeros:
-        numero = numero.strip()  # Eliminar espacios en blanco alrededor del número
-        if re.match(patron, numero):
-            numeros_validos.append(numero)
+        es_valido, numero_limpio = _validar_numero_colombiano(numero)
+        if es_valido:
+            numeros_validos.append(numero_limpio)
         else:
-            numeros_no_validos.append(numero)
+            numeros_no_validos.append(numero.strip())
     
-    # Determinar el estado del control   
+    # Determinar el estado del control
     control_l = control.lower()
     if control_l == 'enviado' or control_l == 'enviado - confirmado':
         pass
-    elif (control_l != 'enviado' and control_l != 'enviado - confirmado' or control_l == 'enviar') and len(numeros_no_validos) == 0:
+    elif len(numeros_validos) > 0:
+        # Si hay al menos un número válido, permitir envío por WhatsApp
         control = 'pendiente enviar whatsapp'
-    else:
+    elif len(numeros_no_validos) > 0:
+        # Solo marcar como no válido si NO hay ningún número válido
         control = f'celular no disponible o no válido {numeros_no_validos}'
         
     # Convertir la lista de números válidos a una cadena separada por ';'
