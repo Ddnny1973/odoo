@@ -1,49 +1,47 @@
 from odoo import http
 from odoo.http import request
 
-class WhatsappQRPortal(http.Controller):
 
-    @http.route(['/my/whatsapp_qr/<int:qr_id>/update_qr'], type='json', auth='user', website=True)
-    def portal_whatsapp_qr_update_qr(self, qr_id, **kw):
-        qr = request.env['whatsapp.qr'].sudo().browse(qr_id)
-        if qr.user_id.id != request.env.user.id:
-            return {'error': 'No autorizado'}
-        qr_code = qr._get_qr_from_logs()
-        logs = qr._get_logs_without_qr()
-        return {'qr_code': qr_code, 'logs': logs}
-    @http.route(['/my/whatsapp_qr/<int:qr_id>/ejecutar_consola'], type='http', auth='user', website=True)
-    def portal_whatsapp_qr_ejecutar_consola(self, qr_id, **kw):
-        qr = request.env['whatsapp.qr'].sudo().browse(qr_id)
-        if qr.user_id.id != request.env.user.id:
-            return request.not_found()
-        # Ejecutar la función lanzar_consola_job del modelo mb-asesores.vencimientos
-        vencimientos_model = request.env['mb_asesores.vencimientos'].sudo()
-        # Puedes pasar parámetros personalizados aquí si lo deseas
-        result = vencimientos_model.lanzar_consola_job()
-        # Mensaje de feedback
-        request.session['portal_message'] = 'Consola lanzada en background.'
-        return request.redirect('/my/whatsapp_qr')
+class WhatsappQRPortal(http.Controller):
+    """Portal /my/whatsapp_qr: cada usuario ve solo los servicios de WhatsApp que son suyos."""
+
+    def _mi_servicio(self, qr_id):
+        """Registro del usuario actual o un recordset vacío. Se usa sudo() solo para poder leer los
+        campos de conexión (token) en el servidor; la pertenencia se comprueba aquí y además por la
+        regla de registro de whatsapp.qr."""
+        qr = request.env['whatsapp.qr'].sudo().browse(qr_id).exists()
+        if not qr or qr.user_id.id != request.env.user.id:
+            return request.env['whatsapp.qr'].sudo().browse()
+        return qr
+
     @http.route(['/my/whatsapp_qr'], type='http', auth='user', website=True)
     def portal_whatsapp_qr(self, **kw):
-        user = request.env.user
-        qr_records = request.env['whatsapp.qr'].sudo().search([('user_id', '=', user.id)])
+        qr_records = request.env['whatsapp.qr'].sudo().search([('user_id', '=', request.env.user.id)])
         return request.render('odoo_whatsapp_qr.portal_whatsapp_qr_list', {
             'qr_records': qr_records,
         })
 
     @http.route(['/my/whatsapp_qr/<int:qr_id>'], type='http', auth='user', website=True)
     def portal_whatsapp_qr_detail(self, qr_id, **kw):
-        qr = request.env['whatsapp.qr'].sudo().browse(qr_id)
-        if qr.user_id.id != request.env.user.id:
+        qr = self._mi_servicio(qr_id)
+        if not qr:
             return request.not_found()
         return request.render('odoo_whatsapp_qr.portal_whatsapp_qr_detail', {
             'qr': qr,
+            'qr_code': qr._get_qr(),
+            'estado': qr._get_estado(),
         })
+
+    @http.route(['/my/whatsapp_qr/<int:qr_id>/update_qr'], type='json', auth='user', website=True)
+    def portal_whatsapp_qr_update_qr(self, qr_id, **kw):
+        qr = self._mi_servicio(qr_id)
+        if not qr:
+            return {'error': 'No autorizado'}
+        return {'qr_code': qr._get_qr(), 'logs': qr._get_estado()}
 
     @http.route(['/my/whatsapp_qr/<int:qr_id>/update_logs'], type='json', auth='user', website=True)
     def portal_whatsapp_qr_update_logs(self, qr_id, **kw):
-        qr = request.env['whatsapp.qr'].sudo().browse(qr_id)
-        if qr.user_id.id != request.env.user.id:
+        qr = self._mi_servicio(qr_id)
+        if not qr:
             return {'error': 'No autorizado'}
-        logs = qr._get_logs_without_qr()
-        return {'logs': logs}
+        return {'logs': qr._get_estado()}

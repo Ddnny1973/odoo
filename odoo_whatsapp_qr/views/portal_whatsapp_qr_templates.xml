@@ -53,7 +53,7 @@
                         <div id="qr_error_msg" style="display:none; color:red; margin-bottom:10px; font-weight:bold;"></div>
                         <div style="display: inline-block; border: 3px solid #333; padding: 15px; background: white;">
                             <!-- pre oculto almacena el dato crudo; canvas/img lo renderizan -->
-                            <pre id="qr_code_block" style="display:none;"><t t-esc="qr.qr_code or ''"/></pre>
+                            <pre id="qr_code_block" style="display:none;"><t t-esc="qr_code or ''"/></pre>
                             <img  id="qr_img"    style="display:none; max-width:400px;"/>
                             <canvas id="qr_canvas" style="display:block; image-rendering:pixelated;"></canvas>
                         </div>
@@ -68,13 +68,13 @@
                 
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0">Últimos Logs del Contenedor</h5>
+                        <h5 class="mb-0">Estado de la sesión</h5>
                     </div>
                     <div class="card-body" style="background-color: #2d2d2d; color: #cccccc;">
-                        <pre id="logs_block" style="font-size:11px; background: transparent; padding:10px; max-height:400px; overflow:auto; font-family: monospace; white-space: pre-wrap; margin: 0; color: #cccccc;"><t t-esc="qr.logs_preview or 'Cargando logs...'"/></pre>
+                        <pre id="logs_block" style="font-size:11px; background: transparent; padding:10px; max-height:400px; overflow:auto; font-family: monospace; white-space: pre-wrap; margin: 0; color: #cccccc;"><t t-esc="estado or 'Cargando estado...'"/></pre>
                         <div class="mt-3">
                             <button class="btn btn-secondary" id="update_logs_btn" type="button">
-                                <i class="fa fa-refresh"></i> Actualizar Logs
+                                <i class="fa fa-refresh"></i> Actualizar estado
                             </button>
                             <p class="small" style="margin: 0; margin-top: 10px; color: #cccccc;">Última actualización: <span id="logs_last_update">--:--:--</span></p>
                         </div>
@@ -179,7 +179,7 @@
                     function updateLogs() {
                         var btn = document.getElementById('update_logs_btn');
                         btn.disabled = true; btn.textContent = 'Actualizando...';
-                        function reset() { btn.disabled = false; btn.innerHTML = '<i class="fa fa-refresh"></i> Actualizar Logs'; }
+                        function reset() { btn.disabled = false; btn.innerHTML = '<i class="fa fa-refresh"></i> Actualizar estado'; }
                         jsonRpc('/my/whatsapp_qr/' + qr_id + '/update_logs')
                             .then(function(data) {
                                 if (data && data.logs) { setEl('logs_block', data.logs); }
